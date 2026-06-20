@@ -17,7 +17,7 @@ export default function CTASection() {
             <div className="w-2 h-2 bg-[#f0c040] rounded-full" />
             <span className="text-muted text-xs font-medium">Dot The Talents</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-5 tracking-tight leading-tight">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 tracking-tight leading-tight">
             {t('cta.title')}
           </h2>
           <p className="text-muted mb-10 text-sm leading-relaxed max-w-md mx-auto">

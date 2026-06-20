@@ -1,93 +1,112 @@
+"use client"
 import Link from 'next/link'
 import { mockInfluencers } from '@/lib/mock-data'
-import { formatNumber } from '@/lib/utils'
-import { CheckCircle, Instagram, Youtube } from 'lucide-react'
+import { Instagram, BadgeCheck, ArrowRight } from 'lucide-react'
+import { useLang } from '@/lib/lang'
+
+const gradients = [
+  ['#ff6b6b', '#ffa07a'],
+  ['#0a84ff', '#30d158'],
+  ['#ff9500', '#ff6b6b'],
+  ['#64d2ff', '#0a84ff'],
+  ['#30d158', '#64d2ff'],
+  ['#ffd60a', '#ff9500'],
+]
+
+function formatK(n: number) {
+  if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`
+  if (n >= 1000) return `${(n / 1000).toFixed(0)}k`
+  return `${n}`
+}
+
+function initials(name: string) {
+  return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+}
 
 export default function Influencers() {
-  const featured = mockInfluencers.slice(0, 4)
-
-  const categoryColors: Record<string, string> = {
-    MICRO: 'bg-green-100 text-green-700',
-    MACRO: 'bg-blue-100 text-blue-700',
-    INTERNATIONAL: 'bg-purple-100 text-purple-700',
-  }
-  const categoryLabels: Record<string, string> = {
-    MICRO: 'Micro',
-    MACRO: 'Macro',
-    INTERNATIONAL: 'International',
-  }
+  const { lang } = useLang()
+  const list = mockInfluencers.slice(0, 6)
 
   return (
-    <section className="py-24 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12">
+    <section className="py-20 bg-[#080c1a]">
+      <div className="max-w-6xl mx-auto px-5 lg:px-8">
+        {/* Header */}
+        <div className="flex items-end justify-between mb-8">
           <div>
-            <span className="text-purple-700 font-semibold text-sm uppercase tracking-wider">Notre réseau</span>
-            <h2 className="font-display text-4xl lg:text-5xl font-bold text-gray-900 mt-2 mb-2">
-              Des talents d&apos;exception
+            <p className="text-muted text-xs uppercase tracking-widest mb-2">Notre réseau</p>
+            <h2 className="text-2xl font-bold text-white tracking-tight">
+              {lang === 'fr' ? 'Talents certifiés' : 'Certified Talents'}
             </h2>
-            <p className="text-gray-500 text-lg">Découvrez quelques-uns de nos influenceurs certifiés</p>
           </div>
-          <Link
-            href="/auth/inscription?role=brand"
-            className="mt-6 md:mt-0 inline-flex items-center gap-2 bg-purple-700 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-800 transition"
-          >
-            Voir tous les profils
+          <Link href="/auth/inscription?role=brand" className="hidden sm:inline-flex items-center gap-1.5 text-xs text-muted hover:text-white transition-colors">
+            {lang === 'fr' ? 'Voir tous' : 'See all'} <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featured.map((inf) => (
-            <div
-              key={inf.id}
-              className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all hover:-translate-y-1 group"
-            >
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src={inf.photo}
-                  alt={inf.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute top-3 right-3">
-                  <span className={`text-xs font-semibold px-2 py-1 rounded-full ${categoryColors[inf.category]}`}>
-                    {categoryLabels[inf.category]}
-                  </span>
-                </div>
-                {inf.isVerified && (
-                  <div className="absolute bottom-3 left-3">
-                    <div className="flex items-center gap-1 bg-white/90 backdrop-blur-sm text-green-600 text-xs font-medium px-2 py-1 rounded-full">
-                      <CheckCircle className="w-3 h-3" />
-                      Certifié
+        {/* Scroll horizontal desktop / grille 2 col mobile */}
+        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-3">
+          {list.map((inf, i) => {
+            const [c1, c2] = gradients[i % gradients.length]
+            return (
+              <div key={inf.id} className="liquid-glass-card rounded-3xl p-5 flex-shrink-0 w-[220px] sm:w-auto hover:bg-white/10 transition-all duration-300">
+
+                {/* Avatar + badge */}
+                <div className="relative w-14 h-14 mb-4">
+                  <div
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-bold text-lg"
+                    style={{ background: `linear-gradient(135deg, ${c1}, ${c2})` }}
+                  >
+                    {initials(inf.name)}
+                  </div>
+                  {inf.isVerified && (
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#0a84ff] rounded-full flex items-center justify-center border-2 border-[#080c1a]">
+                      <BadgeCheck className="w-3 h-3 text-white" strokeWidth={2.5} />
                     </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
 
-              <div className="p-4">
-                <h3 className="font-semibold text-gray-900 mb-1">{inf.name}</h3>
-                <p className="text-xs text-gray-500 mb-3 line-clamp-2">{inf.bio}</p>
+                {/* Name + handle */}
+                <p className="text-white font-semibold text-sm leading-tight">{inf.name}</p>
+                <div className="flex items-center gap-1 mt-0.5 mb-4">
+                  <Instagram className="w-3 h-3 text-muted" />
+                  <span className="text-faint text-[11px]">{inf.instagram}</span>
+                </div>
 
-                <div className="grid grid-cols-2 gap-2 mb-3">
-                  <div className="bg-gray-50 rounded-lg p-2 text-center">
-                    <p className="font-bold text-purple-700 text-sm">{formatNumber(inf.followers)}</p>
-                    <p className="text-xs text-gray-400">Abonnés</p>
+                {/* Stats */}
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                  <div className="liquid-glass rounded-xl px-3 py-2 text-center">
+                    <p className="text-white font-bold text-sm">{formatK(inf.followers)}</p>
+                    <p className="text-faint text-[10px]">{lang === 'fr' ? 'abonnés' : 'followers'}</p>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-2 text-center">
-                    <p className="font-bold text-green-600 text-sm">{inf.engagementRate}%</p>
-                    <p className="text-xs text-gray-400">Engagement</p>
+                  <div className="liquid-glass rounded-xl px-3 py-2 text-center">
+                    <p className="text-[#30d158] font-bold text-sm">{inf.engagementRate}%</p>
+                    <p className="text-faint text-[10px]">engagement</p>
                   </div>
                 </div>
 
-                <div className="flex gap-1 flex-wrap">
-                  {inf.interests.slice(0, 2).map((interest, i) => (
-                    <span key={i} className="text-xs bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full">
-                      {interest}
+                {/* Tags */}
+                <div className="flex flex-wrap gap-1.5">
+                  {inf.interests.slice(0, 2).map((tag) => (
+                    <span key={tag} className="liquid-glass text-faint text-[10px] px-2.5 py-1 rounded-full">
+                      {tag}
                     </span>
                   ))}
+                  {inf.subscription === 'PRO' && (
+                    <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{background:'rgba(240,192,64,0.12)', color:'#f0c040', border:'1px solid rgba(240,192,64,0.2)'}}>
+                      Pro
+                    </span>
+                  )}
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
+        </div>
+
+        {/* Mobile voir tous */}
+        <div className="sm:hidden mt-6 text-center">
+          <Link href="/auth/inscription?role=brand" className="inline-flex items-center gap-1.5 text-xs text-muted hover:text-white transition-colors">
+            {lang === 'fr' ? 'Voir tous les talents' : 'See all talents'} <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
       </div>
     </section>

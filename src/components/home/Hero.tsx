@@ -27,7 +27,7 @@ export default function Hero() {
               <span className="text-white/60 text-xs font-medium tracking-wide">{t('hero.badge')}</span>
             </div>
 
-            <h1 className="text-[clamp(2.6rem,6vw,4.5rem)] font-bold leading-[1.06] tracking-tight mb-6">
+            <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[1.08] tracking-tight mb-5">
               {t('hero.title1')}
               <br />
               <span style={{background:'linear-gradient(135deg, #f0c040 0%, #f4a638 50%, #e87040 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text'}}>

@@ -33,7 +33,7 @@ export default function Features() {
       </div>
       <div className="relative max-w-5xl mx-auto px-5 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight">{t('features.title')}</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 tracking-tight">{t('features.title')}</h2>
           <p className="text-muted max-w-md mx-auto text-sm leading-relaxed">{t('features.sub')}</p>
         </div>
 
