@@ -4,26 +4,28 @@ import { Heart } from 'lucide-react';
 import { api } from '../lib/api';
 import { useStore } from '../lib/store';
 import ItemCard from '../components/ItemCard';
+import { STATIC_ITEMS } from '../lib/staticItems';
 
 export default function Favorites() {
-  const { user } = useStore();
-  const [favs, setFavs] = useState<any[]>([]);
+  const { user, favIds } = useStore();
+  const [apiFavs, setApiFavs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user) { setLoading(false); return; }
     api.get('/favorites')
-      .then(d => setFavs(d.favorites || []))
+      .then(d => setApiFavs(d.favorites || []))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [user]);
 
-  const removeFav = async (itemId: string) => {
-    try {
-      await api.post(`/favorites/${itemId}`);
-      setFavs(prev => prev.filter(f => f.id !== itemId));
-    } catch {}
-  };
+  // Merge API favs with local store + static items fallback
+  const favItems = (() => {
+    if (apiFavs.length > 0) return apiFavs;
+    // Use local favIds to filter static items
+    const staticFavs = STATIC_ITEMS.filter(item => favIds.has(item.id));
+    return staticFavs;
+  })();
 
   if (!user) {
     return (
@@ -40,7 +42,6 @@ export default function Favorites() {
 
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1rem 6rem' }}>
-      {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>
         <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.55rem', letterSpacing: '0.35em', color: '#c9a96e', marginBottom: '4px' }}>MON COMPTE</p>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -48,9 +49,9 @@ export default function Favorites() {
             <Heart size={20} color="#c9a96e" fill="#c9a96e" />
             Mes favoris
           </h1>
-          {favs.length > 0 && (
+          {favItems.length > 0 && (
             <span style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.75rem', color: '#9e8e7e' }}>
-              {favs.length} pièce{favs.length > 1 ? 's' : ''}
+              {favItems.length} pièce{favItems.length > 1 ? 's' : ''}
             </span>
           )}
         </div>
@@ -65,7 +66,7 @@ export default function Favorites() {
             </div>
           ))}
         </div>
-      ) : favs.length === 0 ? (
+      ) : favItems.length === 0 ? (
         <div style={{ minHeight: '40vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', textAlign: 'center' }}>
           <div style={{ width: '70px', height: '70px', backgroundColor: '#f8f4ef', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Heart size={28} color="#e8d5b7" />
@@ -83,30 +84,10 @@ export default function Favorites() {
       ) : (
         <>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
-            {favs.map(item => (
-              <div key={item.id} style={{ position: 'relative' }}>
-                <ItemCard item={{ ...item, _faved: true }} />
-                {/* Bouton retirer */}
-                <button
-                  onClick={() => removeFav(item.id)}
-                  style={{
-                    position: 'absolute', top: '8px', right: '8px',
-                    width: '30px', height: '30px', borderRadius: '50%',
-                    background: 'rgba(255,255,255,0.9)',
-                    backdropFilter: 'blur(6px)',
-                    border: 'none', cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
-                    zIndex: 10,
-                  }}
-                  title="Retirer des favoris"
-                >
-                  <Heart size={14} fill="#c9a96e" color="#c9a96e" />
-                </button>
-              </div>
+            {favItems.map(item => (
+              <ItemCard key={item.id} item={item} />
             ))}
           </div>
-
           <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid #e8d5b7', textAlign: 'center' }}>
             <Link to="/catalogue" style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.7rem', letterSpacing: '0.1em', color: '#9e8e7e', textDecoration: 'none' }}>
               ← Continuer à explorer

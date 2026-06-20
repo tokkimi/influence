@@ -101,10 +101,12 @@ export default function ItemDetail() {
 
   const toggleFav = async (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!user || isStatic) return;
-    toggleFavId(item.id);
-    try { await api.post(`/favorites/${item.id}`); }
-    catch { toggleFavId(item.id); }
+    if (!user) return;
+    toggleFavId(item.id); // optimistic local update always works
+    if (!isStatic) {
+      try { await api.post(`/favorites/${item.id}`); }
+      catch { toggleFavId(item.id); }
+    }
   };
 
   if (!item) return (
@@ -263,15 +265,23 @@ export default function ItemDetail() {
 
           {/* Boutique */}
           {item.shop_name && (
-            <div style={{ padding: '1rem', border: '1px solid #e8d5b7', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{ width: '38px', height: '38px', backgroundColor: '#f8f4ef', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <span style={{ fontFamily: 'Georgia, serif', fontSize: '1rem', color: '#c9a96e' }}>{item.shop_name[0]}</span>
+            <Link to={`/catalogue?shop_id=${item.shop_id}`} style={{ textDecoration: 'none', display: 'block' }}>
+              <div style={{ padding: '1rem', border: '1px solid #e8d5b7', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer' }}
+                onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.borderColor = '#c9a96e'}
+                onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = '#e8d5b7'}>
+                <div style={{ width: '44px', height: '44px', backgroundColor: '#f8f4ef', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '2px solid #e8d5b7', overflow: 'hidden' }}>
+                  {item.shop_avatar ? (
+                    <img src={imgUrl(item.shop_avatar)} alt={item.shop_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <span style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', color: '#c9a96e' }}>{item.shop_name[0]}</span>
+                  )}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.8rem', color: '#1a1a1a', fontWeight: 600 }}>{item.shop_name}</p>
+                  <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.7rem', color: '#9e8e7e' }}>Boutique professionnelle vérifiée · Voir tous ses articles →</p>
+                </div>
               </div>
-              <div>
-                <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.8rem', color: '#1a1a1a', fontWeight: 600 }}>{item.shop_name}</p>
-                <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.7rem', color: '#9e8e7e' }}>Boutique professionnelle vérifiée</p>
-              </div>
-            </div>
+            </Link>
           )}
         </div>
       </div>

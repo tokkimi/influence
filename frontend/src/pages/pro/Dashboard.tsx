@@ -1,14 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingBag, Wallet, Settings, Star, Plus, MessageCircle } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingBag, Wallet, Settings, Star, Plus, MessageCircle, Menu, X } from 'lucide-react';
 import { useStore, useT } from '../../lib/store';
-import { api } from '../../lib/api';
 
 export default function ProLayout() {
   const t = useT();
   const { user, shop } = useStore();
   const location = useLocation();
-  const navigate = useNavigate();
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const nav = [
     { to: '/boutique', label: t('dashboard'), icon: LayoutDashboard, exact: true },
@@ -32,39 +31,91 @@ export default function ProLayout() {
     );
   }
 
-  return (
-    <div style={{ display: 'flex', minHeight: 'calc(100vh - 120px)' }}>
-      {/* Sidebar */}
-      <aside style={{ width: '240px', backgroundColor: '#1a1a1a', flexShrink: 0 }}>
-        <div style={{ padding: '2rem 1.5rem', borderBottom: '1px solid #333' }}>
+  const NavContent = ({ onClose }: { onClose?: () => void }) => (
+    <>
+      <div style={{ padding: '1.5rem', borderBottom: '1px solid #333', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div>
           <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.6rem', letterSpacing: '0.2em', color: '#c9a96e', marginBottom: '4px' }}>ESPACE BOUTIQUE</p>
-          <p style={{ fontFamily: 'Georgia, serif', fontSize: '1rem', color: 'white' }}>{shop?.shop_name || user.name}</p>
+          <p style={{ fontFamily: 'Georgia, serif', fontSize: '0.95rem', color: 'white' }}>{shop?.shop_name || user.name}</p>
           {shop?.subscription_active ? (
             <span style={{ fontSize: '0.65rem', color: '#c9a96e', fontFamily: 'Helvetica Neue, Arial, sans-serif' }}>★ Premium</span>
           ) : (
-            <span style={{ fontSize: '0.65rem', color: '#666', fontFamily: 'Helvetica Neue, Arial, sans-serif' }}>Gratuit · 10 articles max</span>
+            <span style={{ fontSize: '0.65rem', color: '#666', fontFamily: 'Helvetica Neue, Arial, sans-serif' }}>Gratuit</span>
           )}
         </div>
-        <nav style={{ padding: '1rem 0' }}>
-          {nav.map(({ to, label, icon: Icon, exact }) => (
-            <Link key={to} to={to}
-              style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 1.5rem', textDecoration: 'none', color: isActive(to, exact) ? '#c9a96e' : '#888', borderLeft: isActive(to, exact) ? '2px solid #c9a96e' : '2px solid transparent', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.8rem', marginBottom: '2px' }}>
-              <Icon size={16} />
-              {label}
-            </Link>
-          ))}
-        </nav>
-        <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid #333' }}>
-          <Link to="/boutique/articles/nouveau" className="btn-gold" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', textDecoration: 'none', fontSize: '0.7rem' }}>
-            <Plus size={14} /> AJOUTER UN ARTICLE
+        {onClose && (
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888' }}>
+            <X size={20} />
+          </button>
+        )}
+      </div>
+      <nav style={{ padding: '0.75rem 0', flex: 1 }}>
+        {nav.map(({ to, label, icon: Icon, exact }) => (
+          <Link key={to} to={to} onClick={onClose}
+            style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 1.5rem', textDecoration: 'none', color: isActive(to, exact) ? '#c9a96e' : '#888', borderLeft: isActive(to, exact) ? '2px solid #c9a96e' : '2px solid transparent', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.8rem', marginBottom: '2px' }}>
+            <Icon size={16} />
+            {label}
           </Link>
-        </div>
-      </aside>
+        ))}
+      </nav>
+      <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid #333' }}>
+        <Link to="/boutique/articles/nouveau" onClick={onClose} className="btn-gold" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', textDecoration: 'none', fontSize: '0.7rem' }}>
+          <Plus size={14} /> AJOUTER UN ARTICLE
+        </Link>
+      </div>
+    </>
+  );
 
-      {/* Main */}
-      <main style={{ flex: 1, padding: '2rem', backgroundColor: '#f8f4ef', overflowY: 'auto' }}>
-        <Outlet />
-      </main>
-    </div>
+  return (
+    <>
+      <style>{`
+        .pro-sidebar { display: flex; flex-direction: column; width: 240px; background: #1a1a1a; flex-shrink: 0; }
+        .pro-mobile-topbar { display: none; }
+        .pro-drawer-overlay { display: none; }
+        @media (max-width: 767px) {
+          .pro-sidebar { display: none !important; }
+          .pro-mobile-topbar { display: flex !important; align-items: center; justify-content: space-between; background: #1a1a1a; padding: 0.75rem 1rem; position: sticky; top: 0; z-index: 50; }
+          .pro-drawer-overlay { display: flex !important; position: fixed; inset: 0; z-index: 200; }
+        }
+      `}</style>
+
+      {/* Mobile top bar */}
+      <div className="pro-mobile-topbar">
+        <div>
+          <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.55rem', letterSpacing: '0.15em', color: '#c9a96e' }}>ESPACE BOUTIQUE</p>
+          <p style={{ fontFamily: 'Georgia, serif', fontSize: '0.9rem', color: 'white' }}>{shop?.shop_name || user.name}</p>
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <Link to="/boutique/articles/nouveau" className="btn-gold" style={{ fontSize: '0.6rem', padding: '6px 12px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Plus size={12} /> Article
+          </Link>
+          <button onClick={() => setDrawerOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'white', padding: '4px' }}>
+            <Menu size={22} />
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile drawer */}
+      {drawerOpen && (
+        <div className="pro-drawer-overlay">
+          <div style={{ width: '280px', backgroundColor: '#1a1a1a', height: '100%', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+            <NavContent onClose={() => setDrawerOpen(false)} />
+          </div>
+          <div style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }} onClick={() => setDrawerOpen(false)} />
+        </div>
+      )}
+
+      <div style={{ display: 'flex', minHeight: 'calc(100vh - 120px)' }}>
+        {/* Desktop sidebar */}
+        <aside className="pro-sidebar">
+          <NavContent />
+        </aside>
+
+        {/* Main */}
+        <main style={{ flex: 1, padding: '1.5rem', backgroundColor: '#f8f4ef', overflowY: 'auto', minWidth: 0 }}>
+          <Outlet />
+        </main>
+      </div>
+    </>
   );
 }

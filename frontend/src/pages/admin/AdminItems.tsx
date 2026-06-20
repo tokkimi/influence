@@ -2,14 +2,17 @@ import { useEffect, useState } from 'react';
 import { Eye, Star, Pause, Play, Trash2, Edit } from 'lucide-react';
 import { api, imgUrl } from '../../lib/api';
 import { Link } from 'react-router-dom';
+import { STATIC_ITEMS } from '../../lib/staticItems';
 
 export default function AdminItems() {
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<any[]>(STATIC_ITEMS);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all');
 
   useEffect(() => {
-    api.get('/admin/items').then(d => setItems(d.items || [])).catch(() => {});
+    api.get('/admin/items').then(d => {
+      if (d.items?.length) setItems(d.items);
+    }).catch(() => {});
   }, []);
 
   const setStatus = async (id: string, status: string) => {
