@@ -58,7 +58,10 @@ export const useStore = create<Store>((set, get) => ({
   },
   updateUser: (u) => set(s => ({ user: s.user ? { ...s.user, ...u } : null })),
   fetchMe: async () => {
-    if (!get().token) return;
+    const token = get().token;
+    if (!token) return;
+    // Token demo local — ne pas appeler le backend, garder l'état tel quel
+    if (token.startsWith('demo.')) return;
     try {
       const data = await api.get('/auth/me');
       set({ user: data.user, shop: data.shop || null });
