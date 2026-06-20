@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Filter, ChevronDown, X } from 'lucide-react';
 import { api } from '../lib/api';
-import { useT } from '../lib/store';
+import { useT, useStore } from '../lib/store';
 import ItemCard from '../components/ItemCard';
 import { filterStaticItems } from '../lib/staticItems';
 
@@ -10,6 +10,7 @@ const BRANDS = ['Hermès', 'Chanel', 'Dior', 'Louis Vuitton', 'Gucci', 'Prada', 
 
 export default function Catalogue() {
   const t = useT();
+  const lang = useStore(s => s.lang);
   const [params, setParams] = useSearchParams();
   const [items, setItems] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
@@ -67,9 +68,9 @@ export default function Catalogue() {
   const subCats = categories.filter(c => c.parent_id === category || (!category && c.parent_id));
 
   const activeFilters = [
-    type && { key: 'type', label: type === 'auction' ? 'Enchères' : 'Ventes', val: type },
+    type && { key: 'type', label: type === 'auction' ? t('auctions') : t('sales'), val: type },
     brand && { key: 'brand', label: brand, val: brand },
-    category && { key: 'category', label: categories.find(c => c.id === category)?.name_fr || category, val: category },
+    category && { key: 'category', label: (lang === 'en' ? categories.find(c => c.id === category)?.name_en : categories.find(c => c.id === category)?.name_fr) || category, val: category },
   ].filter(Boolean) as { key: string; label: string; val: string }[];
 
   return (
@@ -77,10 +78,10 @@ export default function Catalogue() {
       {/* Page header */}
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{ fontFamily: 'Georgia, serif', fontSize: '1.8rem', fontWeight: 400, color: '#1a1a1a', marginBottom: '0.5rem' }}>
-          {type === 'auction' ? 'Enchères' : type === 'fixed' ? 'Ventes' : search ? `Résultats pour "${search}"` : 'Catalogue'}
+          {type === 'auction' ? t('auctions') : type === 'fixed' ? t('sales') : search ? `${t('allItems')} "${search}"` : 'Catalogue'}
         </h1>
         <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.8rem', color: '#9e8e7e' }}>
-          {total} article{total !== 1 ? 's' : ''}
+          {total} {total !== 1 ? t('resultsPlural') : t('results')}
         </p>
       </div>
 
@@ -88,27 +89,27 @@ export default function Catalogue() {
         {/* Sidebar filters */}
         <aside style={{ width: '220px', flexShrink: 0 }} className="hidden md:block">
           <div style={{ marginBottom: '2rem' }}>
-            <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', letterSpacing: '0.2em', color: '#9e8e7e', marginBottom: '1rem' }}>TYPE</p>
+            <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', letterSpacing: '0.2em', color: '#9e8e7e', marginBottom: '1rem' }}>{t('typeLabel')}</p>
             {['', 'fixed', 'auction'].map(v => (
               <button key={v} onClick={() => setParam('type', v)}
                 style={{ display: 'block', width: '100%', textAlign: 'left', padding: '6px 0', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.8rem', color: type === v ? '#c9a96e' : '#1a1a1a', fontWeight: type === v ? 600 : 400 }}>
-                {v === '' ? 'Tous' : v === 'fixed' ? 'Ventes' : 'Enchères'}
+                {v === '' ? t('allTypes') : v === 'fixed' ? t('sales') : t('auctions')}
               </button>
             ))}
           </div>
 
           <div style={{ marginBottom: '2rem' }}>
-            <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', letterSpacing: '0.2em', color: '#9e8e7e', marginBottom: '1rem' }}>CATÉGORIES</p>
+            <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', letterSpacing: '0.2em', color: '#9e8e7e', marginBottom: '1rem' }}>{t('categoriesLabel')}</p>
             {rootCats.map(cat => (
               <div key={cat.id}>
                 <button onClick={() => setParam('category', category === cat.id ? '' : cat.id)}
                   style={{ display: 'block', width: '100%', textAlign: 'left', padding: '6px 0', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.8rem', color: category === cat.id ? '#c9a96e' : '#1a1a1a', fontWeight: category === cat.id ? 600 : 400 }}>
-                  {cat.name_fr}
+                  {lang === 'en' ? cat.name_en : cat.name_fr}
                 </button>
                 {category === cat.id && categories.filter(c => c.parent_id === cat.id).map(sub => (
                   <button key={sub.id} onClick={() => setParam('category', sub.id)}
                     style={{ display: 'block', width: '100%', textAlign: 'left', padding: '4px 0 4px 12px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.75rem', color: category === sub.id ? '#c9a96e' : '#666' }}>
-                    {sub.name_fr}
+                    {lang === 'en' ? sub.name_en : sub.name_fr}
                   </button>
                 ))}
               </div>
@@ -116,7 +117,7 @@ export default function Catalogue() {
           </div>
 
           <div>
-            <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', letterSpacing: '0.2em', color: '#9e8e7e', marginBottom: '1rem' }}>MARQUES</p>
+            <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', letterSpacing: '0.2em', color: '#9e8e7e', marginBottom: '1rem' }}>{t('brandsLabel')}</p>
             {BRANDS.map(b => (
               <button key={b} onClick={() => setParam('brand', brand === b ? '' : b)}
                 style={{ display: 'block', width: '100%', textAlign: 'left', padding: '4px 0', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.78rem', color: brand === b ? '#c9a96e' : '#1a1a1a', fontWeight: brand === b ? 600 : 400 }}>
@@ -149,11 +150,11 @@ export default function Catalogue() {
           </div>
 
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '4rem', color: '#9e8e7e', fontFamily: 'Helvetica Neue, Arial, sans-serif' }}>Chargement...</div>
+            <div style={{ textAlign: 'center', padding: '4rem', color: '#9e8e7e', fontFamily: 'Helvetica Neue, Arial, sans-serif' }}>{t('loading')}</div>
           ) : items.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '4rem' }}>
-              <p style={{ fontFamily: 'Georgia, serif', fontSize: '1.2rem', color: '#9e8e7e', marginBottom: '0.5rem' }}>Aucun article trouvé</p>
-              <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.8rem', color: '#9e8e7e' }}>Essayez d'autres filtres ou revenez bientôt</p>
+              <p style={{ fontFamily: 'Georgia, serif', fontSize: '1.2rem', color: '#9e8e7e', marginBottom: '0.5rem' }}>{t('noItemsFound')}</p>
+              <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.8rem', color: '#9e8e7e' }}>{t('tryOtherFilters')}</p>
             </div>
           ) : (
             <>

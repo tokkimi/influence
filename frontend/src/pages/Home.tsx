@@ -19,9 +19,9 @@ function SkeletonCard() {
   );
 }
 
-function HScrollSection({ title, label, link, items, loading }: {
+function HScrollSection({ title, label, link, items, loading, seeAll, seeMore }: {
   title: string; label: string; link: string;
-  items: any[]; loading: boolean;
+  items: any[]; loading: boolean; seeAll: string; seeMore: string;
 }) {
   const navigate = useNavigate();
   return (
@@ -33,7 +33,7 @@ function HScrollSection({ title, label, link, items, loading }: {
           <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.15rem', fontWeight: 400, color: '#1a1a1a' }}>{title}</h2>
         </div>
         <Link to={link} style={{ display: 'flex', alignItems: 'center', gap: '3px', textDecoration: 'none', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', color: '#9e8e7e' }}>
-          Tout voir <ChevronRight size={12} />
+          {seeAll} <ChevronRight size={12} />
         </Link>
       </div>
 
@@ -55,7 +55,7 @@ function HScrollSection({ title, label, link, items, loading }: {
               style={{ flexShrink: 0, width: '120px', borderRadius: '12px', border: '1.5px solid #e8d5b7', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '6px', cursor: 'pointer', backgroundColor: '#faf7f4' }}
             >
               <ChevronRight size={22} color="#c9a96e" />
-              <span style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.6rem', color: '#9e8e7e', letterSpacing: '0.08em' }}>VOIR PLUS</span>
+              <span style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.6rem', color: '#9e8e7e', letterSpacing: '0.08em' }}>{seeMore}</span>
             </div>
           )}
         </div>
@@ -115,16 +115,16 @@ export default function Home() {
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(10,8,6,0.88) 0%, rgba(10,8,6,0.55) 35%, rgba(10,8,6,0.1) 100%)' }} />
         <div className="hero-text" style={{ position: 'relative', zIndex: 1, padding: '2rem 1.5rem 2.5rem', maxWidth: '560px', width: '100%' }}>
           <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.58rem', letterSpacing: '0.4em', color: '#c9a96e', marginBottom: '0.75rem' }}>
-            MAGALI BERDAH · MODE DE LUXE
+            {t('heroTagline')}
           </p>
           <h1 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.7rem, 5vw, 3rem)', color: 'white', fontWeight: 400, lineHeight: '1.2', marginBottom: '1.25rem' }}>
-            Des pièces d'exception,{' '}
-            <span style={{ color: '#c9a96e' }}>vendues ou aux enchères.</span>
+            {t('heroTitle')}{' '}
+            <span style={{ color: '#c9a96e' }}>{t('heroHighlight')}</span>
           </h1>
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <Link to="/catalogue?type=fixed" className="btn-gold" style={{ fontSize: '0.68rem', padding: '10px 18px' }}>VENTE DIRECTE</Link>
+            <Link to="/catalogue?type=fixed" className="btn-gold" style={{ fontSize: '0.68rem', padding: '10px 18px' }}>{t('heroCtaSales')}</Link>
             <Link to="/catalogue?type=auction" style={{ border: '1px solid #c9a96e', color: '#c9a96e', padding: '10px 18px', textDecoration: 'none', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.68rem', letterSpacing: '0.1em', borderRadius: '2px' }}>
-              ENCHÈRES EN COURS
+              {t('heroCtaAuctions')}
             </Link>
           </div>
         </div>
@@ -132,49 +132,57 @@ export default function Home() {
 
       {/* Enchères */}
       <HScrollSection
-        label="EN COURS"
+        label={t('sectionOngoing')}
         title={t('featuredAuctions')}
         link="/catalogue?type=auction"
         items={auctions}
         loading={loading}
+        seeAll={t('seeAll')}
+        seeMore={t('seeMore')}
       />
 
       {/* Sélection Femme */}
       <HScrollSection
-        label="SÉLECTION"
-        title="Femme"
+        label={t('sectionSelection')}
+        title={t('womenSection')}
         link="/catalogue?category=women"
         items={women}
         loading={loading}
+        seeAll={t('seeAll')}
+        seeMore={t('seeMore')}
       />
 
       {/* Sélection Homme */}
       <HScrollSection
-        label="SÉLECTION"
-        title="Homme"
+        label={t('sectionSelection')}
+        title={t('menSection')}
         link="/catalogue?category=men"
         items={men}
         loading={loading}
+        seeAll={t('seeAll')}
+        seeMore={t('seeMore')}
       />
 
       {/* Sacs */}
       <HScrollSection
-        label="TENDANCE"
-        title="Sacs de luxe"
+        label={t('sectionTrend')}
+        title={t('bagsSection')}
         link="/catalogue?category=bags"
         items={bags}
         loading={loading}
+        seeAll={t('seeAll')}
+        seeMore={t('seeMore')}
       />
 
       {/* Comment acheter */}
       <div style={{ padding: '2rem 1rem 1.5rem', backgroundColor: '#faf7f4' }}>
         <div className="comment-acheter-inner">
-        <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', fontWeight: 400, color: '#1a1a1a', marginBottom: '1rem' }}>Comment acheter ?</h2>
+        <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', fontWeight: 400, color: '#1a1a1a', marginBottom: '1rem' }}>{t('howToBuy')}</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
           {[
-            { icon: ShoppingBag, title: 'ACHETER MAINTENANT', desc: "Votre guide d'achat et commandes" },
-            { icon: Gavel, title: 'FAQ', desc: 'Vos questions, nos réponses' },
-            { icon: Shield, title: 'AUTHENTICITÉ', desc: 'Vendeurs vérifiés, pièces garanties' },
+            { icon: ShoppingBag, title: t('buyGuide').toUpperCase(), desc: t('buyGuideDesc') },
+            { icon: Gavel, title: t('faqLabel'), desc: t('faqDesc') },
+            { icon: Shield, title: t('authenticity'), desc: t('authenticityDesc') },
           ].map(({ icon: Icon, title, desc }, i) => (
             <Link
               key={title}
@@ -199,10 +207,10 @@ export default function Home() {
       <div style={{ padding: '1.5rem 1rem 7rem', backgroundColor: '#1a1a1a' }}>
         <div className="trust-inner" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           {[
-            { icon: Shield, t1: 'Vendeurs vérifiés', t2: 'SIRET contrôlé' },
-            { icon: Truck, t1: 'Livraison incluse', t2: 'Suivi en temps réel' },
-            { icon: Gavel, t1: 'Enchères sécurisées', t2: 'Paiement protégé' },
-            { icon: ShoppingBag, t1: 'Retour 14 jours', t2: 'Droit EU garanti' },
+            { icon: Shield, t1: t('verifiedSellers'), t2: t('siretChecked') },
+            { icon: Truck, t1: t('shippingIncluded'), t2: t('realTimeTracking') },
+            { icon: Gavel, t1: t('secureAuctions'), t2: t('securePayment') },
+            { icon: ShoppingBag, t1: t('returns14'), t2: t('euRights') },
           ].map(({ icon: Icon, t1, t2 }) => (
             <div key={t1} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Icon size={18} color="#c9a96e" style={{ flexShrink: 0 }} />

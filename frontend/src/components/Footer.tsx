@@ -29,12 +29,12 @@ export default function Footer() {
         </p>
         {subscribed ? (
           <p style={{ color: '#c9a96e', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.85rem' }}>
-            ✓ Merci de votre inscription
+            ✓ {t('subscribeThanks')}
           </p>
         ) : (
           <form onSubmit={handleNewsletter} style={{ display: 'flex', justifyContent: 'center', gap: '0', maxWidth: '400px', margin: '0 auto' }}>
             <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
-              placeholder="Votre email"
+              placeholder={t('emailPlaceholder')}
               style={{ flex: 1, padding: '10px 16px', border: '1px solid #444', backgroundColor: '#222', color: 'white', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.8rem' }} />
             <button type="submit" className="btn-gold" style={{ flexShrink: 0 }}>{t('subscribe').toUpperCase()}</button>
           </form>
@@ -46,7 +46,7 @@ export default function Footer() {
         <div>
           <p style={{ fontFamily: 'Georgia, serif', fontSize: '1rem', letterSpacing: '0.3em', marginBottom: '1rem', color: '#c9a96e' }}>MAGALI BERDAH</p>
           <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.75rem', color: '#666', lineHeight: '1.8' }}>
-            La référence de la mode de luxe de seconde main. Pièces authentiques, ventes et enchères exclusives.
+            {t('footerDesc')}
           </p>
           <div style={{ display: 'flex', gap: '12px', marginTop: '1rem' }}>
             <a href="#" style={{ color: '#c9a96e', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.75rem' }}>Instagram</a>
@@ -55,29 +55,29 @@ export default function Footer() {
         </div>
 
         <div>
-          <p style={footLabelStyle}>ACHETER</p>
+          <p style={footLabelStyle}>{t('footerBuy')}</p>
           {[
-            { label: 'Ventes', to: '/catalogue?type=fixed' },
-            { label: 'Enchères', to: '/catalogue?type=auction' },
-            { label: 'Nouvelles pièces', to: '/catalogue' },
+            { label: t('footerSales'), to: '/catalogue?type=fixed' },
+            { label: t('footerAuctions'), to: '/catalogue?type=auction' },
+            { label: t('footerNew'), to: '/catalogue' },
           ].map(l => (
             <Link key={l.to} to={l.to} style={footLinkStyle}>{l.label}</Link>
           ))}
         </div>
 
         <div>
-          <p style={footLabelStyle}>BOUTIQUES PRO</p>
+          <p style={footLabelStyle}>{t('footerPro')}</p>
           {[
-            { label: 'Ouvrir une boutique', to: '/pro' },
-            { label: 'Abonnement Premium', to: '/pro#abonnement' },
-            { label: 'Commission & tarifs', to: '/pro#tarifs' },
+            { label: t('footerOpenShop'), to: '/pro' },
+            { label: t('footerPremium'), to: '/pro#abonnement' },
+            { label: t('footerCommission'), to: '/pro#tarifs' },
           ].map(l => (
             <Link key={l.to} to={l.to} style={footLinkStyle}>{l.label}</Link>
           ))}
         </div>
 
         <div>
-          <p style={footLabelStyle}>INFORMATIONS</p>
+          <p style={footLabelStyle}>{t('footerInfo')}</p>
           {[
             { label: t('cgv'), to: '/cgv' },
             { label: t('privacy'), to: '/confidentialite' },
