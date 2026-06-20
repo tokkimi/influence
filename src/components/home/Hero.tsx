@@ -13,7 +13,7 @@ export default function Hero() {
         <div className="grid lg:grid-cols-2 min-h-[88vh] items-center gap-8">
 
           {/* Texte */}
-          <div className="py-14 lg:py-0">
+          <div className="py-14 lg:py-0 pb-20 lg:pb-0">
             <div className="inline-flex items-center gap-2 border border-[#c9993a]/30 bg-[#c9993a]/6 rounded-full px-3.5 py-1.5 mb-7">
               <div className="w-1.5 h-1.5 rounded-full bg-[#30d158] animate-pulse" />
               <span className="text-[#c9993a] text-[11px] font-semibold tracking-wide">{t('hero.badge')}</span>
@@ -52,7 +52,7 @@ export default function Hero() {
           </div>
 
           {/* Image éditoriale */}
-          <div className="hidden lg:block relative h-[88vh]">
+          <div className="hidden lg:flex relative h-[88vh]">
             <div className="absolute inset-0 overflow-hidden rounded-bl-[3rem]">
               <Image
                 src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=900&q=85&auto=format&fit=crop"
