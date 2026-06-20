@@ -273,24 +273,27 @@ if (userCount.c === 0) {
   const in5days = new Date(now.getTime() + 5 * 86400000).toISOString();
   const in7days = new Date(now.getTime() + 7 * 86400000).toISOString();
   const in10days = new Date(now.getTime() + 10 * 86400000).toISOString();
-  const p = (w: number, h: number) => JSON.stringify([`/api/placeholder/${w}/${h}`]);
+  const img = (url: string) => JSON.stringify([url]);
 
   const insertAuction = db.prepare('INSERT INTO items (id, shop_id, title, description, brand, category_id, condition, size, color, photos, fixed_price, auction_enabled, auction_start_price, auction_min_price, auction_end_time, status, featured) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
   const insertFixed  = db.prepare('INSERT INTO items (id, shop_id, title, description, brand, category_id, condition, size, color, photos, fixed_price, auction_enabled, status, featured) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 
-  // 5 enchères
-  insertAuction.run(uuidv4(), shopId, 'Sac Birkin 30 Hermès Fauve', 'Birkin 30 cuir Togo fauve, état exceptionnel, boîte et dustbag inclus.', 'Hermès', 'bags-handbags', 'excellent', 'Taille unique', 'Fauve', p(600,800), null, 1, 8500, 7000, in2days, 'active', 1);
-  insertAuction.run(uuidv4(), shopId, 'Montre Cartier Tank Must', 'Tank Must acier, bracelet cuir bordeaux, avec boîte et papiers.', 'Cartier', 'acc-watches', 'excellent', 'Taille unique', 'Argent', p(600,800), null, 1, 1800, 1500, in4days, 'active', 1);
-  insertAuction.run(uuidv4(), shopId, 'Veste Gucci Brodée Fleurs', 'Veste Gucci en laine brodée fleurs, collection Alessandro Michele, état neuf.', 'Gucci', 'women-coats', 'excellent', '40', 'Noir', p(600,800), null, 1, 2200, 1800, in5days, 'active', 1);
-  insertAuction.run(uuidv4(), shopId, 'Sac Kelly 28 Hermès Noir', 'Kelly 28 box calf noir, palladium, intérieur impeccable, avec accessoires.', 'Hermès', 'bags-handbags', 'very_good', 'Taille unique', 'Noir', p(600,800), null, 1, 11000, 9500, in7days, 'active', 1);
-  insertAuction.run(uuidv4(), shopId, 'Collier Perles Chanel Vintage', 'Collier de perles Chanel vintage double rang avec fermoir CC doré, très bon état.', 'Chanel', 'acc-jewelry', 'very_good', 'Taille unique', 'Blanc', p(600,800), null, 1, 950, 750, in10days, 'active', 0);
+  // Enchères
+  insertAuction.run(uuidv4(), shopId, 'Tote YSL Icare Matelassé Bordeaux', 'Grand tote Icare Saint Laurent en cuir matelassé bordeaux. Monogramme YSL doré. État excellent, livré avec pochon.', 'Saint Laurent', 'bags-handbags', 'excellent', 'Taille unique', 'Bordeaux', img('https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80'), null, 1, 1200, 950, in2days, 'active', 1);
+  insertAuction.run(uuidv4(), shopId, 'Sac Baguette Fendi Denim FF', 'Iconic Fendi Baguette en denim avec monogramme FF et rabat en cuir camel. Collection signature. Avec dustbag.', 'Fendi', 'bags-shoulder', 'excellent', 'Taille unique', 'Denim/Camel', img('https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&q=80'), null, 1, 1800, 1500, in4days, 'active', 1);
+  insertAuction.run(uuidv4(), shopId, 'Sac Birkin 30 Hermès Fauve', 'Birkin 30 cuir Togo fauve, quincaillerie palladium. État exceptionnel, boîte et dustbag d\'origine inclus.', 'Hermès', 'bags-handbags', 'excellent', 'Taille unique', 'Fauve', img('https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=80'), null, 1, 8500, 7000, in5days, 'active', 1);
+  insertAuction.run(uuidv4(), shopId, 'Montre Cartier Tank Must', 'Tank Must acier, bracelet cuir bordeaux, mouvement quartz. Livrée avec boîte et papiers d\'origine.', 'Cartier', 'acc-watches', 'excellent', 'Taille unique', 'Argent', img('https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=600&q=80'), null, 1, 1800, 1500, in7days, 'active', 1);
+  insertAuction.run(uuidv4(), shopId, 'Sac Kelly 28 Hermès Noir', 'Kelly 28 box calf noir, palladium. Intérieur impeccable, avec tous ses accessoires d\'origine.', 'Hermès', 'bags-handbags', 'very_good', 'Taille unique', 'Noir', img('https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600&q=80'), null, 1, 11000, 9500, in10days, 'active', 1);
 
-  // 5 ventes directes
-  insertFixed.run(uuidv4(), shopId, 'Robe Chanel Tweed Rose', 'Robe tweed rose poudré Chanel, collection printemps-été, parfait état.', 'Chanel', 'women-dresses', 'excellent', '38', 'Rose', p(600,800), 3200, 0, 'active', 1);
-  insertFixed.run(uuidv4(), shopId, 'Manteau Max Mara Camel', 'Iconique manteau Max Mara en camel, coupe structurée, très bon état.', 'Max Mara', 'women-coats', 'very_good', '40', 'Camel', p(600,800), 850, 0, 'active', 1);
-  insertFixed.run(uuidv4(), shopId, 'Costume Berluti Gris Anthracite', 'Costume deux pièces Berluti, laine gris anthracite, coupe slim, taille 50.', 'Berluti', 'men-suits', 'excellent', '50', 'Gris', p(600,800), 1600, 0, 'active', 0);
-  insertFixed.run(uuidv4(), shopId, 'Sac Pochette Dior Saddle', 'Mini Saddle bag Dior en cuir noir, bandoulière, état excellent avec pochon.', 'Dior', 'bags-clutch', 'excellent', 'Taille unique', 'Noir', p(600,800), 1250, 0, 'active', 1);
-  insertFixed.run(uuidv4(), shopId, 'Écharpe Hermès Cashmere Gris', 'Écharpe Hermès 100% cashmere, imprimé chevaux, coloris gris/or, état neuf.', 'Hermès', 'acc-scarves', 'excellent', 'Taille unique', 'Gris', p(600,800), 480, 0, 'active', 0);
+  // Ventes directes
+  insertFixed.run(uuidv4(), shopId, 'Pochette Cuir Noir Dolce & Gabbana', 'Pochette bandoulière en cuir noir avec bracelet poignet et motif logo DG. Très bon état, pièce élégante pour soirée.', 'Dolce & Gabbana', 'bags-clutch', 'very_good', 'Taille unique', 'Noir', img('https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&q=80'), 480, 0, 'active', 1);
+  insertFixed.run(uuidv4(), shopId, 'Sneakers Bicolore Rouge/Blanc', 'Sneakers cuir rouge et blanc, style artisanal Marni. Semelle épaisse, état excellent. Pointure 42.', 'Marni', 'men-shoes', 'excellent', '42', 'Rouge/Blanc', img('https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80'), 320, 0, 'active', 0);
+  insertFixed.run(uuidv4(), shopId, 'Short Jacquemus Signature Blanc', 'Short en coton blanc avec signature Jacquemus brodée. Coupe sweat-short décontractée, état neuf, taille M.', 'Jacquemus', 'men-pants', 'excellent', 'M', 'Blanc', img('https://images.unsplash.com/photo-1591195853828-11db59a44f43?w=600&q=80'), 180, 0, 'active', 1);
+  insertFixed.run(uuidv4(), shopId, 'Sac Structuré Suède Marron Polène', 'Sac structuré en suède marron, fermeture à rabat magnétique. Silhouette épurée, bandoulière réglable. Neuf.', 'Polène', 'bags-handbags', 'excellent', 'Taille unique', 'Marron', img('https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80&crop=entropy'), 420, 0, 'active', 1);
+  insertFixed.run(uuidv4(), shopId, 'Escarpins Crème Talon Bloc', 'Escarpins en cuir crème avec talon bloc 7cm. Bout légèrement pointu, très confortables, état excellent. Pointure 38.', 'The Row', 'women-shoes', 'excellent', '38', 'Crème', img('https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600&q=80'), 280, 0, 'active', 1);
+  insertFixed.run(uuidv4(), shopId, 'T-Shirt Football Jacquemus France', 'T-shirt graphique Jacquemus inspiré du maillot de foot France. Coupe oversize, état neuf, taille L.', 'Jacquemus', 'men-shirts', 'excellent', 'L', 'Bleu/Blanc', img('https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&q=80'), 95, 0, 'active', 0);
+  insertFixed.run(uuidv4(), shopId, 'Short Denim Gris Purple Brand', 'Short en denim gris délavé Purple Brand. Détails vintage, coupe slim, état très bon. Taille 32.', 'Purple Brand', 'men-pants', 'very_good', '32', 'Gris', img('https://images.unsplash.com/photo-1598554747436-c9293d6a588f?w=600&q=80'), 150, 0, 'active', 0);
+  insertFixed.run(uuidv4(), shopId, 'Robe Chanel Tweed Rose', 'Robe tweed rose poudré Chanel, collection printemps-été, parfait état, livrée avec housse.', 'Chanel', 'women-dresses', 'excellent', '38', 'Rose', img('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80'), 3200, 0, 'active', 1);
 }
 
 // SEO default
