@@ -37,38 +37,30 @@ function HScrollSection({ title, label, link, items, loading }: {
       </div>
 
       {/* Horizontal scroll */}
-      <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none', padding: '0 1rem 1rem' }}>
+      <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none', padding: '0 1rem 1.25rem' }}>
         <style>{`.hscroll::-webkit-scrollbar{display:none}`}</style>
         <div className="hscroll" style={{ display: 'flex', gap: '10px', width: 'max-content' }}>
           {loading
             ? [1,2,3,4].map(i => <SkeletonCard key={i} />)
             : items.map(item => (
-                <div key={item.id} style={{ flexShrink: 0, width: '160px' }}>
+                <div key={item.id} style={{ flexShrink: 0, width: '158px' }}>
                   <ItemCard item={item} />
                 </div>
               ))
           }
-          {/* "Voir plus" tile */}
           {!loading && items.length > 0 && (
             <div
               onClick={() => navigate(link)}
-              style={{ flexShrink: 0, width: '140px', borderRadius: '12px', border: '1.5px solid #e8d5b7', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer', backgroundColor: '#faf7f4' }}
+              style={{ flexShrink: 0, width: '120px', borderRadius: '12px', border: '1.5px solid #e8d5b7', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '6px', cursor: 'pointer', backgroundColor: '#faf7f4' }}
             >
-              <ChevronRight size={24} color="#c9a96e" />
-              <span style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', color: '#9e8e7e', letterSpacing: '0.1em' }}>VOIR PLUS</span>
+              <ChevronRight size={22} color="#c9a96e" />
+              <span style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.6rem', color: '#9e8e7e', letterSpacing: '0.08em' }}>VOIR PLUS</span>
             </div>
           )}
         </div>
       </div>
 
-      {/* Shop now button */}
-      <div style={{ padding: '0 1rem 1.5rem' }}>
-        <Link to={link} style={{ display: 'block', textAlign: 'center', border: '1px solid #1a1a1a', padding: '12px', textDecoration: 'none', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.7rem', letterSpacing: '0.15em', color: '#1a1a1a', borderRadius: '4px' }}>
-          DÉCOUVRIR
-        </Link>
-      </div>
-
-      <div style={{ height: '1px', backgroundColor: '#e8d5b7', margin: '0 1rem' }} />
+      <div style={{ height: '1px', backgroundColor: '#f0ece6', margin: '0 1rem' }} />
     </div>
   );
 }

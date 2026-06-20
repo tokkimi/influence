@@ -18,6 +18,7 @@ interface Item {
   condition: string;
   size?: string;
   featured?: number;
+  _faved?: boolean;
 }
 
 function useCountdown(endTime?: string) {
@@ -41,18 +42,20 @@ function useCountdown(endTime?: string) {
 }
 
 export default function ItemCard({ item }: { item: Item }) {
-  const { user } = useStore();
+  const { user, favIds, toggleFavId } = useStore();
   const countdown = useCountdown(item.auction_enabled ? item.auction_end_time : undefined);
-  const [faved, setFaved] = useState(false);
+  const faved = favIds.has(item.id);
 
   const toggleFav = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (!user) return;
+    toggleFavId(item.id); // optimistic
     try {
-      const data = await api.post(`/favorites/${item.id}`);
-      setFaved(data.favorited);
-    } catch {}
+      await api.post(`/favorites/${item.id}`);
+    } catch {
+      toggleFavId(item.id); // rollback
+    }
   };
 
   const price = item.auction_enabled

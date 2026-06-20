@@ -16,6 +16,7 @@ import CGV from './pages/CGV';
 import ProPage from './pages/ProPage';
 import HowToBuy from './pages/HowToBuy';
 import FAQ from './pages/FAQ';
+import Favorites from './pages/Favorites';
 
 // Pro
 import ProLayout from './pages/pro/Dashboard';
@@ -66,10 +67,10 @@ function AdminWrapper({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const { fetchMe, token } = useStore();
+  const { fetchMe, fetchFavs, token } = useStore();
 
   useEffect(() => {
-    if (token) fetchMe();
+    if (token) { fetchMe(); fetchFavs(); }
   }, []);
 
   return (
@@ -91,7 +92,7 @@ export default function App() {
         <Route path="/profil" element={<PrivateRoute><Layout><Profile /></Layout></PrivateRoute>} />
         <Route path="/mes-achats" element={<PrivateRoute><Layout><Profile /></Layout></PrivateRoute>} />
         <Route path="/mes-encheres" element={<PrivateRoute><Layout><Profile /></Layout></PrivateRoute>} />
-        <Route path="/favoris" element={<PrivateRoute><Layout><Profile /></Layout></PrivateRoute>} />
+        <Route path="/favoris" element={<PrivateRoute><Layout><Favorites /></Layout></PrivateRoute>} />
 
         {/* Pro dashboard */}
         <Route path="/boutique" element={<PrivateRoute role="pro"><AdminWrapper><ProLayout /></AdminWrapper></PrivateRoute>}>

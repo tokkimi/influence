@@ -28,11 +28,14 @@ interface Store {
   shop: Shop | null;
   token: string | null;
   lang: 'fr' | 'en';
+  favIds: Set<string>;
   setLang: (l: 'fr' | 'en') => void;
   login: (token: string, user: User, shop?: Shop) => void;
   logout: () => void;
   updateUser: (u: Partial<User>) => void;
   fetchMe: () => Promise<void>;
+  fetchFavs: () => Promise<void>;
+  toggleFavId: (id: string) => void;
 }
 
 export const useStore = create<Store>((set, get) => ({
@@ -40,6 +43,7 @@ export const useStore = create<Store>((set, get) => ({
   shop: null,
   token: localStorage.getItem('mb_token'),
   lang: (localStorage.getItem('mb_lang') as 'fr' | 'en') || 'fr',
+  favIds: new Set<string>(),
   setLang: (l) => {
     localStorage.setItem('mb_lang', l);
     set({ lang: l });
@@ -50,7 +54,7 @@ export const useStore = create<Store>((set, get) => ({
   },
   logout: () => {
     localStorage.removeItem('mb_token');
-    set({ token: null, user: null, shop: null });
+    set({ token: null, user: null, shop: null, favIds: new Set() });
   },
   updateUser: (u) => set(s => ({ user: s.user ? { ...s.user, ...u } : null })),
   fetchMe: async () => {
@@ -58,10 +62,26 @@ export const useStore = create<Store>((set, get) => ({
     try {
       const data = await api.get('/auth/me');
       set({ user: data.user, shop: data.shop || null });
+      get().fetchFavs();
     } catch {
       localStorage.removeItem('mb_token');
       set({ token: null, user: null, shop: null });
     }
+  },
+  fetchFavs: async () => {
+    if (!get().token) return;
+    try {
+      const data = await api.get('/favorites');
+      const ids = new Set<string>((data.favorites || []).map((f: any) => f.id));
+      set({ favIds: ids });
+    } catch {}
+  },
+  toggleFavId: (id: string) => {
+    set(s => {
+      const next = new Set(s.favIds);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return { favIds: next };
+    });
   },
 }));
 
