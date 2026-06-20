@@ -18,7 +18,7 @@ export default function Footer() {
   };
 
   return (
-    <footer style={{ backgroundColor: '#1a1a1a', color: '#f8f4ef', marginTop: '5rem' }}>
+    <footer style={{ backgroundColor: '#1a1a1a', color: '#f8f4ef', marginTop: 0 }}>
       {/* Newsletter */}
       <div style={{ borderBottom: '1px solid #333', padding: '3rem 2rem', textAlign: 'center' }}>
         <p style={{ fontFamily: 'Georgia, serif', fontSize: '1.2rem', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>

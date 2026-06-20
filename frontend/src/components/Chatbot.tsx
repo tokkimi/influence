@@ -33,17 +33,17 @@ export default function Chatbot() {
 
   return (
     <>
-      {/* Trigger button */}
+      {/* Trigger button — au-dessus de la BottomNav */}
       {!open && (
         <button onClick={() => setOpen(true)}
-          style={{ position: 'fixed', bottom: '2rem', right: '2rem', width: '56px', height: '56px', borderRadius: '50%', backgroundColor: '#c9a96e', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.2)', zIndex: 50 }}>
-          <MessageCircle size={24} color="white" />
+          style={{ position: 'fixed', bottom: '110px', right: '1.25rem', width: '50px', height: '50px', borderRadius: '50%', backgroundColor: '#1a1a1a', border: '1.5px solid #c9a96e', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(0,0,0,0.25)', zIndex: 250 }}>
+          <MessageCircle size={20} color="#c9a96e" />
         </button>
       )}
 
       {/* Chat window */}
       {open && (
-        <div style={{ position: 'fixed', bottom: '2rem', right: '2rem', width: '340px', backgroundColor: 'white', boxShadow: '0 8px 40px rgba(0,0,0,0.2)', zIndex: 50, display: 'flex', flexDirection: 'column', maxHeight: '500px' }}>
+        <div style={{ position: 'fixed', bottom: '110px', right: '1rem', width: 'min(340px, calc(100vw - 2rem))', backgroundColor: 'white', boxShadow: '0 8px 40px rgba(0,0,0,0.2)', zIndex: 250, display: 'flex', flexDirection: 'column', maxHeight: '480px', borderRadius: '12px', overflow: 'hidden' }}>
           <div style={{ backgroundColor: '#1a1a1a', padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <p style={{ color: '#c9a96e', fontFamily: 'Georgia, serif', fontSize: '0.9rem', letterSpacing: '0.05em' }}>ASSISTANCE MODE & LUXE</p>
