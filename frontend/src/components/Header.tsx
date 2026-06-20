@@ -74,7 +74,7 @@ export default function Header() {
         {/* Main header */}
         <div className="flex items-center justify-between px-6 py-4">
           {/* Logo */}
-          <Link to="/" style={{ textDecoration: 'none' }}>
+          <Link to="/" style={{ textDecoration: 'none', marginLeft: '0.5rem' }}>
             <div style={{ fontFamily: 'Georgia, serif', color: '#1a1a1a' }}>
               <div style={{ fontSize: '1.5rem', letterSpacing: '0.3em', fontWeight: 400 }}>MAGALI</div>
               <div style={{ fontSize: '0.7rem', letterSpacing: '0.4em', color: '#c9a96e', marginTop: '-4px' }}>BERDAH</div>
@@ -171,12 +171,7 @@ export default function Header() {
                   )}
                 </div>
               </>
-            ) : (
-              <div id="auth-btns-desktop" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <button onClick={openLogin} className="btn-outline" style={{ padding: '6px 16px' }}>{t('login')}</button>
-                <button onClick={openRegister} className="btn-gold" style={{ padding: '6px 16px' }}>{t('register')}</button>
-              </div>
-            )}
+            ) : null}
 
             <button className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
