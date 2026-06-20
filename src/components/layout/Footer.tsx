@@ -2,32 +2,21 @@
 import Link from "next/link"
 import { Instagram, Twitter, Linkedin } from "lucide-react"
 import { useLang } from "@/lib/lang"
-
-function Logo() {
-  return (
-    <div className="flex items-center gap-2.5">
-      <div className="relative w-6 h-6 flex items-center justify-center">
-        <div className="w-3.5 h-3.5 rounded-full bg-[#0f0f0f]" />
-        <div className="absolute w-1.5 h-1.5 rounded-full bg-[#c9993a] top-0 right-0" />
-      </div>
-      <span className="font-semibold text-sm text-[#0f0f0f] tracking-[-0.01em]">Dot The Talents</span>
-    </div>
-  )
-}
+import { LogoMark } from "./Navbar"
 
 export default function Footer() {
   const { t } = useLang()
   return (
     <footer className="bg-white border-t border-black/6 text-secondary">
-      <div className="max-w-5xl mx-auto px-5 py-14">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
+      <div className="max-w-5xl mx-auto px-5 py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-10">
           <div className="col-span-2 md:col-span-1">
-            <div className="mb-5"><Logo /></div>
-            <p className="text-sm leading-relaxed mb-5">{t('footer.desc')}</p>
+            <div className="mb-4"><LogoMark /></div>
+            <p className="text-xs leading-relaxed mb-5 text-secondary">{t('footer.desc')}</p>
             <div className="flex gap-4">
-              <a href="#" className="hover:text-[#0f0f0f] transition-colors"><Instagram size={15} /></a>
-              <a href="#" className="hover:text-[#0f0f0f] transition-colors"><Twitter size={15} /></a>
-              <a href="#" className="hover:text-[#0f0f0f] transition-colors"><Linkedin size={15} /></a>
+              <a href="#" className="hover:text-[#0f0f0f] transition-colors"><Instagram size={14} /></a>
+              <a href="#" className="hover:text-[#0f0f0f] transition-colors"><Twitter size={14} /></a>
+              <a href="#" className="hover:text-[#0f0f0f] transition-colors"><Linkedin size={14} /></a>
             </div>
           </div>
           {[
@@ -51,18 +40,18 @@ export default function Footer() {
             ]},
           ].map(col => (
             <div key={col.title}>
-              <h3 className="text-[#0f0f0f] font-semibold mb-4 text-[11px] uppercase tracking-widest">{col.title}</h3>
-              <ul className="space-y-3">
+              <h3 className="text-[#0f0f0f] font-semibold mb-3 text-[10px] uppercase tracking-widest">{col.title}</h3>
+              <ul className="space-y-2.5">
                 {col.links.map(l => (
-                  <li key={l.label}><Link href={l.href} className="text-sm hover:text-[#0f0f0f] transition-colors">{l.label}</Link></li>
+                  <li key={l.label}><Link href={l.href} className="text-xs hover:text-[#0f0f0f] transition-colors">{l.label}</Link></li>
                 ))}
               </ul>
             </div>
           ))}
         </div>
-        <div className="border-t border-black/6 pt-8 flex flex-col md:flex-row justify-between items-center gap-2">
-          <p className="text-xs">© 2025 Dot The Talents. {t('footer.rights')}</p>
-          <p className="text-xs">Made with ❤️ in France</p>
+        <div className="border-t border-black/6 pt-6 flex flex-col md:flex-row justify-between items-center gap-2">
+          <p className="text-[10px]">© 2025 Dot The Talents. {t('footer.rights')}</p>
+          <p className="text-[10px]">Made with ❤️ in France</p>
         </div>
       </div>
     </footer>
