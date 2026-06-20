@@ -30,14 +30,14 @@ export default function MissionsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Mes missions</h1>
+      <h1 className="text-2xl font-bold text-white mb-8">Mes missions</h1>
 
       {missions.map(m => (
-        <div key={m.id} className="bg-white rounded-2xl border border-gray-100 p-6 mb-4">
+        <div key={m.id} className="bg-transparent rounded-2xl border border-white/8 p-6 mb-4">
           <div className="flex items-start justify-between mb-4">
             <div>
-              <h3 className="font-semibold text-gray-900">{m.campaignTitle}</h3>
-              <p className="text-sm text-gray-500">{m.brandName}</p>
+              <h3 className="font-semibold text-white">{m.campaignTitle}</h3>
+              <p className="text-sm text-white/40">{m.brandName}</p>
             </div>
             <div className="text-right">
               <p className="text-xl font-bold text-green-600">{formatCurrency(m.payment)}</p>
@@ -45,18 +45,18 @@ export default function MissionsPage() {
             </div>
           </div>
 
-          <div className="bg-gray-50 rounded-xl p-4 mb-4">
-            <p className="text-sm font-medium text-gray-700 mb-1">Brief</p>
-            <p className="text-sm text-gray-600">{m.brief}</p>
+          <div className="bg-transparent rounded-xl p-4 mb-4">
+            <p className="text-sm font-medium text-white/80 mb-1">Brief</p>
+            <p className="text-sm text-white/60">{m.brief}</p>
           </div>
 
           <div className="grid grid-cols-2 gap-3 mb-4">
-            <div className="bg-purple-50 rounded-lg p-3">
-              <p className="text-xs text-gray-400">Code promo à transmettre</p>
-              <p className="font-bold text-purple-700">{m.promoCode}</p>
+            <div className="bg-orange-500 rounded-lg p-3">
+              <p className="text-xs text-white/30">Code promo à transmettre</p>
+              <p className="font-bold text-orange-500">{m.promoCode}</p>
             </div>
             <div className="bg-yellow-50 rounded-lg p-3">
-              <p className="text-xs text-gray-400">Deadline de publication</p>
+              <p className="text-xs text-white/30">Deadline de publication</p>
               <p className="font-bold text-yellow-700">{m.deadline}</p>
             </div>
           </div>
@@ -71,7 +71,7 @@ export default function MissionsPage() {
             </div>
           ) : (
             <div>
-              <p className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+              <p className="text-sm font-medium text-white/80 mb-2 flex items-center gap-2">
                 <Link2 className="w-4 h-4" />
                 Soumettre le lien de publication
               </p>
@@ -81,17 +81,17 @@ export default function MissionsPage() {
                   value={postUrls[m.id] || ''}
                   onChange={e => setPostUrls(p => ({...p, [m.id]: e.target.value}))}
                   placeholder="https://instagram.com/p/..."
-                  className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                  className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-0 text-sm"
                 />
                 <button
                   onClick={() => submitPost(m.id)}
                   disabled={!postUrls[m.id]}
-                  className="bg-purple-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-purple-800 transition disabled:opacity-40"
+                  className="bg-orange-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-orange-500 transition disabled:opacity-40"
                 >
                   Valider
                 </button>
               </div>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-white/30 mt-1">
                 <Clock className="w-3 h-3 inline mr-1" />
                 Le paiement est débloqué dès validation de votre publication
               </p>
@@ -101,7 +101,7 @@ export default function MissionsPage() {
       ))}
 
       {missions.length === 0 && (
-        <div className="text-center py-16 text-gray-400">
+        <div className="text-center py-16 text-white/30">
           <p>Aucune mission en cours. Consultez vos propositions !</p>
         </div>
       )}

@@ -21,7 +21,7 @@ export default function PortefeuilleInfluenceur() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Mon portefeuille</h1>
+      <h1 className="text-2xl font-bold text-white mb-8">Mon portefeuille</h1>
 
       {/* Balance */}
       <div className="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl p-8 text-white mb-6">
@@ -34,14 +34,14 @@ export default function PortefeuilleInfluenceur() {
         <div className="flex gap-3 flex-wrap">
           <button
             onClick={() => setShowWithdraw(!showWithdraw)}
-            className="flex items-center gap-2 bg-white text-yellow-700 px-5 py-2.5 rounded-full font-medium hover:bg-yellow-50 transition text-sm"
+            className="flex items-center gap-2 bg-transparent text-yellow-700 px-5 py-2.5 rounded-full font-medium hover:bg-yellow-50 transition text-sm"
           >
             <ArrowUpRight className="w-4 h-4" />
             Virer sur mon compte
           </button>
           <button
             onClick={() => setShowBankForm(!showBankForm)}
-            className="flex items-center gap-2 border border-white/40 text-white px-5 py-2.5 rounded-full font-medium hover:bg-white/10 transition text-sm"
+            className="flex items-center gap-2 border border-white/40 text-white px-5 py-2.5 rounded-full font-medium hover:bg-transparent/10 transition text-sm"
           >
             <CreditCard className="w-4 h-4" />
             {bankSaved ? 'Modifier mon IBAN' : 'Lier mon compte bancaire'}
@@ -51,12 +51,12 @@ export default function PortefeuilleInfluenceur() {
 
       {/* Bank form */}
       {showBankForm && !bankSaved && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
-          <h2 className="font-semibold text-gray-900 mb-4">Lier votre compte bancaire</h2>
+        <div className="bg-transparent rounded-2xl border border-white/8 p-6 mb-6">
+          <h2 className="font-semibold text-white mb-4">Lier votre compte bancaire</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">IBAN</label>
-              <input value={iban} onChange={e => setIban(e.target.value)} placeholder="FR76 3000 6000 0112 3456 7890 189" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm font-mono" />
+              <label className="block text-sm font-medium text-white/80 mb-1">IBAN</label>
+              <input value={iban} onChange={e => setIban(e.target.value)} placeholder="FR76 3000 6000 0112 3456 7890 189" className="w-full px-4 py-3 rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm font-mono" />
             </div>
             <button onClick={() => { setBankSaved(true); setShowBankForm(false) }} className="bg-yellow-500 text-white px-6 py-2.5 rounded-full font-medium hover:bg-yellow-600 transition text-sm">
               Sauvegarder l&apos;IBAN
@@ -67,20 +67,20 @@ export default function PortefeuilleInfluenceur() {
 
       {/* Withdraw form */}
       {showWithdraw && !withdrawDone && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
-          <h2 className="font-semibold text-gray-900 mb-4">Demande de virement</h2>
+        <div className="bg-transparent rounded-2xl border border-white/8 p-6 mb-6">
+          <h2 className="font-semibold text-white mb-4">Demande de virement</h2>
           {!bankSaved && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 mb-4 text-sm text-yellow-700">
               ⚠️ Liez d&apos;abord votre compte bancaire pour effectuer un virement.
             </div>
           )}
           <div className="flex gap-3">
-            <input type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="Montant en €" max={balance} className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm" />
+            <input type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="Montant en €" max={balance} className="flex-1 px-4 py-3 rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm" />
             <button disabled={!bankSaved} onClick={() => setWithdrawDone(true)} className="bg-green-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-green-700 transition text-sm disabled:opacity-40">
               Virer
             </button>
           </div>
-          <p className="text-xs text-gray-400 mt-2">Délai de virement : 1-3 jours ouvrés (Pro : 24h)</p>
+          <p className="text-xs text-white/30 mt-2">Délai de virement : 1-3 jours ouvrés (Pro : 24h)</p>
         </div>
       )}
 
@@ -91,8 +91,8 @@ export default function PortefeuilleInfluenceur() {
       )}
 
       {/* Transactions */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6">
-        <h2 className="font-semibold text-gray-900 mb-5">Historique</h2>
+      <div className="bg-transparent rounded-2xl border border-white/8 p-6">
+        <h2 className="font-semibold text-white mb-5">Historique</h2>
         <div className="space-y-3">
           {transactions.map(tx => (
             <div key={tx.id} className="flex items-center gap-4 py-3 border-b border-gray-50 last:border-0">
@@ -100,8 +100,8 @@ export default function PortefeuilleInfluenceur() {
                 {tx.amount > 0 ? <ArrowDownLeft className="w-4 h-4 text-green-600" /> : <ArrowUpRight className="w-4 h-4 text-red-600" />}
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">{tx.desc}</p>
-                <p className="text-xs text-gray-400">{tx.date}</p>
+                <p className="text-sm font-medium text-white">{tx.desc}</p>
+                <p className="text-xs text-white/30">{tx.date}</p>
               </div>
               <p className={`font-semibold ${tx.amount > 0 ? 'text-green-600' : 'text-red-500'}`}>
                 {tx.amount > 0 ? '+' : ''}{formatCurrency(tx.amount)}

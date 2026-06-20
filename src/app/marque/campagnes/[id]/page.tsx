@@ -10,7 +10,7 @@ export default function CampagneDetail({ params }: { params: { id: string } }) {
   return (
     <div>
       <div className="mb-6">
-        <Link href="/marque/campagnes" className="text-sm text-purple-700 hover:underline mb-2 block">← Retour aux campagnes</Link>
+        <Link href="/marque/campagnes" className="text-sm text-orange-500 hover:underline mb-2 block">← Retour aux campagnes</Link>
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-gray-900">{camp.title}</h1>
           <span className={`px-3 py-1 rounded-full text-sm font-medium ${camp.status === 'ACTIVE' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
@@ -41,7 +41,7 @@ export default function CampagneDetail({ params }: { params: { id: string } }) {
             </div>
             <div className="w-full bg-gray-100 rounded-full h-3">
               <div
-                className="bg-purple-600 h-3 rounded-full"
+                className="bg-orange-500 h-3 rounded-full"
                 style={{ width: `${((camp.budget - camp.budgetRemaining) / camp.budget) * 100}%` }}
               />
             </div>
@@ -63,7 +63,7 @@ export default function CampagneDetail({ params }: { params: { id: string } }) {
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Accepté</span>
-                <Link href="/chat/demo" className="flex items-center gap-1 text-xs text-purple-700 font-medium hover:underline">
+                <Link href="/chat/demo" className="flex items-center gap-1 text-xs text-orange-500 font-medium hover:underline">
                   <MessageCircle className="w-3 h-3" />
                   Chat
                 </Link>

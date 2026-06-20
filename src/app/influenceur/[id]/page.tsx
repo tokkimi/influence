@@ -6,7 +6,7 @@ export default function PublicInfluenceurProfile({ params }: { params: { id: str
   const inf = mockInfluencers.find(i => i.id === params.id) || mockInfluencers[0]
 
   const categoryLabel: Record<string, string> = { MICRO: 'Micro-influenceur', MACRO: 'Macro-influenceur', INTERNATIONAL: 'Influenceur international' }
-  const categoryColor: Record<string, string> = { MICRO: 'bg-green-100 text-green-700', MACRO: 'bg-blue-100 text-blue-700', INTERNATIONAL: 'bg-purple-100 text-purple-700' }
+  const categoryColor: Record<string, string> = { MICRO: 'bg-green-100 text-green-700', MACRO: 'bg-blue-100 text-blue-700', INTERNATIONAL: 'bg-orange-500 text-orange-500' }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -38,7 +38,7 @@ export default function PublicInfluenceurProfile({ params }: { params: { id: str
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="bg-white rounded-2xl p-4 text-center border border-gray-100">
-            <p className="text-2xl font-bold text-purple-700">{formatNumber(inf.followers)}</p>
+            <p className="text-2xl font-bold text-orange-500">{formatNumber(inf.followers)}</p>
             <p className="text-xs text-gray-500">Abonnés</p>
           </div>
           <div className="bg-white rounded-2xl p-4 text-center border border-gray-100">
@@ -57,7 +57,7 @@ export default function PublicInfluenceurProfile({ params }: { params: { id: str
             <h2 className="font-semibold text-gray-900 mb-3">Centres d&apos;intérêt</h2>
             <div className="flex flex-wrap gap-2">
               {(inf.interests as string[]).map((i, idx) => (
-                <span key={idx} className="text-sm bg-purple-50 text-purple-700 px-3 py-1 rounded-full">{i}</span>
+                <span key={idx} className="text-sm bg-orange-500 text-orange-500 px-3 py-1 rounded-full">{i}</span>
               ))}
             </div>
           </div>

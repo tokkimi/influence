@@ -1,84 +1,115 @@
-import { formatCurrency, formatNumber } from '@/lib/utils'
-import { mockProposals } from '@/lib/mock-data'
-import Link from 'next/link'
-import { Wallet, Star, Briefcase, TrendingUp, ArrowRight } from 'lucide-react'
+'use client'
 
-export default function InfluenceurDashboard() {
-  const balance = 1250
-  const proposals = mockProposals?.filter((p: { status: string }) => p.status === 'PENDING') || []
+import { useState } from 'react'
+import { mockProposals, mockMissions } from '@/lib/mock-data'
+import { formatCurrency } from '@/lib/utils'
+import { Wallet, Briefcase, TrendingUp, Clock, ArrowRight, Check, X } from 'lucide-react'
+import Link from 'next/link'
+
+function GlassCard({ children }: { children: React.ReactNode }) {
+  return <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '1rem', padding: '1.25rem' }}>{children}</div>
+}
+
+export default function InfluenceurTableauDeBordPage() {
+  const balance = 200
+  const pendingProposals = mockProposals.filter(p => p.status === 'PENDING')
+  const activeMissions = mockMissions.filter(m => m.status === 'ACCEPTED')
+  const monthlyEarnings = 400
+
+  const [proposals, setProposals] = useState(mockProposals)
+
+  const accept = (id: string) => setProposals(p => p.map(x => x.id === id ? { ...x, status: 'ACCEPTED' } : x))
+  const decline = (id: string) => setProposals(p => p.map(x => x.id === id ? { ...x, status: 'REJECTED' } : x))
 
   const stats = [
-    { label: 'Portefeuille', value: formatCurrency(balance), icon: Wallet, color: 'text-purple-700', bg: 'bg-purple-50' },
-    { label: 'Propositions', value: '2', icon: Star, color: 'text-yellow-700', bg: 'bg-yellow-50' },
-    { label: 'Missions actives', value: '1', icon: Briefcase, color: 'text-blue-700', bg: 'bg-blue-50' },
-    { label: 'Revenus ce mois', value: formatCurrency(400), icon: TrendingUp, color: 'text-green-700', bg: 'bg-green-50' },
+    { label: 'Portefeuille', value: formatCurrency(balance), icon: Wallet, color: '#F37021', sub: 'Disponible' },
+    { label: 'Propositions', value: String(proposals.filter(p => p.status === 'PENDING').length), icon: Clock, color: '#ff9500', sub: 'En attente' },
+    { label: 'Missions actives', value: String(activeMissions.length), icon: Briefcase, color: '#0a84ff', sub: 'En cours' },
+    { label: 'Revenus ce mois', value: formatCurrency(monthlyEarnings), icon: TrendingUp, color: '#30d158', sub: 'Octobre 2024' },
   ]
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
-        <p className="text-gray-500">Bienvenue, Marie Dupont 👋</p>
+    <div style={{ color: 'white', padding: '1.5rem' }}>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.25rem' }}>Tableau de bord</h1>
+        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>Bienvenue, Sofia Martini</p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {stats.map((stat, i) => (
-          <div key={i} className="bg-white rounded-2xl p-5 border border-gray-100">
-            <div className={`w-10 h-10 rounded-xl ${stat.bg} flex items-center justify-center mb-3`}>
-              <stat.icon className={`w-5 h-5 ${stat.color}`} />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.75rem', marginBottom: '1.5rem' }}>
+        {stats.map(s => (
+          <GlassCard key={s.label}>
+            <div style={{ width: 36, height: 36, borderRadius: '0.75rem', background: `${s.color}20`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
+              <s.icon size={18} color={s.color} />
             </div>
-            <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-            <p className="text-sm text-gray-500">{stat.label}</p>
-          </div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: s.color, marginBottom: '0.1rem' }}>{s.value}</div>
+            <div style={{ fontSize: '0.75rem', fontWeight: 600, marginBottom: '0.1rem' }}>{s.label}</div>
+            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)' }}>{s.sub}</div>
+          </GlassCard>
         ))}
       </div>
 
-      {/* Propositions en attente */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="font-semibold text-gray-900">Propositions en attente</h2>
-          <Link href="/influenceur/propositions" className="text-sm text-purple-700 hover:underline flex items-center gap-1">
-            Voir tout <ArrowRight className="w-3 h-3" />
-          </Link>
-        </div>
-        <div className="space-y-3">
-          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
-            <div className="flex items-center justify-between mb-2">
-              <p className="font-medium text-gray-900">Lancement Rouge à Lèvres Collection Automne</p>
-              <span className="text-green-600 font-semibold">{formatCurrency(800)}</span>
-            </div>
-            <p className="text-sm text-gray-500 mb-3">L&apos;Oréal Paris · Beauté · France</p>
-            <div className="flex gap-2">
-              <Link href="/influenceur/propositions" className="bg-purple-700 text-white px-4 py-1.5 rounded-full text-xs font-medium hover:bg-purple-800 transition">
-                Voir le brief
-              </Link>
-            </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '1rem', alignItems: 'start' }}>
+        <GlassCard>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <h2 style={{ fontSize: '0.875rem', fontWeight: 700 }}>Propositions en attente</h2>
+            <Link href="/influenceur/propositions" style={{ fontSize: '0.75rem', color: '#F37021', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>Voir tout <ArrowRight size={12} /></Link>
           </div>
-          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
-            <div className="flex items-center justify-between mb-2">
-              <p className="font-medium text-gray-900">Campagne Running Hiver 2024</p>
-              <span className="text-green-600 font-semibold">{formatCurrency(400)}</span>
+          {proposals.filter(p => p.status === 'PENDING').length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '2rem', color: 'rgba(255,255,255,0.3)', fontSize: '0.875rem' }}>Aucune proposition en attente</div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {proposals.filter(p => p.status === 'PENDING').map(p => (
+                <div key={p.id} style={{ background: 'rgba(255,255,255,0.04)', borderRadius: '0.75rem', padding: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+                    <div>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>{p.campaignTitle}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{p.brandName}</div>
+                    </div>
+                    <div style={{ fontSize: '1rem', fontWeight: 700, color: '#30d158' }}>{formatCurrency(p.payment)}</div>
+                  </div>
+                  <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', marginBottom: '0.75rem', lineHeight: 1.4 }}>{p.description?.substring(0, 100)}...</p>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button onClick={() => accept(p.id)} style={{ background: 'rgba(48,209,88,0.1)', border: '1px solid rgba(48,209,88,0.2)', color: '#30d158', fontSize: '0.7rem', fontWeight: 600, padding: '0.35rem 0.9rem', borderRadius: '9999px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                      <Check size={12} /> Accepter
+                    </button>
+                    <button onClick={() => decline(p.id)} style={{ background: 'rgba(255,69,58,0.1)', border: '1px solid rgba(255,69,58,0.2)', color: '#ff453a', fontSize: '0.7rem', fontWeight: 600, padding: '0.35rem 0.9rem', borderRadius: '9999px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                      <X size={12} /> Refuser
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
-            <p className="text-sm text-gray-500 mb-3">Nike France · Sport · France</p>
-            <div className="flex gap-2">
-              <Link href="/influenceur/propositions" className="bg-purple-700 text-white px-4 py-1.5 rounded-full text-xs font-medium hover:bg-purple-800 transition">
-                Voir le brief
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
+          )}
+        </GlassCard>
 
-      {/* Quick access */}
-      <div className="grid md:grid-cols-2 gap-4">
-        <Link href="/influenceur/profil" className="bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-md transition group">
-          <p className="font-semibold text-gray-900 mb-1 group-hover:text-purple-700">Compléter mon profil →</p>
-          <p className="text-sm text-gray-400">Plus votre profil est complet, plus vous recevez de propositions</p>
-        </Link>
-        <Link href="/influenceur/portefeuille" className="bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-md transition group">
-          <p className="font-semibold text-gray-900 mb-1 group-hover:text-purple-700">Mon portefeuille →</p>
-          <p className="text-sm text-gray-400">Solde disponible : {formatCurrency(balance)}</p>
-        </Link>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <GlassCard>
+            <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.75rem', fontWeight: 600 }}>Accès rapides</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {[
+                { label: 'Mes propositions', href: '/influenceur/propositions', color: '#ff9500' },
+                { label: 'Mes missions', href: '/influenceur/missions', color: '#0a84ff' },
+                { label: 'Mon portefeuille', href: '/influenceur/portefeuille', color: '#F37021' },
+                { label: 'Mon profil', href: '/influenceur/profil', color: 'rgba(255,255,255,0.5)' },
+              ].map(l => (
+                <Link key={l.href} href={l.href} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.04)', borderRadius: '0.75rem', padding: '0.75rem', textDecoration: 'none', color: l.color, fontSize: '0.8rem', fontWeight: 500 }}>
+                  {l.label} <ArrowRight size={13} />
+                </Link>
+              ))}
+            </div>
+          </GlassCard>
+
+          <GlassCard>
+            <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem' }}>Portefeuille</div>
+            <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#F37021', marginBottom: '0.25rem' }}>{formatCurrency(balance)}</div>
+            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', marginBottom: '1rem' }}>Solde disponible</div>
+            <Link href="/influenceur/portefeuille">
+              <button style={{ background: 'rgba(243,112,33,0.2)', border: '1px solid rgba(243,112,33,0.3)', color: '#F37021', fontSize: '0.75rem', fontWeight: 600, padding: '0.5rem 1.25rem', borderRadius: '9999px', cursor: 'pointer', width: '100%' }}>
+                Virer vers mon compte
+              </button>
+            </Link>
+          </GlassCard>
+        </div>
       </div>
     </div>
   )

@@ -1,131 +1,103 @@
 'use client'
 
 import { useState } from 'react'
+import { mockProposals } from '@/lib/mock-data'
 import { formatCurrency } from '@/lib/utils'
-import { Check, X, FileText } from 'lucide-react'
+import { Check, X, Clock } from 'lucide-react'
 
-const proposals = [
-  {
-    id: 'prop_1',
-    campaignTitle: "Lancement Rouge à Lèvres Collection Automne",
-    brandName: "L'Oréal Paris",
-    brandLogo: "LO",
-    payment: 800,
-    status: 'PENDING',
-    promoCode: 'LOREAL20',
-    websiteUrl: 'https://loreal.fr',
-    description: 'Nous recherchons des créateurs de contenu beauté pour promouvoir notre nouvelle collection de rouges à lèvres automne/hiver 2024. 1 post Instagram + 3 stories minimum.',
-    deadline: '30/11/2024',
-  },
-  {
-    id: 'prop_2',
-    campaignTitle: "Campagne Running Hiver 2024",
-    brandName: "Nike France",
-    brandLogo: "NK",
-    payment: 400,
-    status: 'PENDING',
-    promoCode: 'NIKE15',
-    websiteUrl: 'https://nike.fr',
-    description: 'Mise en avant de la nouvelle collection running Nike pour l\'hiver. 1 Reel Instagram minimum + story avec lien swipe-up.',
-    deadline: '31/12/2024',
-  },
-  {
-    id: 'prop_3',
-    campaignTitle: "Campagne Mode Automne",
-    brandName: "Maison Élégance",
-    brandLogo: "ME",
-    payment: 400,
-    status: 'ACCEPTED',
-    promoCode: 'MAISON10',
-    websiteUrl: 'https://maison-elegance.fr',
-    description: 'Campagne de mise en avant de la collection automne.',
-    deadline: '15/12/2024',
-  },
-]
+function GlassCard({ children }: { children: React.ReactNode }) {
+  return <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '1rem', padding: '1.25rem' }}>{children}</div>
+}
 
-export default function PropositionsPage() {
-  const [statuses, setStatuses] = useState<Record<string, string>>(
-    Object.fromEntries(proposals.map(p => [p.id, p.status]))
-  )
-  const [selected, setSelected] = useState<string | null>(null)
+export default function InfluenceurPropositionsPage() {
+  const [proposals, setProposals] = useState(mockProposals)
+  const [filter, setFilter] = useState('ALL')
 
-  const accept = (id: string) => setStatuses(s => ({...s, [id]: 'ACCEPTED'}))
-  const reject = (id: string) => setStatuses(s => ({...s, [id]: 'REJECTED'}))
+  const accept = (id: string) => setProposals(p => p.map(x => x.id === id ? { ...x, status: 'ACCEPTED' } : x))
+  const decline = (id: string) => setProposals(p => p.map(x => x.id === id ? { ...x, status: 'REJECTED' } : x))
+
+  const filtered = proposals.filter(p => {
+    if (filter === 'PENDING') return p.status === 'PENDING'
+    if (filter === 'ACCEPTED') return p.status === 'ACCEPTED'
+    if (filter === 'REJECTED') return p.status === 'REJECTED'
+    return true
+  })
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Propositions de campagnes</h1>
-
-      <div className="space-y-4">
-        {proposals.map(p => {
-          const status = statuses[p.id]
-          return (
-            <div key={p.id} className={`bg-white rounded-2xl border p-6 transition ${
-              status === 'PENDING' ? 'border-yellow-200' : status === 'ACCEPTED' ? 'border-green-200' : 'border-gray-100 opacity-60'
-            }`}>
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-purple-700 font-bold text-sm">
-                    {p.brandLogo}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">{p.campaignTitle}</p>
-                    <p className="text-sm text-gray-500">{p.brandName}</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-xl font-bold text-green-600">{formatCurrency(p.payment)}</p>
-                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                    status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' :
-                    status === 'ACCEPTED' ? 'bg-green-100 text-green-700' :
-                    'bg-gray-100 text-gray-500'
-                  }`}>
-                    {status === 'PENDING' ? '⏳ En attente' : status === 'ACCEPTED' ? '✅ Acceptée' : '❌ Refusée'}
-                  </span>
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-600 mb-4">{p.description}</p>
-
-              <div className="grid grid-cols-3 gap-3 mb-4 text-sm">
-                <div className="bg-gray-50 rounded-lg p-2">
-                  <p className="text-xs text-gray-400">Code promo</p>
-                  <p className="font-medium text-purple-700">{p.promoCode}</p>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-2">
-                  <p className="text-xs text-gray-400">Deadline</p>
-                  <p className="font-medium">{p.deadline}</p>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-2">
-                  <p className="text-xs text-gray-400">Site</p>
-                  <p className="font-medium text-blue-600 truncate text-xs">{p.websiteUrl}</p>
-                </div>
-              </div>
-
-              {status === 'PENDING' && (
-                <div className="flex gap-3">
-                  <button onClick={() => accept(p.id)} className="flex items-center gap-2 bg-green-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-green-700 transition">
-                    <Check className="w-4 h-4" />
-                    Accepter la mission
-                  </button>
-                  <button onClick={() => reject(p.id)} className="flex items-center gap-2 border border-gray-200 text-gray-600 px-5 py-2 rounded-full text-sm font-medium hover:bg-gray-50 transition">
-                    <X className="w-4 h-4" />
-                    Refuser
-                  </button>
-                </div>
-              )}
-              {status === 'ACCEPTED' && (
-                <div className="flex gap-3">
-                  <button className="flex items-center gap-2 bg-purple-700 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-purple-800 transition">
-                    <FileText className="w-4 h-4" />
-                    Voir le brief complet
-                  </button>
-                </div>
-              )}
-            </div>
-          )
-        })}
+    <div style={{ color: 'white', padding: '1.5rem' }}>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.25rem' }}>Propositions</h1>
+        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>{proposals.length} propositions reçues</p>
       </div>
+
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
+        {[['ALL', 'Toutes'], ['PENDING', 'En attente'], ['ACCEPTED', 'Acceptées'], ['REJECTED', 'Refusées']].map(([k, l]) => (
+          <button key={k} onClick={() => setFilter(k)} style={filter === k
+            ? { background: 'rgba(243,112,33,0.15)', color: '#F37021', border: '1px solid rgba(243,112,33,0.3)', borderRadius: '9999px', padding: '0.4rem 1rem', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }
+            : { background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '9999px', padding: '0.4rem 1rem', fontSize: '0.75rem', cursor: 'pointer' }
+          }>{l}</button>
+        ))}
+      </div>
+
+      {filtered.length === 0 ? (
+        <GlassCard>
+          <div style={{ textAlign: 'center', padding: '3rem', color: 'rgba(255,255,255,0.3)', fontSize: '0.875rem' }}>Aucune proposition dans cette catégorie</div>
+        </GlassCard>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {filtered.map(p => {
+            const commission = p.payment * 0.3
+            const net = p.payment - commission
+            return (
+              <div key={p.id} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '1rem', padding: '1.25rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <div style={{ width: 44, height: 44, borderRadius: '0.75rem', background: 'rgba(243,112,33,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700, color: '#F37021' }}>
+                      {p.brandName.substring(0, 2).toUpperCase()}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{p.campaignTitle}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{p.brandName}</div>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#30d158' }}>{formatCurrency(net)} net</div>
+                    <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.35)' }}>{formatCurrency(p.payment)} brut · comm. 30%</div>
+                  </div>
+                </div>
+
+                {p.description && (
+                  <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', marginBottom: '0.75rem', lineHeight: 1.5 }}>
+                    {p.description.substring(0, 160)}{p.description.length > 160 ? '...' : ''}
+                  </p>
+                )}
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)' }}>
+                    <Clock size={11} style={{ display: 'inline', marginRight: '0.25rem' }} />
+                    Reçu le {p.createdAt}
+                  </div>
+
+                  {p.status === 'PENDING' ? (
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button onClick={() => accept(p.id)} style={{ background: 'rgba(48,209,88,0.1)', border: '1px solid rgba(48,209,88,0.2)', color: '#30d158', fontSize: '0.75rem', fontWeight: 600, padding: '0.4rem 1rem', borderRadius: '9999px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                        <Check size={13} /> Accepter
+                      </button>
+                      <button onClick={() => decline(p.id)} style={{ background: 'rgba(255,69,58,0.1)', border: '1px solid rgba(255,69,58,0.2)', color: '#ff453a', fontSize: '0.75rem', fontWeight: 600, padding: '0.4rem 1rem', borderRadius: '9999px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                        <X size={13} /> Refuser
+                      </button>
+                    </div>
+                  ) : p.status === 'ACCEPTED' ? (
+                    <span style={{ background: 'rgba(48,209,88,0.1)', color: '#30d158', border: '1px solid rgba(48,209,88,0.2)', borderRadius: '9999px', padding: '0.25rem 0.75rem', fontSize: '0.75rem', fontWeight: 600 }}>En cours</span>
+                  ) : (
+                    <span style={{ background: 'rgba(255,69,58,0.1)', color: '#ff453a', border: '1px solid rgba(255,69,58,0.2)', borderRadius: '9999px', padding: '0.25rem 0.75rem', fontSize: '0.75rem', fontWeight: 600 }}>Refusée</span>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

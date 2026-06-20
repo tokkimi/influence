@@ -92,3 +92,10 @@ html { scroll-behavior: smooth; }
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: #f8f7f4; }
 ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 4px; }
+
+/* Dark dashboard inputs */
+.dark-input, .dark-input input, .dark-input select, .dark-input textarea,
+[data-dashboard] input, [data-dashboard] select, [data-dashboard] textarea {
+  background: rgba(255,255,255,0.06) !important;
+  color: white !important;
+}

@@ -3,81 +3,106 @@
 import { useState } from 'react'
 import { Save, Upload } from 'lucide-react'
 
-export default function ProfilMarque() {
-  const [saved, setSaved] = useState(false)
-  const [form, setForm] = useState({
-    companyName: 'Maison Élégance',
-    website: 'https://maison-elegance.fr',
-    description: 'Maison de mode française créée en 2010, spécialisée dans le prêt-à-porter haut de gamme.',
-    sector: 'Mode & Lifestyle',
-    contactEmail: 'marketing@maison-elegance.fr',
-    contactPhone: '+33 1 23 45 67 89',
-  })
+function GlassCard({ children }: { children: React.ReactNode }) {
+  return <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '1rem', padding: '1.25rem' }}>{children}</div>
+}
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault()
-    setSaved(true)
-    setTimeout(() => setSaved(false), 3000)
-  }
+const inputStyle: React.CSSProperties = { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.75rem', padding: '0.75rem 1rem', color: 'white', fontSize: '0.875rem', outline: 'none', width: '100%' }
+const SECTORS = ['Mode', 'Beauté', 'Sport', 'Technologie', 'Alimentation', 'Luxe', 'Voyage', 'Maison', 'Santé', 'Autre']
+
+export default function MarqueProfilPage() {
+  const [companyName, setCompanyName] = useState('Maison Élégance')
+  const [sector, setSector] = useState('Mode')
+  const [website, setWebsite] = useState('https://maison-elegance.fr')
+  const [description, setDescription] = useState('Mode et élégance française')
+  const [contactEmail, setContactEmail] = useState('contact@maison-elegance.fr')
+  const [contactPhone, setContactPhone] = useState('+33 1 23 45 67 89')
+  const [saved, setSaved] = useState(false)
+
+  const save = () => { setSaved(true); setTimeout(() => setSaved(false), 3000) }
 
   return (
-    <div className="max-w-2xl">
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Mon profil marque</h1>
+    <div style={{ color: 'white', padding: '1.5rem', maxWidth: '680px' }}>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.25rem' }}>Profil de la marque</h1>
+        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>Informations publiques de votre entreprise</p>
+      </div>
 
-      <form onSubmit={handleSave} className="space-y-6">
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <h2 className="font-semibold text-gray-900 mb-5">Logo de la marque</h2>
-          <div className="flex items-center gap-4">
-            <div className="w-20 h-20 rounded-2xl bg-purple-100 flex items-center justify-center text-2xl font-bold text-purple-700">
+      {saved && (
+        <div style={{ background: 'rgba(48,209,88,0.1)', border: '1px solid rgba(48,209,88,0.2)', borderRadius: '0.75rem', padding: '0.75rem 1rem', marginBottom: '1rem', color: '#30d158', fontSize: '0.875rem' }}>
+          ✓ Profil enregistré avec succès
+        </div>
+      )}
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <GlassCard>
+          <h2 style={{ fontSize: '0.875rem', fontWeight: 700, marginBottom: '1rem' }}>Logo de la marque</h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ width: 72, height: 72, borderRadius: '1rem', background: 'rgba(243,112,33,0.2)', border: '1px solid rgba(243,112,33,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', fontWeight: 700, color: '#F37021' }}>
               ME
             </div>
             <div>
-              <button type="button" className="flex items-center gap-2 border border-gray-200 px-4 py-2 rounded-xl text-sm hover:bg-gray-50 transition">
-                <Upload className="w-4 h-4" />
-                Changer le logo
+              <button style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)', fontSize: '0.75rem', padding: '0.5rem 1rem', borderRadius: '9999px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.4rem' }}>
+                <Upload size={13} /> Changer le logo
               </button>
-              <p className="text-xs text-gray-400 mt-1">PNG, JPG · Max 2 Mo</p>
+              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)' }}>JPG, PNG ou SVG · Max 2MB</div>
             </div>
           </div>
-        </div>
+        </GlassCard>
 
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
-          <h2 className="font-semibold text-gray-900">Informations de la marque</h2>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nom de l&apos;entreprise</label>
-            <input value={form.companyName} onChange={e => setForm({...form, companyName: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
+        <GlassCard>
+          <h2 style={{ fontSize: '0.875rem', fontWeight: 700, marginBottom: '1rem' }}>Informations générales</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div>
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Nom de l&apos;entreprise</label>
+              <input style={inputStyle} value={companyName} onChange={e => setCompanyName(e.target.value)} />
+            </div>
+            <div>
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Secteur d&apos;activité</label>
+              <select style={inputStyle} value={sector} onChange={e => setSector(e.target.value)}>
+                {SECTORS.map(s => <option key={s} value={s} style={{ background: '#1a1a1a' }}>{s}</option>)}
+              </select>
+            </div>
+            <div>
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Site web</label>
+              <input style={inputStyle} value={website} onChange={e => setWebsite(e.target.value)} placeholder="https://..." />
+            </div>
+            <div>
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Description</label>
+              <textarea style={{ ...inputStyle, minHeight: '100px', resize: 'vertical' } as React.CSSProperties} value={description} onChange={e => setDescription(e.target.value)} placeholder="Décrivez votre marque..." />
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Secteur d&apos;activité</label>
-            <input value={form.sector} onChange={e => setForm({...form, sector: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Site internet</label>
-            <input value={form.website} onChange={e => setForm({...form, website: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
-          </div>
-        </div>
+        </GlassCard>
 
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
-          <h2 className="font-semibold text-gray-900">Contact</h2>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email de contact</label>
-            <input value={form.contactEmail} onChange={e => setForm({...form, contactEmail: e.target.value})} type="email" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
+        <GlassCard>
+          <h2 style={{ fontSize: '0.875rem', fontWeight: 700, marginBottom: '1rem' }}>Informations de contact</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div>
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Email de contact</label>
+              <input type="email" style={inputStyle} value={contactEmail} onChange={e => setContactEmail(e.target.value)} />
+            </div>
+            <div>
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Téléphone</label>
+              <input type="tel" style={inputStyle} value={contactPhone} onChange={e => setContactPhone(e.target.value)} />
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
-            <input value={form.contactPhone} onChange={e => setForm({...form, contactPhone: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
-          </div>
-        </div>
+        </GlassCard>
 
-        <button type="submit" className="flex items-center gap-2 bg-purple-700 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-800 transition">
-          <Save className="w-4 h-4" />
-          {saved ? '✅ Sauvegardé !' : 'Sauvegarder les modifications'}
+        <GlassCard>
+          <h2 style={{ fontSize: '0.875rem', fontWeight: 700, marginBottom: '1rem' }}>Documents de présentation</h2>
+          <div style={{ border: '2px dashed rgba(255,255,255,0.1)', borderRadius: '0.75rem', padding: '1.5rem', textAlign: 'center', cursor: 'pointer' }}
+            onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(243,112,33,0.3)')}
+            onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}>
+            <Upload size={20} color="rgba(255,255,255,0.3)" style={{ margin: '0 auto 0.5rem' }} />
+            <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>Uploader votre présentation ou media kit</div>
+            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.25)', marginTop: '0.25rem' }}>PDF, PPT · Max 20MB</div>
+          </div>
+        </GlassCard>
+
+        <button onClick={save} style={{ background: 'rgba(243,112,33,0.2)', border: '1px solid rgba(243,112,33,0.3)', color: '#F37021', fontSize: '0.75rem', fontWeight: 600, padding: '0.6rem 1.5rem', borderRadius: '9999px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', alignSelf: 'flex-start' }}>
+          <Save size={14} /> Enregistrer le profil
         </button>
-      </form>
+      </div>
     </div>
   )
 }
