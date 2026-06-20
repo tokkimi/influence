@@ -1,103 +1,112 @@
 'use client'
 
 import { useState } from 'react'
-import { Send, Users, Mail } from 'lucide-react'
+import { Send, Users, Check } from 'lucide-react'
+
+function GlassCard({ children }: { children: React.ReactNode }) {
+  return <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '1rem', padding: '1.25rem' }}>{children}</div>
+}
+
+const inputStyle: React.CSSProperties = { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.75rem', padding: '0.75rem 1rem', color: 'white', fontSize: '0.875rem', outline: 'none', width: '100%' }
 
 const subscribers = [
-  { email: 'sophie.martin@email.com', date: '10/10/2024' },
-  { email: 'contact@maison-elegance.fr', date: '12/10/2024' },
-  { email: 'lucas.dupont@gmail.com', date: '15/10/2024' },
-  { email: 'amina.b@outlook.fr', date: '18/10/2024' },
-  { email: 'prmarque@startup.io', date: '22/10/2024' },
+  { email: 'sophie@example.com', name: 'Sophie Martin', role: 'Influenceur', date: '12/09/2024' },
+  { email: 'lucas@example.com', name: 'Lucas Dubois', role: 'Influenceur', date: '15/09/2024' },
+  { email: 'contact@loreal.fr', name: "L'Oréal Paris", role: 'Marque', date: '01/10/2024' },
+  { email: 'nike@example.com', name: 'Nike France', role: 'Marque', date: '05/10/2024' },
+  { email: 'emma@example.com', name: 'Emma Laurent', role: 'Influenceur', date: '10/10/2024' },
+  { email: 'thomas@example.com', name: 'Thomas Bernard', role: 'Influenceur', date: '12/10/2024' },
 ]
 
-export default function AdminNewsletter() {
+export default function AdminNewsletterPage() {
   const [subject, setSubject] = useState('')
   const [body, setBody] = useState('')
   const [sent, setSent] = useState(false)
+  const [preview, setPreview] = useState(false)
 
-  const handleSend = (e: React.FormEvent) => {
-    e.preventDefault()
+  const send = () => {
+    if (!subject || !body) return
     setSent(true)
-    setTimeout(() => setSent(false), 5000)
+    setTimeout(() => setSent(false), 4000)
     setSubject('')
     setBody('')
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Newsletter</h1>
+    <div style={{ color: 'white', padding: '1.5rem' }}>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.25rem' }}>Newsletter</h1>
+        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>Envoyez une newsletter à vos abonnés</p>
+      </div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* Send form */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center">
-              <Send className="w-5 h-5 text-purple-700" />
-            </div>
-            <h2 className="font-semibold text-gray-900">Envoyer une newsletter</h2>
-          </div>
+      {sent && (
+        <div style={{ background: 'rgba(48,209,88,0.1)', border: '1px solid rgba(48,209,88,0.2)', borderRadius: '0.75rem', padding: '0.75rem 1rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#30d158', fontSize: '0.875rem' }}>
+          <Check size={16} /> Newsletter envoyée avec succès à {subscribers.length} abonnés !
+        </div>
+      )}
 
-          {sent && (
-            <div className="mb-4 bg-green-50 border border-green-200 rounded-xl p-3 text-green-700 text-sm">
-              ✅ Newsletter envoyée à {subscribers.length} abonnés !
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1rem', alignItems: 'start' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <GlassCard>
+            <h2 style={{ fontSize: '0.875rem', fontWeight: 700, marginBottom: '1rem' }}>Composer</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <div>
+                <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Objet</label>
+                <input style={inputStyle} placeholder="Objet de la newsletter..." value={subject} onChange={e => setSubject(e.target.value)} />
+              </div>
+              <div>
+                <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Contenu</label>
+                <textarea
+                  style={{ ...inputStyle, minHeight: '240px', resize: 'vertical' } as React.CSSProperties}
+                  placeholder="Rédigez votre newsletter..."
+                  value={body}
+                  onChange={e => setBody(e.target.value)}
+                />
+              </div>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button onClick={send} disabled={!subject || !body} style={{ background: subject && body ? 'rgba(243,112,33,0.2)' : 'rgba(255,255,255,0.04)', border: `1px solid ${subject && body ? 'rgba(243,112,33,0.3)' : 'rgba(255,255,255,0.08)'}`, color: subject && body ? '#F37021' : 'rgba(255,255,255,0.3)', fontSize: '0.75rem', fontWeight: 600, padding: '0.5rem 1.25rem', borderRadius: '9999px', cursor: subject && body ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <Send size={14} /> Envoyer ({subscribers.length} abonnés)
+                </button>
+                <button onClick={() => setPreview(!preview)} style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.6)', fontSize: '0.75rem', padding: '0.5rem 1.25rem', borderRadius: '9999px', cursor: 'pointer' }}>
+                  {preview ? 'Masquer' : 'Aperçu'}
+                </button>
+              </div>
             </div>
+          </GlassCard>
+
+          {preview && subject && body && (
+            <GlassCard>
+              <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem' }}>Aperçu email</div>
+              <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '0.75rem', padding: '1.25rem' }}>
+                <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', marginBottom: '0.25rem' }}>De: newsletter@dotthetalents.com</div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.75rem', color: '#F37021' }}>{subject}</div>
+                <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{body}</div>
+              </div>
+            </GlassCard>
           )}
-
-          <form onSubmit={handleSend} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Objet</label>
-              <input
-                value={subject}
-                onChange={e => setSubject(e.target.value)}
-                required
-                placeholder="Nouveautés Dot The Talents – Novembre 2024"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Contenu</label>
-              <textarea
-                value={body}
-                onChange={e => setBody(e.target.value)}
-                required
-                rows={8}
-                placeholder="Rédigez votre newsletter ici..."
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-gray-500">{subscribers.length} destinataires</p>
-              <button type="submit" className="flex items-center gap-2 bg-purple-700 text-white px-6 py-2.5 rounded-full font-medium hover:bg-purple-800 transition text-sm">
-                <Send className="w-4 h-4" />
-                Envoyer
-              </button>
-            </div>
-          </form>
         </div>
 
-        {/* Subscribers */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
-                <Users className="w-5 h-5 text-blue-700" />
-              </div>
-              <h2 className="font-semibold text-gray-900">Abonnés ({subscribers.length})</h2>
-            </div>
+        <GlassCard>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+            <Users size={16} color="#F37021" />
+            <span style={{ fontSize: '0.875rem', fontWeight: 700 }}>Abonnés</span>
+            <span style={{ background: 'rgba(243,112,33,0.15)', color: '#F37021', border: '1px solid rgba(243,112,33,0.3)', borderRadius: '9999px', padding: '0.1rem 0.5rem', fontSize: '0.7rem', fontWeight: 600, marginLeft: 'auto' }}>{subscribers.length}</span>
           </div>
-          <div className="space-y-2">
-            {subscribers.map((s, i) => (
-              <div key={i} className="flex items-center justify-between py-2.5 border-b border-gray-50 last:border-0">
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-gray-400" />
-                  <span className="text-sm text-gray-700">{s.email}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {subscribers.map(s => (
+              <div key={s.email} style={{ background: 'rgba(255,255,255,0.04)', borderRadius: '0.75rem', padding: '0.75rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 600 }}>{s.name}</div>
+                    <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)' }}>{s.email}</div>
+                  </div>
+                  <span style={{ fontSize: '0.65rem', color: s.role === 'Marque' ? '#0a84ff' : '#F37021', background: s.role === 'Marque' ? 'rgba(10,132,255,0.1)' : 'rgba(243,112,33,0.1)', borderRadius: '9999px', padding: '0.1rem 0.4rem' }}>{s.role}</span>
                 </div>
-                <span className="text-xs text-gray-400">{s.date}</span>
+                <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.25)', marginTop: '0.25rem' }}>Inscrit le {s.date}</div>
               </div>
             ))}
           </div>
-        </div>
+        </GlassCard>
       </div>
     </div>
   )

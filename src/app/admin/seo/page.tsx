@@ -1,113 +1,133 @@
 'use client'
 
 import { useState } from 'react'
-import { Save, Globe } from 'lucide-react'
+import { Save } from 'lucide-react'
+
+function GlassCard({ children }: { children: React.ReactNode }) {
+  return <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '1rem', padding: '1.25rem' }}>{children}</div>
+}
+
+const inputStyle: React.CSSProperties = { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.75rem', padding: '0.75rem 1rem', color: 'white', fontSize: '0.875rem', outline: 'none', width: '100%' }
 
 const pages = [
-  { id: 'home', label: 'Page d\'accueil', path: '/' },
-  { id: 'how-it-works', label: 'Comment ça marche', path: '/comment-ca-marche' },
-  { id: 'pricing', label: 'Tarifs', path: '/tarifs' },
-  { id: 'faq', label: 'FAQ', path: '/faq' },
+  { id: 'home', label: 'Accueil', path: '/' },
+  { id: 'influenceurs', label: 'Influenceurs', path: '/influenceurs' },
+  { id: 'marques', label: 'Marques', path: '/marques' },
+  { id: 'inscription', label: 'Inscription', path: '/auth/inscription' },
+  { id: 'connexion', label: 'Connexion', path: '/auth/connexion' },
+  { id: 'tarifs', label: 'Tarifs', path: '/tarifs' },
 ]
 
-export default function AdminSeo() {
-  const [selectedPage, setSelectedPage] = useState('home')
-  const [settings, setSettings] = useState<Record<string, { title: string; description: string; keywords: string }>>({
-    home: { title: 'Dot The Talents – Plateforme Marketing d\'Influence Internationale', description: 'Connectez votre marque aux meilleurs influenceurs. Campagnes d\'influence ciblées, ROI mesurable.', keywords: 'marketing influence, influenceurs, campagne influence' },
-    'how-it-works': { title: 'Comment ça marche – Dot The Talents', description: 'Découvrez comment fonctionne la plateforme pour marques et influenceurs.', keywords: '' },
-    pricing: { title: 'Tarifs – Dot The Talents', description: 'Découvrez nos offres pour influenceurs : gratuit ou Pro à 29€/mois.', keywords: '' },
-    faq: { title: 'FAQ – Dot The Talents', description: 'Toutes les réponses à vos questions sur la plateforme.', keywords: '' },
-  })
+const defaultSeo: Record<string, { title: string; description: string; keywords: string }> = {
+  home: { title: 'DotTheTalents - Connectez marques et influenceurs', description: 'La plateforme de référence pour connecter les marques avec les meilleurs influenceurs français.', keywords: 'influenceur, marque, marketing, UGC' },
+  influenceurs: { title: 'Influenceurs - DotTheTalents', description: 'Découvrez notre réseau d\'influenceurs vérifiés dans tous les secteurs.', keywords: 'influenceur, créateur de contenu, instagram, tiktok' },
+  marques: { title: 'Marques partenaires - DotTheTalents', description: 'Les plus grandes marques font confiance à DotTheTalents pour leurs campagnes.', keywords: 'marque, campagne, partenariat' },
+  inscription: { title: 'Inscription - DotTheTalents', description: 'Rejoignez DotTheTalents et commencez votre aventure dans le marketing d\'influence.', keywords: 'inscription, créer compte, influenceur' },
+  connexion: { title: 'Connexion - DotTheTalents', description: 'Connectez-vous à votre espace DotTheTalents.', keywords: 'connexion, login' },
+  tarifs: { title: 'Tarifs - DotTheTalents', description: 'Découvrez nos offres adaptées à tous les profils d\'influenceurs.', keywords: 'tarifs, prix, abonnement, pro' },
+}
+
+function CharBar({ value, max, warn, danger }: { value: number; max: number; warn: number; danger: number }) {
+  const pct = Math.min((value / max) * 100, 100)
+  const color = value >= danger ? '#ff453a' : value >= warn ? '#ff9500' : '#30d158'
+  return (
+    <div style={{ marginTop: '0.25rem' }}>
+      <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: '9999px', height: '3px' }}>
+        <div style={{ width: `${pct}%`, background: color, borderRadius: '9999px', height: '3px', transition: 'width 0.2s' }} />
+      </div>
+      <div style={{ fontSize: '0.65rem', color: value >= danger ? '#ff453a' : 'rgba(255,255,255,0.3)', marginTop: '0.15rem', textAlign: 'right' }}>{value}/{max}</div>
+    </div>
+  )
+}
+
+export default function AdminSeoPage() {
+  const [activePage, setActivePage] = useState('home')
+  const [seoData, setSeoData] = useState(defaultSeo)
   const [saved, setSaved] = useState(false)
 
-  const page = settings[selectedPage]
-
-  const update = (field: string, value: string) => {
-    setSettings(s => ({...s, [selectedPage]: {...s[selectedPage], [field]: value}}))
-  }
-
-  const save = (e: React.FormEvent) => {
-    e.preventDefault()
-    setSaved(true)
-    setTimeout(() => setSaved(false), 3000)
-  }
+  const current = seoData[activePage] || { title: '', description: '', keywords: '' }
+  const update = (field: string, value: string) => setSeoData(d => ({ ...d, [activePage]: { ...d[activePage], [field]: value } }))
+  const save = () => { setSaved(true); setTimeout(() => setSaved(false), 2500) }
 
   return (
-    <div>
-      <div className="flex items-center gap-3 mb-8">
-        <Globe className="w-6 h-6 text-purple-700" />
-        <h1 className="text-2xl font-bold text-gray-900">SEO</h1>
+    <div style={{ color: 'white', padding: '1.5rem' }}>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.25rem' }}>SEO</h1>
+        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>Gérez les métadonnées de chaque page</p>
       </div>
 
-      <div className="grid lg:grid-cols-4 gap-6">
-        {/* Pages list */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-4 h-fit">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Pages</p>
-          <ul className="space-y-1">
-            {pages.map(p => (
-              <li key={p.id}>
-                <button
-                  onClick={() => setSelectedPage(p.id)}
-                  className={`w-full text-left px-3 py-2.5 rounded-xl text-sm transition ${selectedPage === p.id ? 'bg-purple-50 text-purple-700 font-medium' : 'text-gray-600 hover:bg-gray-50'}`}
-                >
-                  {p.label}
-                  <span className="text-xs text-gray-400 block">{p.path}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
+      {saved && (
+        <div style={{ background: 'rgba(48,209,88,0.1)', border: '1px solid rgba(48,209,88,0.2)', borderRadius: '0.75rem', padding: '0.75rem 1rem', marginBottom: '1rem', color: '#30d158', fontSize: '0.875rem' }}>
+          ✓ Paramètres SEO enregistrés
         </div>
+      )}
 
-        {/* SEO form */}
-        <div className="lg:col-span-3 bg-white rounded-2xl border border-gray-100 p-6">
-          <h2 className="font-semibold text-gray-900 mb-5">
-            {pages.find(p => p.id === selectedPage)?.label}
-          </h2>
+      <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '1rem', alignItems: 'start' }}>
+        <GlassCard>
+          <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'rgba(255,255,255,0.4)', marginBottom: '0.75rem' }}>Pages</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            {pages.map(p => (
+              <button key={p.id} onClick={() => setActivePage(p.id)} style={{
+                background: activePage === p.id ? 'rgba(243,112,33,0.15)' : 'transparent',
+                border: activePage === p.id ? '1px solid rgba(243,112,33,0.3)' : '1px solid transparent',
+                color: activePage === p.id ? '#F37021' : 'rgba(255,255,255,0.6)',
+                borderRadius: '0.5rem', padding: '0.5rem 0.75rem', fontSize: '0.8rem', cursor: 'pointer', textAlign: 'left', width: '100%',
+              }}>
+                <div style={{ fontWeight: activePage === p.id ? 600 : 400 }}>{p.label}</div>
+                <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)' }}>{p.path}</div>
+              </button>
+            ))}
+          </div>
+        </GlassCard>
 
-          {saved && <div className="mb-4 bg-green-50 border border-green-200 rounded-xl p-3 text-green-700 text-sm">✅ Paramètres SEO sauvegardés</div>}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <GlassCard>
+            <h2 style={{ fontSize: '0.875rem', fontWeight: 700, marginBottom: '1rem' }}>
+              Métadonnées — <span style={{ color: '#F37021' }}>{pages.find(p => p.id === activePage)?.label}</span>
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Titre (60 caractères max)</label>
+                <input style={inputStyle} value={current.title} onChange={e => update('title', e.target.value)} maxLength={70} placeholder="Titre de la page..." />
+                <CharBar value={current.title.length} max={70} warn={55} danger={65} />
+              </div>
+              <div>
+                <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Description (160 caractères max)</label>
+                <textarea
+                  style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' } as React.CSSProperties}
+                  value={current.description}
+                  onChange={e => update('description', e.target.value)}
+                  maxLength={200}
+                  placeholder="Description de la page..."
+                />
+                <CharBar value={current.description.length} max={200} warn={140} danger={165} />
+              </div>
+              <div>
+                <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Mots-clés (séparés par des virgules)</label>
+                <input style={inputStyle} value={current.keywords} onChange={e => update('keywords', e.target.value)} placeholder="mot-clé1, mot-clé2, ..." />
+              </div>
+              <div>
+                <button onClick={save} style={{ background: 'rgba(243,112,33,0.2)', border: '1px solid rgba(243,112,33,0.3)', color: '#F37021', fontSize: '0.75rem', fontWeight: 600, padding: '0.5rem 1.25rem', borderRadius: '9999px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <Save size={14} /> Enregistrer
+                </button>
+              </div>
+            </div>
+          </GlassCard>
 
-          <form onSubmit={save} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Titre SEO <span className="text-gray-400 font-normal">(max 60 car.)</span></label>
-              <input
-                value={page?.title || ''}
-                onChange={e => update('title', e.target.value)}
-                maxLength={60}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-              />
-              <p className="text-xs text-gray-400 mt-1">{(page?.title || '').length}/60 caractères</p>
+          <GlassCard>
+            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'rgba(255,255,255,0.4)', marginBottom: '0.75rem' }}>Aperçu Google SERP</div>
+            <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '0.75rem', padding: '1rem', maxWidth: '600px' }}>
+              <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', marginBottom: '0.25rem' }}>
+                https://dotthetalents.com{pages.find(p => p.id === activePage)?.path}
+              </div>
+              <div style={{ fontSize: '1rem', color: '#0a84ff', fontWeight: 600, marginBottom: '0.25rem', lineHeight: 1.3 }}>
+                {current.title || <span style={{ color: 'rgba(255,255,255,0.2)' }}>Titre de la page</span>}
+              </div>
+              <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>
+                {current.description || <span style={{ color: 'rgba(255,255,255,0.2)' }}>Description de la page...</span>}
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Meta description <span className="text-gray-400 font-normal">(max 160 car.)</span></label>
-              <textarea
-                value={page?.description || ''}
-                onChange={e => update('description', e.target.value)}
-                maxLength={160}
-                rows={3}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-              />
-              <p className="text-xs text-gray-400 mt-1">{(page?.description || '').length}/160 caractères</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Mots-clés <span className="text-gray-400 font-normal">(séparés par des virgules)</span></label>
-              <input
-                value={page?.keywords || ''}
-                onChange={e => update('keywords', e.target.value)}
-                placeholder="marketing influence, influenceurs, campagne..."
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-              />
-            </div>
-            <div className="bg-gray-50 rounded-xl p-4">
-              <p className="text-xs font-semibold text-gray-500 mb-2">Aperçu Google</p>
-              <p className="text-sm text-blue-600 font-medium line-clamp-1">{page?.title}</p>
-              <p className="text-xs text-green-700">dotthetalents.com{pages.find(p => p.id === selectedPage)?.path}</p>
-              <p className="text-xs text-gray-500 line-clamp-2 mt-0.5">{page?.description}</p>
-            </div>
-            <button type="submit" className="flex items-center gap-2 bg-purple-700 text-white px-6 py-2.5 rounded-full font-medium hover:bg-purple-800 transition text-sm">
-              <Save className="w-4 h-4" />
-              Sauvegarder
-            </button>
-          </form>
+          </GlassCard>
         </div>
       </div>
     </div>

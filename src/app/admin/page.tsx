@@ -11,10 +11,10 @@ function GlassCard({ children, className = '' }: { children: React.ReactNode; cl
 
 export default function AdminDashboard() {
   const stats = [
-    { label: 'Influenceurs', value: '5 420', delta: '+42', icon: Users, color: '#c9993a' },
+    { label: 'Influenceurs', value: '5 420', delta: '+42', icon: Users, color: '#F37021' },
     { label: 'Marques', value: '847', delta: '+12', icon: Building2, color: '#0a84ff' },
     { label: 'Campagnes actives', value: '156', delta: '23 en attente', icon: BarChart3, color: '#30d158' },
-    { label: 'Revenus', value: '42 800 €', delta: '+18%', icon: DollarSign, color: '#c9993a' },
+    { label: 'Revenus', value: '42 800 €', delta: '+18%', icon: DollarSign, color: '#F37021' },
   ]
   const bars = [38,52,44,68,55,72,60,80,65,88,74,95]
   const months = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc']
@@ -54,7 +54,7 @@ export default function AdminDashboard() {
           </div>
           <div className="flex items-end gap-1.5 h-24">
             {bars.map((h, i) => (
-              <div key={i} className="flex-1 rounded-sm" style={{height:`${h}%`, background: i === bars.length-1 ? '#c9993a' : 'rgba(255,255,255,0.1)'}} />
+              <div key={i} className="flex-1 rounded-sm" style={{height:`${h}%`, background: i === bars.length-1 ? '#F37021' : 'rgba(255,255,255,0.1)'}} />
             ))}
           </div>
           <div className="flex justify-between mt-2">

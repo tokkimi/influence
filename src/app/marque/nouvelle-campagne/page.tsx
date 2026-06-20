@@ -1,266 +1,242 @@
 'use client'
 
 import { useState } from 'react'
-import { Upload, ArrowRight, ArrowLeft, Check } from 'lucide-react'
+import { Upload, ArrowRight, ArrowLeft, Check, Plus, X } from 'lucide-react'
 
-const interests = ['Mode', 'Beauté', 'Fitness', 'Tech', 'Gaming', 'Voyage', 'Gastronomie', 'Lifestyle', 'Sport', 'Musique', 'Cinéma', 'Business', 'Développement personnel', 'Bien-être', 'Décoration', 'Cuisine']
-const countries = ['France', 'Belgique', 'Suisse', 'Canada', 'Maroc', 'Espagne', 'Italie', 'Allemagne', 'Royaume-Uni', 'États-Unis']
-const languages = ['Français', 'Anglais', 'Espagnol', 'Allemand', 'Italien', 'Portugais', 'Arabe']
+function GlassCard({ children }: { children: React.ReactNode }) {
+  return <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '1rem', padding: '1.25rem' }}>{children}</div>
+}
 
-export default function NouvelleCampagne() {
+const inputStyle: React.CSSProperties = { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.75rem', padding: '0.75rem 1rem', color: 'white', fontSize: '0.875rem', outline: 'none', width: '100%' }
+const btnGold: React.CSSProperties = { background: 'rgba(243,112,33,0.2)', border: '1px solid rgba(243,112,33,0.3)', color: '#F37021', fontSize: '0.75rem', fontWeight: 600, padding: '0.5rem 1.25rem', borderRadius: '9999px', cursor: 'pointer' }
+const btnGhost: React.CSSProperties = { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.6)', fontSize: '0.75rem', padding: '0.5rem 1.25rem', borderRadius: '9999px', cursor: 'pointer' }
+
+const INTERESTS_OPTS = ['Mode', 'Beauté', 'Lifestyle', 'Sport', 'Fitness', 'Voyage', 'Tech', 'Gaming', 'Gastronomie', 'Culture', 'Nutrition', 'Innovation']
+const COUNTRY_OPTS = ['France', 'Belgique', 'Suisse', 'Canada', 'Maroc']
+const LANG_OPTS = ['Français', 'Anglais', 'Espagnol', 'Arabe']
+
+export default function NouvellesCampagnePage() {
   const [step, setStep] = useState(1)
-  const [submitted, setSubmitted] = useState(false)
-  const [form, setForm] = useState({
-    title: '',
-    description: '',
-    budget: '',
-    startDate: '',
-    endDate: '',
-    targetCategory: '',
-    targetGender: '',
-    targetInterests: [] as string[],
-    targetCountries: [] as string[],
-    targetLanguages: [] as string[],
-    promoCode: '',
-    websiteUrl: '',
-    autoAssign: false,
-    documentName: '',
-  })
+  const [done, setDone] = useState(false)
 
-  const toggle = (key: 'targetInterests' | 'targetCountries' | 'targetLanguages', val: string) => {
-    setForm(f => ({
-      ...f,
-      [key]: f[key].includes(val) ? f[key].filter(x => x !== val) : [...f[key], val],
-    }))
+  // Step 1
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+  const [budget, setBudget] = useState('')
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
+  const [promoCode, setPromoCode] = useState('')
+  const [websiteUrl, setWebsiteUrl] = useState('')
+
+  // Step 2
+  const [category, setCategory] = useState('')
+  const [gender, setGender] = useState('')
+  const [interests, setInterests] = useState<string[]>([])
+  const [countries, setCountries] = useState<string[]>([])
+  const [languages, setLanguages] = useState<string[]>([])
+  const [minEngagement, setMinEngagement] = useState('')
+
+  // Step 3
+  const [assignMode, setAssignMode] = useState('manual')
+
+  const toggleTag = (arr: string[], setArr: (v: string[]) => void, val: string) => {
+    setArr(arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val])
   }
 
-  if (submitted) {
+  const tag = (label: string, active: boolean, onClick: () => void) => (
+    <button key={label} onClick={onClick} style={active
+      ? { background: 'rgba(243,112,33,0.15)', color: '#F37021', border: '1px solid rgba(243,112,33,0.3)', borderRadius: '9999px', padding: '0.3rem 0.75rem', fontSize: '0.75rem', cursor: 'pointer' }
+      : { background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '9999px', padding: '0.3rem 0.75rem', fontSize: '0.75rem', cursor: 'pointer' }
+    }>{label}</button>
+  )
+
+  if (done) {
     return (
-      <div className="flex items-center justify-center min-h-96">
-        <div className="text-center max-w-md">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Check className="w-10 h-10 text-green-600" />
+      <div style={{ color: 'white', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+        <div style={{ textAlign: 'center', maxWidth: '400px' }}>
+          <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(48,209,88,0.15)', border: '1px solid rgba(48,209,88,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+            <Check size={28} color="#30d158" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Campagne soumise !</h2>
-          <p className="text-gray-500 mb-6">Notre équipe va analyser votre demande et vous proposer des profils sous 24h.</p>
-          <button onClick={() => { setSubmitted(false); setStep(1) }} className="bg-purple-700 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-800 transition">
-            Créer une nouvelle campagne
-          </button>
+          <h1 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>Campagne créée !</h1>
+          <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.875rem', marginBottom: '1.5rem' }}>Votre campagne &quot;{title}&quot; a été soumise avec succès. Elle sera examinée par notre équipe.</p>
+          <button onClick={() => { setStep(1); setDone(false); setTitle('') }} style={btnGold}>Créer une autre campagne</button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-2xl">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Nouvelle campagne</h1>
-        <p className="text-gray-500">Étape {step} sur 3</p>
-        <div className="flex gap-1 mt-3">
-          {[1,2,3].map(s => (
-            <div key={s} className={`h-1.5 flex-1 rounded-full transition-colors ${s <= step ? 'bg-purple-600' : 'bg-gray-200'}`} />
+    <div style={{ color: 'white', padding: '1.5rem', maxWidth: '640px', margin: '0 auto' }}>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>Nouvelle campagne</h1>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          {[1, 2, 3].map(s => (
+            <div key={s} style={{ flex: 1, height: '3px', borderRadius: '9999px', background: step >= s ? '#F37021' : 'rgba(255,255,255,0.1)' }} />
+          ))}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem' }}>
+          {['Informations', 'Ciblage', 'Récapitulatif'].map((l, i) => (
+            <span key={l} style={{ fontSize: '0.7rem', color: step > i ? '#F37021' : 'rgba(255,255,255,0.3)' }}>{l}</span>
           ))}
         </div>
       </div>
 
-      {/* Step 1 */}
       {step === 1 && (
-        <div className="space-y-5 bg-white rounded-2xl border border-gray-100 p-6">
-          <h2 className="font-semibold text-gray-900">Informations générales</h2>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Titre de la campagne *</label>
-            <input
-              value={form.title}
-              onChange={e => setForm({...form, title: e.target.value})}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-              placeholder="Ex: Lancement collection printemps 2024"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description / Brief *</label>
-            <textarea
-              value={form.description}
-              onChange={e => setForm({...form, description: e.target.value})}
-              rows={4}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-              placeholder="Décrivez votre campagne, vos attentes, le ton de communication..."
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
+        <GlassCard>
+          <h2 style={{ fontSize: '0.875rem', fontWeight: 700, marginBottom: '1rem' }}>Informations de la campagne</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Budget total (€) *</label>
-              <input
-                type="number"
-                value={form.budget}
-                onChange={e => setForm({...form, budget: e.target.value})}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-                placeholder="5000"
-                min="500"
-              />
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Titre *</label>
+              <input style={inputStyle} value={title} onChange={e => setTitle(e.target.value)} placeholder="Titre de la campagne" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Code promo</label>
-              <input
-                value={form.promoCode}
-                onChange={e => setForm({...form, promoCode: e.target.value})}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-                placeholder="PROMO20"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
-              <input type="date" value={form.startDate} onChange={e => setForm({...form, startDate: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Brief / Description *</label>
+              <textarea style={{ ...inputStyle, minHeight: '100px', resize: 'vertical' } as React.CSSProperties} value={description} onChange={e => setDescription(e.target.value)} placeholder="Décrivez votre campagne..." />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Date de fin</label>
-              <input type="date" value={form.endDate} onChange={e => setForm({...form, endDate: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Budget (€) *</label>
+              <input type="number" style={inputStyle} value={budget} onChange={e => setBudget(e.target.value)} placeholder="Ex: 5000" />
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div>
+                <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Date de début</label>
+                <input type="date" style={inputStyle} value={startDate} onChange={e => setStartDate(e.target.value)} />
+              </div>
+              <div>
+                <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Date de fin</label>
+                <input type="date" style={inputStyle} value={endDate} onChange={e => setEndDate(e.target.value)} />
+              </div>
+            </div>
+            <div>
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Code promo</label>
+              <input style={inputStyle} value={promoCode} onChange={e => setPromoCode(e.target.value)} placeholder="Ex: MAISON10" />
+            </div>
+            <div>
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>URL du site</label>
+              <input style={inputStyle} value={websiteUrl} onChange={e => setWebsiteUrl(e.target.value)} placeholder="https://..." />
+            </div>
+            <div>
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Brief PDF (optionnel)</label>
+              <div style={{ border: '2px dashed rgba(255,255,255,0.1)', borderRadius: '0.75rem', padding: '1.5rem', textAlign: 'center', cursor: 'pointer' }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(243,112,33,0.3)')}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}>
+                <Upload size={20} color="rgba(255,255,255,0.3)" style={{ margin: '0 auto 0.5rem' }} />
+                <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>Glisser-déposer ou cliquer pour uploader</div>
+                <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.25)', marginTop: '0.25rem' }}>PDF max 10MB</div>
+              </div>
             </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">URL de votre site</label>
-            <input value={form.websiteUrl} onChange={e => setForm({...form, websiteUrl: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" placeholder="https://votremarque.com" />
+          <div style={{ marginTop: '1.25rem', display: 'flex', justifyContent: 'flex-end' }}>
+            <button onClick={() => setStep(2)} disabled={!title || !description || !budget} style={{ ...btnGold, opacity: title && description && budget ? 1 : 0.5, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              Suivant <ArrowRight size={14} />
+            </button>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Document de présentation</label>
-            <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center hover:border-purple-300 transition cursor-pointer">
-              <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-              <p className="text-sm text-gray-500">Glissez votre PDF ou cliquez pour choisir</p>
-              <p className="text-xs text-gray-400 mt-1">PDF, DOCX, PPTX · Max 10 Mo</p>
-            </div>
-          </div>
-        </div>
+        </GlassCard>
       )}
 
-      {/* Step 2 */}
       {step === 2 && (
-        <div className="space-y-6 bg-white rounded-2xl border border-gray-100 p-6">
-          <h2 className="font-semibold text-gray-900">Ciblage des influenceurs</h2>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Catégorie d&apos;influenceur</label>
-            <div className="grid grid-cols-3 gap-3">
-              {[
-                { val: 'MICRO', label: 'Micro', sub: '< 10K abonnés' },
-                { val: 'MACRO', label: 'Macro', sub: '10K – 500K' },
-                { val: 'INTERNATIONAL', label: 'International', sub: '500K+' },
-              ].map(c => (
-                <button key={c.val} onClick={() => setForm({...form, targetCategory: c.val})}
-                  className={`p-3 rounded-xl border-2 text-left transition ${form.targetCategory === c.val ? 'border-purple-600 bg-purple-50' : 'border-gray-200 hover:border-purple-300'}`}>
-                  <p className={`font-medium text-sm ${form.targetCategory === c.val ? 'text-purple-700' : 'text-gray-700'}`}>{c.label}</p>
-                  <p className="text-xs text-gray-400">{c.sub}</p>
-                </button>
-              ))}
+        <GlassCard>
+          <h2 style={{ fontSize: '0.875rem', fontWeight: 700, marginBottom: '1rem' }}>Ciblage</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div>
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem', display: 'block' }}>Catégorie d&apos;influenceur</label>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                {[['MICRO', 'Micro &lt;10K'], ['MACRO', 'Macro 10K–500K'], ['INTERNATIONAL', 'International 500K+']].map(([k, l]) => (
+                  <button key={k} onClick={() => setCategory(category === k ? '' : k)} style={category === k
+                    ? { background: 'rgba(243,112,33,0.15)', color: '#F37021', border: '1px solid rgba(243,112,33,0.3)', borderRadius: '0.75rem', padding: '0.6rem 1rem', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 600 }
+                    : { background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.75rem', padding: '0.6rem 1rem', fontSize: '0.75rem', cursor: 'pointer' }
+                  }>{l}</button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem', display: 'block' }}>Genre cible</label>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                {['Tous', 'Femme', 'Homme'].map(g => (
+                  <button key={g} onClick={() => setGender(gender === g ? '' : g)} style={gender === g
+                    ? { background: 'rgba(243,112,33,0.15)', color: '#F37021', border: '1px solid rgba(243,112,33,0.3)', borderRadius: '9999px', padding: '0.4rem 1rem', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 600 }
+                    : { background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '9999px', padding: '0.4rem 1rem', fontSize: '0.75rem', cursor: 'pointer' }
+                  }>{g}</button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem', display: 'block' }}>Intérêts</label>
+              <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+                {INTERESTS_OPTS.map(i => tag(i, interests.includes(i), () => toggleTag(interests, setInterests, i)))}
+              </div>
+            </div>
+            <div>
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem', display: 'block' }}>Pays cibles</label>
+              <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+                {COUNTRY_OPTS.map(c => tag(c, countries.includes(c), () => toggleTag(countries, setCountries, c)))}
+              </div>
+            </div>
+            <div>
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem', display: 'block' }}>Langues</label>
+              <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+                {LANG_OPTS.map(l => tag(l, languages.includes(l), () => toggleTag(languages, setLanguages, l)))}
+              </div>
+            </div>
+            <div>
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem', display: 'block' }}>Taux d&apos;engagement minimum (%)</label>
+              <input type="number" style={inputStyle} value={minEngagement} onChange={e => setMinEngagement(e.target.value)} placeholder="Ex: 3" min="0" max="100" step="0.1" />
             </div>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Genre cible</label>
-            <div className="flex gap-3">
-              {['Tous', 'Femme', 'Homme'].map(g => (
-                <button key={g} onClick={() => setForm({...form, targetGender: g === 'Tous' ? '' : g})}
-                  className={`px-4 py-2 rounded-full text-sm border-2 transition ${(form.targetGender === g || (g === 'Tous' && !form.targetGender)) ? 'border-purple-600 bg-purple-50 text-purple-700' : 'border-gray-200 text-gray-600 hover:border-purple-300'}`}>
-                  {g}
-                </button>
-              ))}
-            </div>
+          <div style={{ marginTop: '1.25rem', display: 'flex', justifyContent: 'space-between' }}>
+            <button onClick={() => setStep(1)} style={{ ...btnGhost, display: 'flex', alignItems: 'center', gap: '0.4rem' }}><ArrowLeft size={14} /> Retour</button>
+            <button onClick={() => setStep(3)} style={{ ...btnGold, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>Suivant <ArrowRight size={14} /></button>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Centres d&apos;intérêt</label>
-            <div className="flex flex-wrap gap-2">
-              {interests.map(int => (
-                <button key={int} onClick={() => toggle('targetInterests', int)}
-                  className={`px-3 py-1.5 rounded-full text-xs border transition ${form.targetInterests.includes(int) ? 'bg-purple-600 border-purple-600 text-white' : 'border-gray-200 text-gray-600 hover:border-purple-300'}`}>
-                  {int}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Pays cibles</label>
-            <div className="flex flex-wrap gap-2">
-              {countries.map(c => (
-                <button key={c} onClick={() => toggle('targetCountries', c)}
-                  className={`px-3 py-1.5 rounded-full text-xs border transition ${form.targetCountries.includes(c) ? 'bg-blue-600 border-blue-600 text-white' : 'border-gray-200 text-gray-600 hover:border-blue-300'}`}>
-                  {c}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Langues parlées</label>
-            <div className="flex flex-wrap gap-2">
-              {languages.map(l => (
-                <button key={l} onClick={() => toggle('targetLanguages', l)}
-                  className={`px-3 py-1.5 rounded-full text-xs border transition ${form.targetLanguages.includes(l) ? 'bg-green-600 border-green-600 text-white' : 'border-gray-200 text-gray-600 hover:border-green-300'}`}>
-                  {l}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+        </GlassCard>
       )}
 
-      {/* Step 3 */}
       {step === 3 && (
-        <div className="space-y-5 bg-white rounded-2xl border border-gray-100 p-6">
-          <h2 className="font-semibold text-gray-900">Validation et mode d&apos;assignation</h2>
-
-          <div className="space-y-3">
-            <label className="block text-sm font-medium text-gray-700">Mode d&apos;assignation des influenceurs</label>
-            <div
-              onClick={() => setForm({...form, autoAssign: false})}
-              className={`p-4 rounded-xl border-2 cursor-pointer transition ${!form.autoAssign ? 'border-purple-600 bg-purple-50' : 'border-gray-200 hover:border-purple-300'}`}
-            >
-              <p className={`font-medium text-sm ${!form.autoAssign ? 'text-purple-700' : 'text-gray-700'}`}>✋ Validation manuelle</p>
-              <p className="text-xs text-gray-500 mt-1">Vous recevrez les profils proposés et validerez chaque influenceur un par un.</p>
+        <GlassCard>
+          <h2 style={{ fontSize: '0.875rem', fontWeight: 700, marginBottom: '1rem' }}>Récapitulatif &amp; Paiement</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
+            <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: '0.75rem', padding: '1rem' }}>
+              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem' }}>Campagne</div>
+              <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.25rem' }}>{title}</div>
+              <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)' }}>{description.substring(0, 100)}{description.length > 100 ? '...' : ''}</div>
             </div>
-            <div
-              onClick={() => setForm({...form, autoAssign: true})}
-              className={`p-4 rounded-xl border-2 cursor-pointer transition ${form.autoAssign ? 'border-purple-600 bg-purple-50' : 'border-gray-200 hover:border-purple-300'}`}
-            >
-              <p className={`font-medium text-sm ${form.autoAssign ? 'text-purple-700' : 'text-gray-700'}`}>🤖 Assignation automatique</p>
-              <p className="text-xs text-gray-500 mt-1">Notre algorithme sélectionne et assigne automatiquement les meilleurs profils selon vos critères.</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+              {[{ l: 'Budget', v: `${Number(budget).toLocaleString('fr-FR')} €` }, { l: 'Catégorie', v: category || 'Tous' }, { l: 'Début', v: startDate || '-' }, { l: 'Fin', v: endDate || '-' }].map(s => (
+                <div key={s.l} style={{ background: 'rgba(255,255,255,0.04)', borderRadius: '0.75rem', padding: '0.75rem' }}>
+                  <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.35)' }}>{s.l}</div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 600, marginTop: '0.15rem' }}>{s.v}</div>
+                </div>
+              ))}
+            </div>
+            <div>
+              <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem', display: 'block' }}>Mode d&apos;assignation</label>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                {[['manual', 'Manuel'], ['auto', 'Automatique']].map(([k, l]) => (
+                  <button key={k} onClick={() => setAssignMode(k)} style={assignMode === k
+                    ? { background: 'rgba(243,112,33,0.15)', color: '#F37021', border: '1px solid rgba(243,112,33,0.3)', borderRadius: '9999px', padding: '0.4rem 1rem', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 600 }
+                    : { background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '9999px', padding: '0.4rem 1rem', fontSize: '0.75rem', cursor: 'pointer' }
+                  }>{l}</button>
+                ))}
+              </div>
+            </div>
+            <div style={{ background: 'rgba(243,112,33,0.08)', border: '1px solid rgba(243,112,33,0.15)', borderRadius: '0.75rem', padding: '1rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.15rem' }}>Paiement depuis le portefeuille</div>
+                  <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)' }}>Solde actuel: 3 200 €</div>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '1rem', fontWeight: 700, color: '#F37021' }}>{Number(budget || 0).toLocaleString('fr-FR')} €</div>
+                  <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)' }}>à débiter</div>
+                </div>
+              </div>
             </div>
           </div>
-
-          <div className="bg-gray-50 rounded-xl p-4 text-sm">
-            <p className="font-medium text-gray-900 mb-3">Récapitulatif</p>
-            <div className="space-y-2 text-gray-600">
-              <div className="flex justify-between"><span>Titre</span><span className="font-medium text-gray-900 text-right max-w-48 truncate">{form.title || '—'}</span></div>
-              <div className="flex justify-between"><span>Budget</span><span className="font-medium text-gray-900">{form.budget ? `${form.budget}€` : '—'}</span></div>
-              <div className="flex justify-between"><span>Catégorie</span><span className="font-medium text-gray-900">{form.targetCategory || 'Toutes'}</span></div>
-              <div className="flex justify-between"><span>Centres d&apos;intérêt</span><span className="font-medium text-gray-900">{form.targetInterests.length > 0 ? form.targetInterests.slice(0,2).join(', ') : '—'}</span></div>
-              <div className="flex justify-between"><span>Pays</span><span className="font-medium text-gray-900">{form.targetCountries.length > 0 ? form.targetCountries.slice(0,2).join(', ') : '—'}</span></div>
-            </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <button onClick={() => setStep(2)} style={{ ...btnGhost, display: 'flex', alignItems: 'center', gap: '0.4rem' }}><ArrowLeft size={14} /> Retour</button>
+            <button onClick={() => setDone(true)} style={{ ...btnGold, display: 'flex', alignItems: 'center', gap: '0.4rem' }}><Check size={14} /> Lancer la campagne</button>
           </div>
-        </div>
+        </GlassCard>
       )}
-
-      {/* Navigation */}
-      <div className="flex justify-between mt-6">
-        {step > 1 ? (
-          <button onClick={() => setStep(step - 1)} className="flex items-center gap-2 px-5 py-2.5 border border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-50 transition">
-            <ArrowLeft className="w-4 h-4" />
-            Précédent
-          </button>
-        ) : <div />}
-        {step < 3 ? (
-          <button onClick={() => setStep(step + 1)} className="flex items-center gap-2 bg-purple-700 text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-purple-800 transition">
-            Suivant
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        ) : (
-          <button onClick={() => setSubmitted(true)} className="flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-green-700 transition">
-            <Check className="w-4 h-4" />
-            Soumettre la campagne
-          </button>
-        )}
-      </div>
     </div>
   )
 }

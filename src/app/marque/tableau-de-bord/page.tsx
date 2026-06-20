@@ -1,97 +1,142 @@
+'use client'
+
+import { useState } from 'react'
 import { mockCampaigns, mockInfluencers } from '@/lib/mock-data'
 import { formatCurrency, formatNumber } from '@/lib/utils'
-import { TrendingUp, Users, Wallet, BarChart3, Plus, ArrowRight } from 'lucide-react'
+import { Wallet, TrendingUp, Users, BarChart3, Plus, ArrowRight, MessageCircle } from 'lucide-react'
 import Link from 'next/link'
 
-export default function MarqueDashboard() {
-  const myCampaigns = mockCampaigns.filter(c => c.brandProfileId === 'brand-1')
-  const activeCampaigns = myCampaigns.filter(c => c.status === 'ACTIVE')
+function GlassCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return <div className={className} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '1rem', padding: '1.25rem' }}>{children}</div>
+}
+
+const myCampaigns = mockCampaigns.filter(c => c.brandProfileId === 'brand-1')
+const myInfluencers = mockInfluencers.slice(0, 3)
+
+export default function MarqueTableauDeBordPage() {
   const balance = 3200
 
   const stats = [
-    { label: 'Portefeuille', value: formatCurrency(balance), icon: Wallet, color: 'text-purple-700', bg: 'bg-purple-50' },
-    { label: 'Campagnes actives', value: activeCampaigns.length.toString(), icon: BarChart3, color: 'text-blue-700', bg: 'bg-blue-50' },
-    { label: 'Influenceurs assignés', value: '3', icon: Users, color: 'text-green-700', bg: 'bg-green-50' },
-    { label: 'ROI moyen', value: '+287%', icon: TrendingUp, color: 'text-yellow-700', bg: 'bg-yellow-50' },
+    { label: 'Portefeuille', value: formatCurrency(balance), icon: Wallet, color: '#F37021', sub: 'Solde disponible' },
+    { label: 'Campagnes actives', value: String(myCampaigns.filter(c => c.status === 'ACTIVE').length), icon: BarChart3, color: '#0a84ff', sub: 'En cours' },
+    { label: 'Influenceurs assignés', value: String(myInfluencers.length), icon: Users, color: '#30d158', sub: 'Sur vos campagnes' },
+    { label: 'ROI moyen', value: '+142%', icon: TrendingUp, color: '#F37021', sub: 'Ce mois-ci' },
   ]
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-8">
+    <div style={{ color: 'white', padding: '1.5rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.75rem' }}>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
-          <p className="text-gray-500">Bienvenue, Maison Élégance 👋</p>
+          <h1 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.25rem' }}>Tableau de bord</h1>
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>Maison Élégance</p>
         </div>
-        <Link
-          href="/marque/nouvelle-campagne"
-          className="inline-flex items-center gap-2 bg-purple-700 text-white px-5 py-2.5 rounded-full font-medium hover:bg-purple-800 transition text-sm"
-        >
-          <Plus className="w-4 h-4" />
-          Nouvelle campagne
+        <Link href="/marque/nouvelle-campagne">
+          <button style={{ background: 'rgba(243,112,33,0.2)', border: '1px solid rgba(243,112,33,0.3)', color: '#F37021', fontSize: '0.75rem', fontWeight: 600, padding: '0.6rem 1.25rem', borderRadius: '9999px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <Plus size={14} /> Nouvelle campagne
+          </button>
         </Link>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {stats.map((stat, i) => (
-          <div key={i} className="bg-white rounded-2xl p-5 border border-gray-100">
-            <div className={`w-10 h-10 rounded-xl ${stat.bg} flex items-center justify-center mb-3`}>
-              <stat.icon className={`w-5 h-5 ${stat.color}`} />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.75rem', marginBottom: '1.5rem' }}>
+        {stats.map(s => (
+          <GlassCard key={s.label}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+              <div style={{ width: 36, height: 36, borderRadius: '0.75rem', background: `${s.color}20`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <s.icon size={18} color={s.color} />
+              </div>
             </div>
-            <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-            <p className="text-sm text-gray-500">{stat.label}</p>
-          </div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: s.color, marginBottom: '0.15rem' }}>{s.value}</div>
+            <div style={{ fontSize: '0.75rem', fontWeight: 600, marginBottom: '0.1rem' }}>{s.label}</div>
+            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)' }}>{s.sub}</div>
+          </GlassCard>
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* Campaigns */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="font-semibold text-gray-900">Mes campagnes</h2>
-            <Link href="/marque/campagnes" className="text-sm text-purple-700 hover:underline flex items-center gap-1">
-              Voir tout <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-          <div className="space-y-3">
-            {myCampaigns.map(camp => (
-              <div key={camp.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                <div>
-                  <p className="font-medium text-sm text-gray-900">{camp.title}</p>
-                  <p className="text-xs text-gray-400">{camp.influencersCount} influenceurs · Budget restant: {formatCurrency(camp.budgetRemaining)}</p>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1rem', alignItems: 'start' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <GlassCard>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h2 style={{ fontSize: '0.875rem', fontWeight: 700 }}>Mes campagnes</h2>
+              <Link href="/marque/campagnes" style={{ fontSize: '0.75rem', color: '#F37021', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>Voir tout <ArrowRight size={12} /></Link>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {myCampaigns.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '2rem', color: 'rgba(255,255,255,0.3)', fontSize: '0.875rem' }}>Aucune campagne pour l&apos;instant</div>
+              ) : myCampaigns.map(c => (
+                <div key={c.id} style={{ background: 'rgba(255,255,255,0.04)', borderRadius: '0.75rem', padding: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+                    <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>{c.title}</div>
+                    <span style={{ background: c.status === 'ACTIVE' ? 'rgba(48,209,88,0.1)' : 'rgba(255,149,0,0.1)', color: c.status === 'ACTIVE' ? '#30d158' : '#ff9500', border: `1px solid ${c.status === 'ACTIVE' ? 'rgba(48,209,88,0.2)' : 'rgba(255,149,0,0.2)'}`, borderRadius: '9999px', padding: '0.1rem 0.5rem', fontSize: '0.65rem', fontWeight: 600 }}>
+                      {c.status === 'ACTIVE' ? 'Active' : 'En attente'}
+                    </span>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
+                    <div>
+                      <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.35)' }}>Budget</div>
+                      <div style={{ fontSize: '0.8rem', fontWeight: 600 }}>{formatCurrency(c.budget)}</div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.35)' }}>Restant</div>
+                      <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#30d158' }}>{formatCurrency(c.budgetRemaining)}</div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.35)' }}>Influenceurs</div>
+                      <div style={{ fontSize: '0.8rem', fontWeight: 600 }}>{c.influencersCount}</div>
+                    </div>
+                  </div>
                 </div>
-                <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                  camp.status === 'ACTIVE' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-                }`}>
-                  {camp.status === 'ACTIVE' ? 'Active' : 'En attente'}
-                </span>
-              </div>
-            ))}
-            {myCampaigns.length === 0 && (
-              <p className="text-sm text-gray-400 text-center py-6">Aucune campagne. Créez votre première campagne !</p>
-            )}
-          </div>
+              ))}
+            </div>
+          </GlassCard>
+
+          <GlassCard>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h2 style={{ fontSize: '0.875rem', fontWeight: 700 }}>Influenceurs assignés</h2>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {myInfluencers.map(inf => (
+                <div key={inf.id} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(255,255,255,0.04)', borderRadius: '0.75rem', padding: '0.75rem' }}>
+                  <img src={inf.photo} alt={inf.name} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 600 }}>{inf.name}</div>
+                    <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)' }}>{formatNumber(inf.followers)} abonnés · {inf.engagementRate}% eng.</div>
+                  </div>
+                  <button style={{ background: 'rgba(10,132,255,0.1)', border: '1px solid rgba(10,132,255,0.2)', color: '#0a84ff', fontSize: '0.65rem', fontWeight: 600, padding: '0.3rem 0.75rem', borderRadius: '9999px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    <MessageCircle size={11} /> Chat
+                  </button>
+                </div>
+              ))}
+            </div>
+          </GlassCard>
         </div>
 
-        {/* Influenceurs assignés */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="font-semibold text-gray-900">Influenceurs assignés</h2>
-          </div>
-          <div className="space-y-3">
-            {mockInfluencers.slice(0, 3).map(inf => (
-              <div key={inf.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                <img src={inf.photo} alt={inf.name} className="w-10 h-10 rounded-full object-cover" />
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm text-gray-900">{inf.name}</p>
-                  <p className="text-xs text-gray-400">{formatNumber(inf.followers)} abonnés · {inf.engagementRate}%</p>
-                </div>
-                <Link href={`/chat/demo`} className="text-xs text-purple-700 font-medium hover:underline">
-                  Chat
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <GlassCard>
+            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'rgba(255,255,255,0.4)', marginBottom: '0.75rem' }}>Accès rapides</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {[
+                { label: 'Nouvelle campagne', href: '/marque/nouvelle-campagne', color: '#F37021' },
+                { label: 'Recharger le portefeuille', href: '/marque/portefeuille', color: '#30d158' },
+                { label: 'Voir mes campagnes', href: '/marque/campagnes', color: '#0a84ff' },
+                { label: 'Mon profil', href: '/marque/profil', color: 'rgba(255,255,255,0.5)' },
+              ].map(l => (
+                <Link key={l.href} href={l.href} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.04)', borderRadius: '0.75rem', padding: '0.75rem', textDecoration: 'none', color: l.color, fontSize: '0.8rem', fontWeight: 500 }}>
+                  {l.label} <ArrowRight size={13} />
                 </Link>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </GlassCard>
+
+          <GlassCard>
+            <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem' }}>Portefeuille</div>
+            <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#F37021', marginBottom: '0.25rem' }}>{formatCurrency(balance)}</div>
+            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', marginBottom: '1rem' }}>Solde disponible</div>
+            <Link href="/marque/portefeuille">
+              <button style={{ background: 'rgba(243,112,33,0.2)', border: '1px solid rgba(243,112,33,0.3)', color: '#F37021', fontSize: '0.75rem', fontWeight: 600, padding: '0.5rem 1.25rem', borderRadius: '9999px', cursor: 'pointer', width: '100%' }}>
+                Recharger
+              </button>
+            </Link>
+          </GlassCard>
         </div>
       </div>
     </div>
