@@ -93,10 +93,10 @@ export default function Home() {
       <style>{`@keyframes shimmer{0%{background-position:400% 0}100%{background-position:-400% 0}}`}</style>
 
       {/* Hero */}
-      <div style={{ position: 'relative', backgroundColor: '#1a1a1a', minHeight: '52vh', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(135deg, #1a1a1a 0%, #2d2520 60%, #1a1a1a 100%)' }} />
-        <div style={{ position: 'absolute', top: '10%', right: '5%', width: '45%', height: '80%', opacity: 0.08, backgroundImage: 'repeating-linear-gradient(45deg, #c9a96e 0, #c9a96e 1px, transparent 0, transparent 50%)', backgroundSize: '20px 20px' }} />
-        <div style={{ position: 'relative', zIndex: 1, padding: '2.5rem 1.5rem', maxWidth: '560px' }}>
+      <div style={{ position: 'relative', backgroundColor: '#1a1a1a', minHeight: '65vh', display: 'flex', alignItems: 'flex-end', overflow: 'hidden' }}>
+        <img src="/hero.jpeg" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(10,8,6,0.88) 0%, rgba(10,8,6,0.45) 45%, rgba(10,8,6,0.1) 100%)' }} />
+        <div style={{ position: 'relative', zIndex: 1, padding: '2rem 1.5rem 2.5rem', maxWidth: '560px', width: '100%' }}>
           <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.58rem', letterSpacing: '0.4em', color: '#c9a96e', marginBottom: '0.75rem' }}>
             MAGALI BERDAH · MODE DE LUXE
           </p>
