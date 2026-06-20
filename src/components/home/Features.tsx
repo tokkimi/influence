@@ -25,20 +25,23 @@ export default function Features() {
   const features = lang === 'fr' ? featuresFr : featuresEn
 
   return (
-    <section className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-28 bg-[#07071a] relative">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-violet-600/5 rounded-full blur-[100px]" />
+      </div>
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-ink-900 mb-4">{t('features.title')}</h2>
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto">{t('features.sub')}</p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight">{t('features.title')}</h2>
+          <p className="text-white/45 max-w-xl mx-auto leading-relaxed">{t('features.sub')}</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature) => (
-            <div key={feature.title} className="group p-7 rounded-2xl border border-gray-100 hover:border-ink-200 hover:shadow-ink transition-all duration-300 cursor-default">
-              <div className="w-12 h-12 bg-ink-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-ink-700 transition-colors duration-300">
-                <feature.icon className="w-5 h-5 text-ink-600 group-hover:text-white transition-colors duration-300" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {features.map((f) => (
+            <div key={f.title} className="glass-card rounded-2xl p-6 hover:bg-white/8 transition-all duration-300 group">
+              <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-400/20 flex items-center justify-center mb-5 group-hover:bg-violet-500/20 transition-colors">
+                <f.icon className="w-4 h-4 text-violet-400" />
               </div>
-              <h3 className="text-base font-semibold text-gray-900 mb-2">{feature.title}</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">{feature.description}</p>
+              <h3 className="text-white font-semibold text-sm mb-2">{f.title}</h3>
+              <p className="text-white/40 text-sm leading-relaxed">{f.description}</p>
             </div>
           ))}
         </div>
