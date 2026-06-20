@@ -14,14 +14,14 @@ export default function Hero() {
 
           {/* Texte */}
           <div className="py-14 lg:py-0 pb-20 lg:pb-0">
-            <div className="inline-flex items-center gap-2 border border-[#c9993a]/30 bg-[#c9993a]/6 rounded-full px-3.5 py-1.5 mb-7">
+            <div className="inline-flex items-center gap-2 border border-[#f97316]/30 bg-[#f97316]/6 rounded-full px-3.5 py-1.5 mb-7">
               <div className="w-1.5 h-1.5 rounded-full bg-[#30d158] animate-pulse" />
-              <span className="text-[#c9993a] text-[11px] font-semibold tracking-wide">{t('hero.badge')}</span>
+              <span className="text-[#f97316] text-[11px] font-semibold tracking-wide">{t('hero.badge')}</span>
             </div>
 
             <h1 className="font-black text-[#0f0f0f] leading-[1.05] tracking-[-0.025em] mb-4" style={{fontSize:'clamp(1.8rem, 3.2vw, 2.6rem)'}}>
               {t('hero.title1')}<br />
-              <span className="text-[#c9993a]">{t('hero.title2')}</span>
+              <span className="text-[#f97316]">{t('hero.title2')}</span>
             </h1>
 
             <p className="text-[#6b6b6b] text-sm leading-relaxed mb-8 max-w-[400px]">
@@ -32,7 +32,7 @@ export default function Hero() {
               <Link href="/auth/inscription?role=brand" className="inline-flex items-center gap-2 bg-[#0f0f0f] hover:bg-[#1a1a1a] text-white font-semibold px-6 py-3 rounded-full text-sm transition-all">
                 {t('hero.brand')} <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link href="/auth/inscription?role=influencer" className="inline-flex items-center border border-black/12 hover:border-[#c9993a]/40 text-[#0f0f0f] font-medium px-6 py-3 rounded-full text-sm transition-all">
+              <Link href="/auth/inscription?role=influencer" className="inline-flex items-center border border-black/12 hover:border-[#f97316]/40 text-[#0f0f0f] font-medium px-6 py-3 rounded-full text-sm transition-all">
                 {t('hero.influencer')}
               </Link>
             </div>
@@ -71,14 +71,14 @@ export default function Hero() {
               <p className="text-[#0f0f0f] font-black text-xl tracking-tight">+287%</p>
               <div className="flex items-end gap-0.5 h-7 mt-2">
                 {[30,50,35,65,45,80,55,95].map((h,i) => (
-                  <div key={i} className="flex-1 rounded-sm" style={{height:`${h}%`, background: i===7 ? '#c9993a' : 'rgba(0,0,0,0.08)'}} />
+                  <div key={i} className="flex-1 rounded-sm" style={{height:`${h}%`, background: i===7 ? '#f97316' : 'rgba(0,0,0,0.08)'}} />
                 ))}
               </div>
             </div>
 
             {/* Badge certifiés */}
             <div className="animate-float2 absolute top-16 left-[-1.5rem] rounded-2xl px-4 py-3 z-10 flex items-center gap-2.5" style={{background:'rgba(255,255,255,0.88)', backdropFilter:'blur(20px)', border:'1px solid rgba(0,0,0,0.07)', boxShadow:'0 12px 40px rgba(0,0,0,0.08)'}}>
-              <div className="w-8 h-8 rounded-xl bg-[#c9993a] flex items-center justify-center text-white font-black text-xs">5K+</div>
+              <div className="w-8 h-8 rounded-xl bg-[#f97316] flex items-center justify-center text-white font-black text-xs">5K+</div>
               <div>
                 <p className="text-xs font-semibold text-[#0f0f0f]">Talents certifiés</p>
                 <p className="text-[10px] text-[#aaaaaa]">France · Europe · US</p>

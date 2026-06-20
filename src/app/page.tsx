@@ -12,8 +12,8 @@ export default function Home() {
     <main>
       <Navbar />
       <Hero />
-      <Features />
       <Influencers />
+      <Features />
       <Newsletter />
       <QuickLinks />
       <CTASection />

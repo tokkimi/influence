@@ -3,19 +3,19 @@ import { Shield, Zap, BarChart3, MessageSquare, CreditCard, Search } from "lucid
 import { useLang } from "@/lib/lang"
 
 const featuresFr = [
-  { icon: Search, title: "Matching intelligent", description: "Algorithme de recommandation basé sur vos objectifs, audience cible et secteur.", color: '#c9993a', n: '01' },
+  { icon: Search, title: "Matching intelligent", description: "Algorithme de recommandation basé sur vos objectifs, audience cible et secteur.", color: '#f97316', n: '01' },
   { icon: BarChart3, title: "Analytics temps réel", description: "Impressions, ROI, taux d'engagement — tableau de bord en direct.", color: '#0a84ff', n: '02' },
   { icon: Shield, title: "100% sécurisé RGPD", description: "Contrats automatisés, paiements escrow, données hébergées en France.", color: '#30d158', n: '03' },
   { icon: MessageSquare, title: "Chat intégré", description: "Messagerie directe avec vos partenaires sans quitter la plateforme.", color: '#ff9500', n: '04' },
-  { icon: CreditCard, title: "Paiements auto", description: "Versements déclenchés à la validation du contenu livré.", color: '#c9993a', n: '05' },
+  { icon: CreditCard, title: "Paiements auto", description: "Versements déclenchés à la validation du contenu livré.", color: '#f97316', n: '05' },
   { icon: Zap, title: "Live en 24h", description: "Publiez votre première campagne en moins d'une journée.", color: '#0a84ff', n: '06' },
 ]
 const featuresEn = [
-  { icon: Search, title: "Smart Matching", description: "Recommendation engine based on your goals, target audience and sector.", color: '#c9993a', n: '01' },
+  { icon: Search, title: "Smart Matching", description: "Recommendation engine based on your goals, target audience and sector.", color: '#f97316', n: '01' },
   { icon: BarChart3, title: "Real-time Analytics", description: "Impressions, ROI, engagement rate — live dashboard.", color: '#0a84ff', n: '02' },
   { icon: Shield, title: "100% GDPR Secure", description: "Automated contracts, escrow payments, data hosted in France.", color: '#30d158', n: '03' },
   { icon: MessageSquare, title: "Integrated Chat", description: "Direct messaging with your partners without leaving the platform.", color: '#ff9500', n: '04' },
-  { icon: CreditCard, title: "Auto Payments", description: "Payouts triggered on content validation.", color: '#c9993a', n: '05' },
+  { icon: CreditCard, title: "Auto Payments", description: "Payouts triggered on content validation.", color: '#f97316', n: '05' },
   { icon: Zap, title: "Live in 24h", description: "Publish your first campaign in less than a day.", color: '#0a84ff', n: '06' },
 ]
 
@@ -28,7 +28,7 @@ export default function Features() {
       <div className="max-w-6xl mx-auto px-5 lg:px-8">
         <div className="mb-8">
           <h2 className="text-base font-bold text-[#0f0f0f]">{t('features.title')}</h2>
-          <div className="w-8 h-0.5 bg-[#c9993a] mt-2" />
+          <div className="w-8 h-0.5 bg-[#f97316] mt-2" />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-black/6 border border-black/6 rounded-2xl overflow-hidden">
           {features.map((f) => (

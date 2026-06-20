@@ -24,7 +24,7 @@ export default function BottomNav() {
   ]
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden" style={{background:'rgba(255,255,255,0.9)', backdropFilter:'blur(20px) saturate(180%)', borderTop:'1px solid rgba(0,0,0,0.08)'}}>
+    <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden" style={{background:'#ffffff', borderTop:'1px solid rgba(0,0,0,0.1)'}}>
       <div className="flex items-center justify-around px-2 py-2">
         {items.map(({ href, icon: Icon, label }) => {
           const active = pathname === href
