@@ -4,7 +4,7 @@ const nextConfig = {
     domains: ['images.unsplash.com', 'randomuser.me', 'ui-avatars.com'],
   },
   experimental: {
-    serverComponentsExternalPackages: ['@prisma/client', 'bcryptjs'],
+    serverComponentsExternalPackages: ['bcryptjs'],
   },
 }
 
