@@ -57,7 +57,7 @@ export default function Hero() {
             {/* Image pleine hauteur */}
             <div className="absolute inset-0 overflow-hidden rounded-bl-[3rem]">
               <Image
-                src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=900&q=85&auto=format&fit=crop"
+                src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=900&q=85&auto=format&fit=crop"
                 alt="Influencer marketing"
                 fill
                 className="object-cover object-top"
