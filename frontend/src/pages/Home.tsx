@@ -99,13 +99,14 @@ export default function Home() {
     <div style={{ backgroundColor: '#faf7f4' }}>
       <style>{`
         @keyframes shimmer{0%{background-position:400% 0}100%{background-position:-400% 0}}
-        .hero-img { object-fit: cover; object-position: center top; }
+        .hero-img { object-fit: cover; object-position: center center; }
         @media (min-width: 768px) {
-          .hero-img { object-fit: contain; object-position: center center; }
-          .hero-section { min-height: 0 !important; }
           .hero-text { padding: 3rem 4rem !important; }
-          .comment-acheter-inner { max-width: 860px; margin: 0 auto; }
-          .trust-inner { max-width: 860px; margin: 0 auto; }
+          .comment-acheter-inner { max-width: 1000px; margin: 0 auto; }
+          .comment-acheter-links { flex-direction: row !important; gap: 0 !important; }
+          .comment-acheter-links a { flex: 1; border-right: 1px solid #e8e0d8; padding: 1.5rem 2rem !important; border-bottom: none !important; }
+          .comment-acheter-links a:last-child { border-right: none; }
+          .trust-inner { max-width: 1000px; margin: 0 auto; }
         }
       `}</style>
 
@@ -178,7 +179,7 @@ export default function Home() {
       <div style={{ padding: '2rem 1rem 1.5rem', backgroundColor: '#faf7f4' }}>
         <div className="comment-acheter-inner">
         <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', fontWeight: 400, color: '#1a1a1a', marginBottom: '1rem' }}>{t('howToBuy')}</h2>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+        <div className="comment-acheter-links" style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
           {[
             { icon: ShoppingBag, title: t('buyGuide').toUpperCase(), desc: t('buyGuideDesc') },
             { icon: Gavel, title: t('faqLabel'), desc: t('faqDesc') },
