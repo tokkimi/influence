@@ -4,6 +4,20 @@ import { useState } from "react"
 import { Menu, X } from "lucide-react"
 import { useLang } from "@/lib/lang"
 
+function Logo() {
+  return (
+    <Link href="/" className="flex items-center gap-2.5 group">
+      {/* Single luminous dot logo */}
+      <div className="relative w-7 h-7 flex items-center justify-center">
+        <div className="absolute inset-0 rounded-full bg-[#0f0f0f] opacity-10 scale-150 group-hover:opacity-20 transition-all duration-500" />
+        <div className="w-4 h-4 rounded-full bg-[#0f0f0f] group-hover:scale-110 transition-transform duration-300" />
+        <div className="absolute w-1.5 h-1.5 rounded-full bg-[#c9993a] top-0.5 right-0.5 animate-pulse-dot" />
+      </div>
+      <span className="font-semibold text-[15px] tracking-[-0.01em] text-[#0f0f0f]">Dot The Talents</span>
+    </Link>
+  )
+}
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const { lang, setLang, t } = useLang()
@@ -12,16 +26,7 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 glass-nav">
       <div className="max-w-6xl mx-auto px-5 lg:px-8">
         <div className="flex justify-between items-center h-14">
-
-          {/* Logo — trois points + nom */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="flex items-center gap-0.5">
-              <div className="w-2 h-2 rounded-full bg-[#0f0f0f] group-hover:scale-110 transition-transform" />
-              <div className="w-2 h-2 rounded-full bg-[#c9993a] group-hover:scale-110 transition-transform delay-75" />
-              <div className="w-2 h-2 rounded-full bg-[#0f0f0f] opacity-40 group-hover:scale-110 transition-transform delay-150" />
-            </div>
-            <span className="font-display font-bold text-[15px] tracking-wide text-[#0f0f0f]">Dot The Talents</span>
-          </Link>
+          <Logo />
 
           <div className="hidden md:flex items-center gap-7">
             {[
@@ -40,10 +45,10 @@ export default function Navbar() {
             >
               {lang === 'fr' ? 'EN' : 'FR'}
             </button>
-            <Link href="/auth/connexion" className="text-sm text-secondary hover:text-[#0f0f0f] px-3 py-1.5 rounded-lg hover:bg-black/4 transition-all">
+            <Link href="/auth/connexion" className="text-sm text-secondary hover:text-[#0f0f0f] px-3 py-1.5 transition-all">
               {t('nav.login')}
             </Link>
-            <Link href="/auth/inscription" className="text-sm bg-[#0f0f0f] hover:bg-[#1a1a2e] text-white px-5 py-2 rounded-full font-medium transition-colors">
+            <Link href="/auth/inscription" className="text-sm bg-[#0f0f0f] hover:bg-[#222] text-white px-5 py-2 rounded-full font-medium transition-colors">
               {t('nav.signup')}
             </Link>
           </div>
