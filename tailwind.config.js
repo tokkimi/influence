@@ -11,23 +11,20 @@ module.exports = {
         sans: ['var(--font-inter)', 'sans-serif'],
         display: ['var(--font-playfair)', 'serif'],
       },
-      colors: {
-        rose: {
-          DEFAULT: '#ff2d55',
-          light: '#ff6b81',
-          dark: '#d90429',
-        },
-        apple: {
-          bg: '#f5f5f7',
-          surface: '#ffffff',
-          text: '#1d1d1f',
-          secondary: '#6e6e73',
-          border: 'rgba(0,0,0,0.08)',
-        },
-      },
       backgroundImage: {
-        'hero-gradient': 'linear-gradient(160deg, #f5f5f7 0%, #ffffff 100%)',
+        'hero-gradient': 'linear-gradient(160deg, #080c1a 0%, #0d1a2e 50%, #080c1a 100%)',
+        'mesh': 'radial-gradient(ellipse at 20% 50%, #0a2a5a 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, #0a3a4a 0%, transparent 60%), radial-gradient(ellipse at 50% 80%, #1a0a3a 0%, transparent 60%)',
       },
+      animation: {
+        'float': 'float 6s ease-in-out infinite',
+        'float-delay': 'float 6s ease-in-out 3s infinite',
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' },
+        }
+      }
     },
   },
   plugins: [],
