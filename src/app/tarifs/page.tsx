@@ -8,26 +8,22 @@ export default function TarifsPage() {
   return (
     <>
       <Navbar />
-      <div className="pt-16">
-        <div className="bg-[#07071a] py-16 text-center">
-          <h1 className="font-display text-4xl lg:text-5xl font-bold text-white mb-3">Nos tarifs</h1>
-          <p className="text-white/50 text-lg">Transparent, sans engagement, rentable dès le premier mois</p>
+      <div className="pt-14 bg-[#080c1a] min-h-screen">
+        <div className="py-20 text-center px-6">
+          <h1 className="text-4xl lg:text-5xl font-bold text-white mb-3 tracking-tight">Nos tarifs</h1>
+          <p className="text-muted text-lg">Transparent, sans engagement, rentable dès le premier mois</p>
         </div>
         <Pricing />
-
-        <section className="py-16 bg-[#07071a]">
-          <div className="max-w-3xl mx-auto px-4">
-            <h2 className="font-display text-3xl font-bold text-white mb-8 text-center">Tarifs pour les Marques</h2>
-            <p className="text-white/50 text-center mb-8">
-              Pour les marques, les tarifs dépendent du budget de votre campagne. La plateforme ne prélève pas de commission supplémentaire sur le budget – vous payez les influenceurs au prix défini.
-            </p>
-            <div className="bg-purple-50 rounded-2xl p-6 text-center">
-              <p className="text-white/50 mb-4">Budget minimum de campagne</p>
-              <p className="text-4xl font-bold text-purple-700 mb-2">500€</p>
-              <p className="text-white/40 text-sm">pour une campagne micro-influence</p>
+        <section className="py-16">
+          <div className="max-w-sm mx-auto px-6 text-center">
+            <div className="liquid-glass-card rounded-3xl p-8">
+              <p className="text-muted text-sm mb-3">Budget minimum de campagne</p>
+              <p className="text-5xl font-bold text-white mb-2">500€</p>
+              <p className="text-faint text-xs">pour une campagne micro-influence</p>
             </div>
           </div>
         </section>
+        <div className="pb-20" />
       </div>
       <Footer />
     </>

@@ -36,11 +36,11 @@ export default function ConnexionPage() {
   ]
 
   return (
-    <div className="min-h-screen flex bg-gray-50">
+    <div className="min-h-screen flex bg-[#080c1a]">
       {/* Left visual */}
-      <div className="hidden lg:flex lg:w-1/2 bg-hero-gradient items-center justify-center relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-[#080c1a] items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-20 -right-20 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl" />
+          <div className="absolute -top-20 -right-20 w-80 h-80 bg-white/50/20 rounded-full blur-3xl" />
           <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-yellow-500/20 rounded-full blur-3xl" />
         </div>
         <div className="relative text-white text-center px-12">
@@ -62,15 +62,15 @@ export default function ConnexionPage() {
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-700 to-yellow-500 flex items-center justify-center">
                 <span className="text-white font-bold text-xs">DTT</span>
               </div>
-              <span className="font-display font-bold text-xl text-purple-900">Dot The Talents</span>
+              <span className="font-display font-bold text-xl text-white">Dot The Talents</span>
             </Link>
-            <h1 className="text-2xl font-bold text-gray-900">Connexion</h1>
-            <p className="text-gray-500 mt-1">Bon retour ! Connectez-vous à votre espace.</p>
+            <h1 className="text-2xl font-bold text-white">Connexion</h1>
+            <p className="text-muted mt-1">Bon retour ! Connectez-vous à votre espace.</p>
           </div>
 
           {/* Demo accounts */}
-          <div className="bg-purple-50 border border-purple-100 rounded-xl p-4 mb-6">
-            <p className="text-xs font-semibold text-purple-700 mb-2">🎯 Comptes de démonstration :</p>
+          <div className="bg-white/5 border border-purple-100 rounded-xl p-4 mb-6">
+            <p className="text-xs font-semibold text-[#f0c040] mb-2">🎯 Comptes de démonstration :</p>
             <div className="space-y-1">
               {demos.map((d, i) => (
                 <button
@@ -92,7 +92,7 @@ export default function ConnexionPage() {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                className="w-full px-4 py-3 rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 text-sm"
                 placeholder="vous@exemple.com"
               />
             </div>
@@ -104,7 +104,7 @@ export default function ConnexionPage() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm pr-10"
+                  className="w-full px-4 py-3 rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 text-sm pr-10"
                   placeholder="••••••••"
                 />
                 <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600">
@@ -118,16 +118,16 @@ export default function ConnexionPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-purple-700 hover:bg-purple-800 text-white font-semibold py-3 rounded-xl transition disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 bg-[#1a1a2e] hover:bg-black text-white font-semibold py-3 rounded-xl transition disabled:opacity-50"
             >
               <LogIn className="w-4 h-4" />
               {loading ? 'Connexion...' : 'Se connecter'}
             </button>
           </form>
 
-          <p className="text-center text-sm text-gray-500 mt-6">
+          <p className="text-center text-sm text-muted mt-6">
             Pas encore de compte ?{' '}
-            <Link href="/auth/inscription" className="text-purple-700 font-medium hover:underline">
+            <Link href="/auth/inscription" className="text-[#f0c040] font-medium hover:underline">
               Créer mon compte
             </Link>
           </p>

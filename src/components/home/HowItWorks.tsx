@@ -13,58 +13,51 @@ const influencerSteps = [
 
 export default function HowItWorks() {
   return (
-    <section className="py-24 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Comment ça marche ?</h2>
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto">Un processus simple et transparent pour créer des collaborations authentiques.</p>
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          <div>
-            <div className="flex items-center gap-3 mb-8">
-              <div className="h-px flex-1 bg-purple-200"></div>
-              <span className="bg-purple-800 text-white px-4 py-1.5 rounded-full text-sm font-semibold">Pour les Marques</span>
-              <div className="h-px flex-1 bg-purple-200"></div>
+    <section className="py-24 bg-[#080c1a]">
+      <div className="max-w-5xl mx-auto px-5 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          {/* Marques */}
+          <div className="liquid-glass-card rounded-3xl p-8">
+            <div className="inline-flex items-center gap-2 liquid-glass rounded-full px-4 py-1.5 mb-8">
+              <div className="w-2 h-2 bg-[#0a84ff] rounded-full" />
+              <span className="text-white/60 text-xs font-medium">Pour les Marques</span>
             </div>
-            <div className="space-y-6">
+            <div className="space-y-7">
               {brandSteps.map((step) => (
-                <div key={step.step} className="flex gap-5">
-                  <div className="flex-shrink-0">
-                    <div className="w-12 h-12 bg-purple-800 rounded-xl flex items-center justify-center">
-                      <step.icon className="w-6 h-6 text-white" />
-                    </div>
+                <div key={step.step} className="flex gap-4">
+                  <div className="w-10 h-10 rounded-2xl bg-[#0a84ff]/10 border border-[#0a84ff]/20 flex items-center justify-center flex-shrink-0">
+                    <step.icon className="w-4 h-4 text-[#0a84ff]" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-amber-500 font-bold text-sm">{step.step}</span>
-                      <h3 className="font-semibold text-gray-900">{step.title}</h3>
+                      <span className="text-white/25 font-mono text-xs">{step.step}</span>
+                      <h3 className="font-semibold text-white text-sm">{step.title}</h3>
                     </div>
-                    <p className="text-gray-500 text-sm leading-relaxed">{step.description}</p>
+                    <p className="text-muted text-sm leading-relaxed">{step.description}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-          <div>
-            <div className="flex items-center gap-3 mb-8">
-              <div className="h-px flex-1 bg-amber-200"></div>
-              <span className="bg-amber-500 text-white px-4 py-1.5 rounded-full text-sm font-semibold">Pour les Influenceurs</span>
-              <div className="h-px flex-1 bg-amber-200"></div>
+
+          {/* Influenceurs */}
+          <div className="liquid-glass-card rounded-3xl p-8">
+            <div className="inline-flex items-center gap-2 liquid-glass rounded-full px-4 py-1.5 mb-8">
+              <div className="w-2 h-2 bg-[#f0c040] rounded-full" />
+              <span className="text-white/60 text-xs font-medium">Pour les Influenceurs</span>
             </div>
-            <div className="space-y-6">
+            <div className="space-y-7">
               {influencerSteps.map((step) => (
-                <div key={step.step} className="flex gap-5">
-                  <div className="flex-shrink-0">
-                    <div className="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center">
-                      <step.icon className="w-6 h-6 text-white" />
-                    </div>
+                <div key={step.step} className="flex gap-4">
+                  <div className="w-10 h-10 rounded-2xl bg-[#f0c040]/10 border border-[#f0c040]/20 flex items-center justify-center flex-shrink-0">
+                    <step.icon className="w-4 h-4 text-[#f0c040]" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-purple-800 font-bold text-sm">{step.step}</span>
-                      <h3 className="font-semibold text-gray-900">{step.title}</h3>
+                      <span className="text-white/25 font-mono text-xs">{step.step}</span>
+                      <h3 className="font-semibold text-white text-sm">{step.title}</h3>
                     </div>
-                    <p className="text-gray-500 text-sm leading-relaxed">{step.description}</p>
+                    <p className="text-muted text-sm leading-relaxed">{step.description}</p>
                   </div>
                 </div>
               ))}
