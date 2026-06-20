@@ -1,0 +1,33 @@
+import type { Metadata } from 'next'
+import { Inter, Playfair_Display } from 'next/font/google'
+import './globals.css'
+import { Providers } from './providers'
+import CookieBanner from '@/components/CookieBanner'
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' })
+
+export const metadata: Metadata = {
+  title: 'Dot The Talents – Plateforme de Marketing d\'Influence Internationale',
+  description: 'Connectez votre marque aux meilleurs influenceurs du monde. Campagnes d\'influence ciblées, ROI mesurable, talent certifié.',
+  keywords: 'marketing influence, influenceurs, marques, campagne influence, micro-influenceurs, macro-influenceurs',
+  openGraph: {
+    title: 'Dot The Talents – Marketing d\'Influence International',
+    description: 'La plateforme qui connecte les marques aux meilleurs talents digitaux.',
+    locale: 'fr_FR',
+    type: 'website',
+  },
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="fr" className={`${inter.variable} ${playfair.variable}`}>
+      <body className={inter.className}>
+        <Providers>
+          {children}
+          <CookieBanner />
+        </Providers>
+      </body>
+    </html>
+  )
+}

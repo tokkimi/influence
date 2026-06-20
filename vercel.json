@@ -1,12 +1,4 @@
 {
-  "experimentalServices": {
-    "frontend": {
-      "entrypoint": "frontend",
-      "routePrefix": "/"
-    },
-    "backend": {
-      "entrypoint": "backend",
-      "routePrefix": "/api"
-    }
-  }
+  "buildCommand": "npx prisma generate && next build",
+  "framework": "nextjs"
 }

@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      String   @default("INFLUENCER")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  brandProfile      BrandProfile?
+  influencerProfile InfluencerProfile?
+  sentMessages      Message[]         @relation("SentMessages")
+  receivedMessages  Message[]         @relation("ReceivedMessages")
+  transactions      Transaction[]
+}
+
+model BrandProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  companyName String
+  logo        String?
+  website     String?
+  description String?
+  sector      String?
+  balance     Float    @default(0)
+  campaigns   Campaign[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model InfluencerProfile {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id])
+  name               String
+  bio                String?
+  photo              String?
+  instagram          String?
+  tiktok             String?
+  youtube            String?
+  twitter            String?
+  followers          Int      @default(0)
+  engagementRate     Float    @default(0)
+  category           String   @default("MICRO")
+  interests          String   @default("[]")
+  gender             String?
+  country            String?
+  languages          String   @default("[]")
+  ratePost           Float?
+  rateStory          Float?
+  rateVideo          Float?
+  communityAge       String?
+  communityGender    String?
+  communityCountries String?
+  subscription       String   @default("FREE")
+  isVerified         Boolean  @default(false)
+  isActive           Boolean  @default(true)
+  balance            Float    @default(0)
+  bankAccount        String?
+  campaigns          CampaignInfluencer[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Campaign {
+  id              String   @id @default(cuid())
+  brandProfileId  String
+  brand           BrandProfile @relation(fields: [brandProfileId], references: [id])
+  title           String
+  description     String?
+  budget          Float
+  budgetRemaining Float
+  startDate       DateTime
+  endDate         DateTime
+  targetGender    String?
+  targetInterests String   @default("[]")
+  targetCountries String   @default("[]")
+  targetLanguages String   @default("[]")
+  targetCategory  String?
+  minFollowers    Int?
+  maxFollowers    Int?
+  promoCode       String?
+  documentUrl     String?
+  websiteUrl      String?
+  autoAssign      Boolean  @default(false)
+  status          String   @default("PENDING")
+  influencers     CampaignInfluencer[]
+  messages        Message[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model CampaignInfluencer {
+  id                  String   @id @default(cuid())
+  campaignId          String
+  campaign            Campaign @relation(fields: [campaignId], references: [id])
+  influencerProfileId String
+  influencer          InfluencerProfile @relation(fields: [influencerProfileId], references: [id])
+  status              String   @default("PENDING")
+  payment             Float    @default(0)
+  postUrl             String?
+  paymentReleased     Boolean  @default(false)
+  createdAt           DateTime @default(now())
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  campaignId String?
+  campaign   Campaign? @relation(fields: [campaignId], references: [id])
+  senderId   String
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId String
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  content    String
+  createdAt  DateTime @default(now())
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  type        String
+  amount      Float
+  description String?
+  createdAt   DateTime @default(now())
+}
+
+model Newsletter {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model SeoSetting {
+  id          String   @id @default(cuid())
+  page        String   @unique
+  title       String?
+  description String?
+  keywords    String?
+  updatedAt   DateTime @updatedAt
+}

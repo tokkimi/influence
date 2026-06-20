@@ -1,0 +1,171 @@
+'use client'
+
+import { useState } from 'react'
+import { Save, Plus, Instagram, Youtube } from 'lucide-react'
+
+export default function ProfilInfluenceur() {
+  const [saved, setSaved] = useState(false)
+  const [plan, setPlan] = useState('PRO')
+  const [form, setForm] = useState({
+    name: 'Marie Dupont',
+    bio: 'Influenceuse lifestyle et mode. Basée à Paris.',
+    instagram: '@mariedupont',
+    tiktok: '@mariedupont',
+    youtube: '',
+    twitter: '',
+    followers: '25000',
+    engagementRate: '4.7',
+    ratePost: '400',
+    rateStory: '100',
+    rateVideo: '800',
+    gender: 'Femme',
+    country: 'France',
+    languages: 'Français, Anglais',
+    interests: 'Mode, Lifestyle, Beauté',
+    communityGenderF: '72',
+    communityGenderM: '28',
+    communityAge1824: '35',
+    communityAge2534: '42',
+    communityAge3544: '16',
+    communityAge45: '7',
+  })
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault()
+    setSaved(true)
+    setTimeout(() => setSaved(false), 3000)
+  }
+
+  return (
+    <div className="max-w-3xl">
+      <h1 className="text-2xl font-bold text-gray-900 mb-8">Mon profil influenceur</h1>
+
+      <form onSubmit={handleSave} className="space-y-6">
+        {/* Abonnement */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+          <h2 className="font-semibold text-gray-900 mb-4">Mon offre</h2>
+          <div className="grid grid-cols-2 gap-4">
+            <button type="button" onClick={() => setPlan('FREE')}
+              className={`p-4 rounded-xl border-2 text-left transition ${plan === 'FREE' ? 'border-gray-400 bg-gray-50' : 'border-gray-200 hover:border-gray-300'}`}>
+              <p className={`font-semibold ${plan === 'FREE' ? 'text-gray-900' : 'text-gray-500'}`}>Gratuit</p>
+              <p className="text-xs text-gray-400 mt-1">0€/mois · 30% commission</p>
+            </button>
+            <button type="button" onClick={() => setPlan('PRO')}
+              className={`p-4 rounded-xl border-2 text-left transition ${plan === 'PRO' ? 'border-yellow-500 bg-yellow-50' : 'border-gray-200 hover:border-yellow-300'}`}>
+              <p className={`font-semibold ${plan === 'PRO' ? 'text-yellow-700' : 'text-gray-500'}`}>⭐ Pro</p>
+              <p className="text-xs text-gray-400 mt-1">29€/mois · 5% commission</p>
+            </button>
+          </div>
+        </div>
+
+        {/* Info de base */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
+          <h2 className="font-semibold text-gray-900">Informations de base</h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Prénom & Nom / Pseudo</label>
+              <input value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Genre</label>
+              <select value={form.gender} onChange={e => setForm({...form, gender: e.target.value})} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm">
+                <option>Femme</option><option>Homme</option><option>Non-binaire</option><option>Préfère ne pas dire</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+            <textarea value={form.bio} onChange={e => setForm({...form, bio: e.target.value})} rows={2} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Pays</label>
+              <input value={form.country} onChange={e => setForm({...form, country: e.target.value})} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Langues parlées</label>
+              <input value={form.languages} onChange={e => setForm({...form, languages: e.target.value})} placeholder="Français, Anglais..." className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Centres d&apos;intérêt</label>
+            <input value={form.interests} onChange={e => setForm({...form, interests: e.target.value})} placeholder="Mode, Voyage, Tech..." className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
+          </div>
+        </div>
+
+        {/* Réseaux sociaux */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
+          <h2 className="font-semibold text-gray-900">Réseaux sociaux</h2>
+          {[
+            { key: 'instagram', label: 'Instagram', placeholder: '@monpseudo' },
+            { key: 'tiktok', label: 'TikTok', placeholder: '@monpseudo' },
+            { key: 'youtube', label: 'YouTube', placeholder: 'MaChaîne' },
+            { key: 'twitter', label: 'Twitter/X', placeholder: '@monpseudo' },
+          ].map(r => (
+            <div key={r.key}>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{r.label}</label>
+              <input value={form[r.key as keyof typeof form]} onChange={e => setForm({...form, [r.key]: e.target.value})} placeholder={r.placeholder} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
+            </div>
+          ))}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nombre d&apos;abonnés</label>
+              <input type="number" value={form.followers} onChange={e => setForm({...form, followers: e.target.value})} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Taux d&apos;engagement (%)</label>
+              <input type="number" step="0.1" value={form.engagementRate} onChange={e => setForm({...form, engagementRate: e.target.value})} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
+            </div>
+          </div>
+        </div>
+
+        {/* Tarifs */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
+          <h2 className="font-semibold text-gray-900">Mes tarifs</h2>
+          <div className="grid grid-cols-3 gap-4">
+            {[
+              { key: 'ratePost', label: 'Post / Photo (€)' },
+              { key: 'rateStory', label: 'Story (€)' },
+              { key: 'rateVideo', label: 'Vidéo / Reel (€)' },
+            ].map(r => (
+              <div key={r.key}>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{r.label}</label>
+                <input type="number" value={form[r.key as keyof typeof form]} onChange={e => setForm({...form, [r.key]: e.target.value})} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Communauté */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
+          <h2 className="font-semibold text-gray-900">Statistiques de ma communauté</h2>
+          <div>
+            <p className="text-sm font-medium text-gray-700 mb-2">Genre de l&apos;audience (%)</p>
+            <div className="grid grid-cols-2 gap-4">
+              <div><label className="text-xs text-gray-500 mb-1 block">Femmes</label><input type="number" value={form.communityGenderF} onChange={e => setForm({...form, communityGenderF: e.target.value})} className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" /></div>
+              <div><label className="text-xs text-gray-500 mb-1 block">Hommes</label><input type="number" value={form.communityGenderM} onChange={e => setForm({...form, communityGenderM: e.target.value})} className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" /></div>
+            </div>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-700 mb-2">Âge de l&apos;audience (%)</p>
+            <div className="grid grid-cols-4 gap-3">
+              {[
+                { key: 'communityAge1824', label: '18-24' },
+                { key: 'communityAge2534', label: '25-34' },
+                { key: 'communityAge3544', label: '35-44' },
+                { key: 'communityAge45', label: '45+' },
+              ].map(a => (
+                <div key={a.key}><label className="text-xs text-gray-500 mb-1 block">{a.label}</label><input type="number" value={form[a.key as keyof typeof form]} onChange={e => setForm({...form, [a.key]: e.target.value})} className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" /></div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" className="flex items-center gap-2 bg-purple-700 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-800 transition">
+          <Save className="w-4 h-4" />
+          {saved ? '✅ Sauvegardé !' : 'Sauvegarder les modifications'}
+        </button>
+      </form>
+    </div>
+  )
+}
