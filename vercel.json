@@ -1,12 +1,12 @@
 {
   "experimentalServices": {
     "frontend": {
-      "root": "frontend",
-      "framework": "vite"
+      "entrypoint": "frontend",
+      "routePrefix": "/"
     },
     "backend": {
-      "root": "backend",
-      "framework": "express"
+      "entrypoint": "backend",
+      "routePrefix": "/api"
     }
   }
 }
