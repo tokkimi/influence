@@ -34,18 +34,19 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } });
 
-app.post('/api/upload', upload.single('file'), (req: any, res: any) => {
+// Routes without /api prefix — Vercel routePrefix strips /api before forwarding
+app.post('/upload', upload.single('file'), (req: any, res: any) => {
   if (!req.file) return res.status(400).json({ error: 'Aucun fichier' });
-  res.json({ url: `/uploads/${req.file.filename}` });
+  res.json({ url: `/api/uploads/${req.file.filename}` });
 });
 
-app.post('/api/upload/multiple', upload.array('files', 10), (req: any, res: any) => {
+app.post('/upload/multiple', upload.array('files', 10), (req: any, res: any) => {
   if (!req.files || !(req.files as any[]).length) return res.status(400).json({ error: 'Aucun fichier' });
-  const urls = (req.files as any[]).map(f => `/uploads/${f.filename}`);
+  const urls = (req.files as any[]).map(f => `/api/uploads/${f.filename}`);
   res.json({ urls });
 });
 
-app.get('/api/placeholder/:w/:h', (req: any, res: any) => {
+app.get('/placeholder/:w/:h', (req: any, res: any) => {
   const { w, h } = req.params;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
     <rect width="100%" height="100%" fill="#f5f0eb"/>
@@ -55,11 +56,11 @@ app.get('/api/placeholder/:w/:h', (req: any, res: any) => {
   res.send(svg);
 });
 
-app.use('/api/auth', authRoutes);
-app.use('/api/items', itemRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/shops', shopRoutes);
-app.use('/api', miscRoutes);
+app.use('/auth', authRoutes);
+app.use('/items', itemRoutes);
+app.use('/orders', orderRoutes);
+app.use('/admin', adminRoutes);
+app.use('/shops', shopRoutes);
+app.use('/', miscRoutes);
 
 export default app;
