@@ -97,13 +97,23 @@ export default function Home() {
 
   return (
     <div style={{ backgroundColor: '#faf7f4' }}>
-      <style>{`@keyframes shimmer{0%{background-position:400% 0}100%{background-position:-400% 0}}`}</style>
+      <style>{`
+        @keyframes shimmer{0%{background-position:400% 0}100%{background-position:-400% 0}}
+        .hero-img { object-fit: cover; object-position: center top; }
+        @media (min-width: 768px) {
+          .hero-img { object-fit: contain; object-position: center center; }
+          .hero-section { min-height: 0 !important; }
+          .hero-text { padding: 3rem 4rem !important; }
+          .comment-acheter-inner { max-width: 860px; margin: 0 auto; }
+          .trust-inner { max-width: 860px; margin: 0 auto; }
+        }
+      `}</style>
 
       {/* Hero */}
-      <div style={{ position: 'relative', backgroundColor: '#1a1a1a', minHeight: '65vh', display: 'flex', alignItems: 'flex-end', overflow: 'hidden' }}>
-        <img src="/hero.jpeg" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(10,8,6,0.88) 0%, rgba(10,8,6,0.45) 45%, rgba(10,8,6,0.1) 100%)' }} />
-        <div style={{ position: 'relative', zIndex: 1, padding: '2rem 1.5rem 2.5rem', maxWidth: '560px', width: '100%' }}>
+      <div className="hero-section" style={{ position: 'relative', backgroundColor: '#1a1a1a', minHeight: '65vh', display: 'flex', alignItems: 'flex-end', overflow: 'hidden' }}>
+        <img src="/hero.jpeg" alt="" className="hero-img" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(10,8,6,0.88) 0%, rgba(10,8,6,0.55) 35%, rgba(10,8,6,0.1) 100%)' }} />
+        <div className="hero-text" style={{ position: 'relative', zIndex: 1, padding: '2rem 1.5rem 2.5rem', maxWidth: '560px', width: '100%' }}>
           <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.58rem', letterSpacing: '0.4em', color: '#c9a96e', marginBottom: '0.75rem' }}>
             MAGALI BERDAH · MODE DE LUXE
           </p>
@@ -158,6 +168,7 @@ export default function Home() {
 
       {/* Comment acheter */}
       <div style={{ padding: '2rem 1rem 1.5rem', backgroundColor: '#faf7f4' }}>
+        <div className="comment-acheter-inner">
         <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', fontWeight: 400, color: '#1a1a1a', marginBottom: '1rem' }}>Comment acheter ?</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
           {[
@@ -181,11 +192,12 @@ export default function Home() {
             </Link>
           ))}
         </div>
+        </div>
       </div>
 
       {/* Trust */}
       <div style={{ padding: '1.5rem 1rem 7rem', backgroundColor: '#1a1a1a' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div className="trust-inner" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           {[
             { icon: Shield, t1: 'Vendeurs vérifiés', t2: 'SIRET contrôlé' },
             { icon: Truck, t1: 'Livraison incluse', t2: 'Suivi en temps réel' },
