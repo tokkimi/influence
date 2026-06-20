@@ -116,6 +116,7 @@ router.post('/:id/bid', authenticate, (req: AuthRequest, res: Response) => {
   if (amount < minBid) return res.status(400).json({ error: `Enchère minimum: ${minBid}€` });
 
   const bidId = uuidv4();
+  const bidder = db.prepare('SELECT name FROM users WHERE id = ?').get(req.user!.id) as any;
   db.prepare('INSERT INTO bids (id, item_id, user_id, amount) VALUES (?, ?, ?, ?)').run(bidId, item.id, req.user!.id, amount);
   db.prepare('UPDATE items SET current_bid = ?, current_bid_user_id = ? WHERE id = ?').run(amount, req.user!.id, item.id);
 
@@ -125,6 +126,15 @@ router.post('/:id/bid', authenticate, (req: AuthRequest, res: Response) => {
       uuidv4(), item.current_bid_user_id, 'outbid', 'Vous avez été surenchéri !',
       `Une nouvelle offre a été placée sur "${item.title}"`, JSON.stringify({ item_id: item.id })
     );
+  }
+
+  // Real-time broadcast to all users on item page
+  const ioInstance = (req as any).app.get('io');
+  if (ioInstance) {
+    ioInstance.to(`item:${item.id}`).emit('bid-update', {
+      id: bidId, item_id: item.id, user_id: req.user!.id,
+      bidder_name: bidder?.name || 'Anonyme', amount, created_at: new Date().toISOString()
+    });
   }
 
   res.json({ success: true, newBid: amount });

@@ -5,6 +5,9 @@ import app from './app';
 const server = http.createServer(app);
 const io = new SocketServer(server, { cors: { origin: '*' } });
 
+// Make io accessible in routes via req.app.get('io')
+app.set('io', io);
+
 io.on('connection', (socket) => {
   socket.on('join-order', (orderId: string) => socket.join(`order:${orderId}`));
   socket.on('send-message', (data: { orderId: string; message: any }) => {

@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Heart, Shield, Truck, Clock } from 'lucide-react';
+import { ChevronLeft, Shield, Truck, Clock } from 'lucide-react';
+import { io, Socket } from 'socket.io-client';
 import { api, imgUrl } from '../lib/api';
 import { useStore, useT } from '../lib/store';
+
+const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 function Countdown({ endTime }: { endTime: string }) {
   const [time, setTime] = useState('');
@@ -35,6 +38,7 @@ export default function ItemDetail() {
   const [bidError, setBidError] = useState('');
   const [bidSuccess, setBidSuccess] = useState(false);
   const [buying, setBuying] = useState(false);
+  const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -42,6 +46,16 @@ export default function ItemDetail() {
       setItem(d.item);
       setBids(d.bids || []);
     }).catch(() => navigate('/catalogue'));
+
+    // Socket.io for real-time bid updates
+    const socket = io(SOCKET_URL, { transports: ['websocket', 'polling'] });
+    socketRef.current = socket;
+    socket.emit('join-item', id);
+    socket.on('bid-update', (bid: any) => {
+      setItem((prev: any) => prev ? { ...prev, current_bid: bid.amount, current_bid_user_id: bid.user_id } : prev);
+      setBids(prev => [bid, ...prev]);
+    });
+    return () => { socket.disconnect(); };
   }, [id]);
 
   const handleBid = async () => {
