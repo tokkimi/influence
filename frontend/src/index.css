@@ -117,3 +117,7 @@ input:focus, textarea:focus, select:focus {
   color: white;
   font-family: Arial, sans-serif;
 }
+
+/* Auth buttons: desktop only */
+#auth-btns-desktop { display: none; }
+@media (min-width: 768px) { #auth-btns-desktop { display: flex; } }

@@ -157,7 +157,7 @@ export default function Home() {
       />
 
       {/* Comment acheter */}
-      <div style={{ padding: '2rem 1rem 1.5rem', backgroundColor: '#fff' }}>
+      <div style={{ padding: '2rem 1rem 1.5rem', backgroundColor: '#faf7f4' }}>
         <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', fontWeight: 400, color: '#1a1a1a', marginBottom: '1rem' }}>Comment acheter ?</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
           {[

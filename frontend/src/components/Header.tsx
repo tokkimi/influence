@@ -172,8 +172,7 @@ export default function Header() {
                 </div>
               </>
             ) : (
-              /* Desktop only — hidden on mobile (shown in burger menu instead) */
-              <div className="hidden md:flex items-center gap-3">
+              <div id="auth-btns-desktop" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <button onClick={openLogin} className="btn-outline" style={{ padding: '6px 16px' }}>{t('login')}</button>
                 <button onClick={openRegister} className="btn-gold" style={{ padding: '6px 16px' }}>{t('register')}</button>
               </div>
