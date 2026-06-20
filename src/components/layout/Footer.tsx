@@ -7,13 +7,13 @@ export default function Footer() {
   const { t } = useLang()
 
   return (
-    <footer className="bg-[#07071a] border-t border-white/6 text-white/40">
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-          <div>
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-7 h-7 rounded-lg glass-strong flex items-center justify-center border border-violet-400/25">
-                <span className="text-violet-300 font-bold text-[10px] tracking-wider">DTT</span>
+    <footer className="bg-[#1d1d1f] text-white/40">
+      <div className="max-w-6xl mx-auto px-6 py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
+          <div className="col-span-2 md:col-span-1">
+            <div className="flex items-center gap-2.5 mb-5">
+              <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center">
+                <span className="text-white font-bold text-[10px] tracking-widest">DTT</span>
               </div>
               <span className="font-semibold text-white/80 text-sm">Dot The Talents</span>
             </div>
@@ -56,7 +56,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/6 pt-8 flex flex-col md:flex-row justify-between items-center gap-2">
+        <div className="border-t border-white/8 pt-8 flex flex-col md:flex-row justify-between items-center gap-2">
           <p className="text-xs">© 2024 Dot The Talents. {t('footer.rights')}</p>
           <p className="text-xs">Made with ❤️ in France</p>
         </div>

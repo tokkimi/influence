@@ -7,15 +7,26 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {
-        surface: 'rgba(255,255,255,0.05)',
-      },
       fontFamily: {
         sans: ['var(--font-inter)', 'sans-serif'],
         display: ['var(--font-playfair)', 'serif'],
       },
+      colors: {
+        rose: {
+          DEFAULT: '#ff2d55',
+          light: '#ff6b81',
+          dark: '#d90429',
+        },
+        apple: {
+          bg: '#f5f5f7',
+          surface: '#ffffff',
+          text: '#1d1d1f',
+          secondary: '#6e6e73',
+          border: 'rgba(0,0,0,0.08)',
+        },
+      },
       backgroundImage: {
-        'hero-gradient': 'linear-gradient(135deg, #07071a 0%, #0d0d2b 50%, #07071a 100%)',
+        'hero-gradient': 'linear-gradient(160deg, #f5f5f7 0%, #ffffff 100%)',
       },
     },
   },
