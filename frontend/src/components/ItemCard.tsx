@@ -84,11 +84,12 @@ export default function ItemCard({ item }: { item: Item }) {
         }}
       >
         {/* Image */}
-        <div style={{ position: 'relative', aspectRatio: '3/4', overflow: 'hidden', backgroundColor: '#f8f4ef' }}>
+        <div style={{ position: 'relative', height: '200px', overflow: 'hidden', backgroundColor: '#f8f4ef', flexShrink: 0 }}>
           <img
             src={imgUrl(item.photos?.[0])}
             alt={item.title}
             style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
+            onError={e => { (e.currentTarget as HTMLImageElement).src = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect fill='%23f5f0eb' width='200' height='200'/><text x='50%25' y='50%25' font-family='Georgia' font-size='12' fill='%239e8e7e' text-anchor='middle' dominant-baseline='middle'>Photo</text></svg>`; }}
             onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.04)')}
             onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
           />
@@ -130,20 +131,21 @@ export default function ItemCard({ item }: { item: Item }) {
         {/* Infos */}
         <div style={{ padding: '10px 10px 12px' }}>
           {/* Marque + catégorie */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '3px', overflow: 'hidden' }}>
             <p style={{
               fontFamily: 'Helvetica Neue, Arial, sans-serif',
-              fontSize: '0.6rem', letterSpacing: '0.14em',
+              fontSize: '0.6rem', letterSpacing: '0.1em',
               color: '#c9a96e', fontWeight: 600,
+              whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flexShrink: 1, minWidth: 0,
             }}>
               {item.brand?.toUpperCase()}
             </p>
             {item.category_name_fr && (
               <p style={{
                 fontFamily: 'Helvetica Neue, Arial, sans-serif',
-                fontSize: '0.55rem', color: '#bbb', letterSpacing: '0.05em',
+                fontSize: '0.55rem', color: '#bbb', flexShrink: 0, whiteSpace: 'nowrap',
               }}>
-                {item.category_name_fr}
+                · {item.category_name_fr}
               </p>
             )}
           </div>
