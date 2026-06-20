@@ -2,7 +2,8 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import bcrypt from 'bcryptjs';
 
-const DB_PATH = path.join(__dirname, '../../data/magali.db');
+const DB_PATH = process.env.DATABASE_PATH ||
+  (process.env.VERCEL ? '/tmp/magali.db' : path.join(__dirname, '../../data/magali.db'));
 
 import fs from 'fs';
 fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
