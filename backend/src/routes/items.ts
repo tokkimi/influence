@@ -1,6 +1,7 @@
 import { Router, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import db from '../database';
+import { queryStaticItems } from '../staticData';
 import { authenticate, requirePro, requireAdmin, AuthRequest } from '../middleware/auth';
 
 const router = Router();
@@ -34,10 +35,23 @@ router.get('/', (req: any, res: Response) => {
   query += ' LIMIT ? OFFSET ?';
   params.push(Number(limit), Number(offset));
 
-  const items = db.prepare(query).all(...params);
-  const total = db.prepare(`SELECT COUNT(*) as c FROM items i LEFT JOIN categories c ON i.category_id = c.id WHERE i.status = 'active'${category ? ' AND (i.category_id = ? OR c.parent_id = ?)' : ''}${brand ? ' AND i.brand LIKE ?' : ''}${search ? ' AND (i.title LIKE ? OR i.brand LIKE ? OR i.description LIKE ?)' : ''}${type === 'auction' ? ' AND i.auction_enabled = 1' : ''}${type === 'fixed' ? ' AND i.fixed_price IS NOT NULL' : ''}${featured === 'true' ? ' AND i.featured = 1' : ''}`).get(...params.slice(0, -2)) as any;
+  let items: any[] = [];
+  let totalCount = 0;
+  try {
+    items = db.prepare(query).all(...params) as any[];
+    const total = db.prepare(`SELECT COUNT(*) as c FROM items i LEFT JOIN categories c ON i.category_id = c.id WHERE i.status = 'active'${category ? ' AND (i.category_id = ? OR c.parent_id = ?)' : ''}${brand ? ' AND i.brand LIKE ?' : ''}${search ? ' AND (i.title LIKE ? OR i.brand LIKE ? OR i.description LIKE ?)' : ''}${type === 'auction' ? ' AND i.auction_enabled = 1' : ''}${type === 'fixed' ? ' AND i.fixed_price IS NOT NULL' : ''}${featured === 'true' ? ' AND i.featured = 1' : ''}`).get(...params.slice(0, -2)) as any;
+    totalCount = total.c;
+  } catch (e) {
+    console.error('DB error, using static fallback:', e);
+  }
 
-  res.json({ items: items.map(parseItem), total: total.c });
+  // Fallback to static data if DB is empty or unavailable
+  if (items.length === 0 && totalCount === 0) {
+    const fallback = queryStaticItems(req.query);
+    return res.json(fallback);
+  }
+
+  res.json({ items: items.map(parseItem), total: totalCount });
 });
 
 // Public: single item
