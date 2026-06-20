@@ -1,4 +1,6 @@
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// En dev le proxy Vite redirige /api → localhost:3001
+// En prod (Vercel experimentalServices) le backend est sur le même domaine via routePrefix /api
+const BASE = import.meta.env.VITE_API_URL || '';
 
 export const API = BASE + '/api';
 
@@ -40,7 +42,7 @@ export async function uploadFile(file: File): Promise<string> {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Upload échoué');
-  return BASE + data.url;
+  return data.url;
 }
 
 export async function uploadFiles(files: File[]): Promise<string[]> {
@@ -54,11 +56,11 @@ export async function uploadFiles(files: File[]): Promise<string[]> {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Upload échoué');
-  return data.urls.map((u: string) => BASE + u);
+  return data.urls || [];
 }
 
 export function imgUrl(url: string) {
-  if (!url) return BASE + '/api/placeholder/600/800';
-  if (url.startsWith('http') || url.startsWith('/uploads')) return url.startsWith('/uploads') ? BASE + url : url;
+  if (!url) return `${BASE}/api/placeholder/600/800`;
+  if (url.startsWith('http')) return url;
   return BASE + url;
 }

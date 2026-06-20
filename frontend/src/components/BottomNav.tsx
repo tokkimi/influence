@@ -7,114 +7,110 @@ export default function BottomNav() {
   const navigate = useNavigate();
   const { user } = useStore();
 
-  const isAuctions = location.search.includes('type=auction') || location.pathname === '/catalogue' && location.search.includes('auction');
+  const isAuctions = location.search.includes('type=auction');
   const isSales = location.search.includes('type=fixed');
 
-  const handleFavorites = () => {
-    if (!user) return;
-    navigate('/favoris');
+  const handleFavorites = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate(user ? '/favoris' : '/');
   };
 
   return (
-    <div style={{
-      position: 'fixed',
-      bottom: '20px',
-      left: '50%',
-      transform: 'translateX(-50%)',
-      zIndex: 200,
-      width: 'calc(100% - 40px)',
-      maxWidth: '480px',
-    }}>
-      <div style={{
-        background: 'rgba(255, 255, 255, 0.15)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255, 255, 255, 0.3)',
-        borderRadius: '50px',
-        padding: '10px 16px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.4)',
-      }}>
-        {/* Vente */}
-        <Link
-          to="/catalogue?type=fixed"
-          style={{
-            flex: 1,
-            textAlign: 'center',
-            textDecoration: 'none',
-            padding: '8px 12px',
-            borderRadius: '40px',
-            background: isSales ? 'rgba(201, 169, 110, 0.9)' : 'transparent',
-            transition: 'all 0.2s ease',
-          }}
-        >
-          <span style={{
-            fontFamily: 'Helvetica Neue, Arial, sans-serif',
-            fontSize: '0.7rem',
-            fontWeight: 600,
-            letterSpacing: '0.12em',
-            color: isSales ? 'white' : '#1a1a1a',
-          }}>
+    <>
+      <style>{`
+        .bottom-nav-wrap {
+          position: fixed;
+          bottom: 18px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 300;
+          width: calc(100% - 32px);
+          max-width: 440px;
+        }
+        .bottom-nav {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 8px 10px;
+          border-radius: 60px;
+          background: rgba(248, 244, 239, 0.45);
+          backdrop-filter: blur(28px) saturate(180%);
+          -webkit-backdrop-filter: blur(28px) saturate(180%);
+          border: 1px solid rgba(255, 255, 255, 0.6);
+          box-shadow:
+            0 8px 32px rgba(26, 26, 26, 0.14),
+            0 2px 8px rgba(26, 26, 26, 0.08),
+            inset 0 1px 0 rgba(255,255,255,0.75),
+            inset 0 -1px 0 rgba(201,169,110,0.12);
+        }
+        .nav-pill {
+          flex: 1;
+          text-align: center;
+          padding: 9px 8px;
+          border-radius: 50px;
+          text-decoration: none;
+          transition: background 0.2s ease;
+          font-family: 'Helvetica Neue', Arial, sans-serif;
+          font-size: 0.68rem;
+          font-weight: 700;
+          letter-spacing: 0.13em;
+        }
+        .nav-pill.active {
+          background: rgba(201, 169, 110, 0.88);
+          color: white;
+          box-shadow: 0 2px 10px rgba(201,169,110,0.35);
+        }
+        .nav-pill.inactive {
+          color: #1a1a1a;
+        }
+        .nav-pill.inactive:hover {
+          background: rgba(201,169,110,0.12);
+        }
+        .nav-heart {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          border: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          margin: 0 6px;
+          background: linear-gradient(145deg, #d4b07a, #c9a96e, #b8935a);
+          box-shadow:
+            0 4px 15px rgba(201,169,110,0.45),
+            0 1px 3px rgba(201,169,110,0.3),
+            inset 0 1px 0 rgba(255,255,255,0.25);
+          transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+        .nav-heart:hover, .nav-heart:active {
+          transform: scale(1.1);
+          box-shadow: 0 6px 22px rgba(201,169,110,0.55), inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+      `}</style>
+
+      <div className="bottom-nav-wrap">
+        <div className="bottom-nav">
+          <Link
+            to="/catalogue?type=fixed"
+            className={`nav-pill ${isSales ? 'active' : 'inactive'}`}
+          >
             VENTE
-          </span>
-        </Link>
+          </Link>
 
-        {/* Heart — center */}
-        <button
-          onClick={handleFavorites}
-          style={{
-            width: '52px',
-            height: '52px',
-            borderRadius: '50%',
-            border: 'none',
-            background: 'linear-gradient(135deg, #c9a96e, #b8935a)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            boxShadow: '0 4px 16px rgba(201, 169, 110, 0.5)',
-            flexShrink: 0,
-            margin: '0 8px',
-            transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-          }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.08)';
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 6px 20px rgba(201, 169, 110, 0.6)';
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 4px 16px rgba(201, 169, 110, 0.5)';
-          }}
-        >
-          <Heart size={22} color="white" fill="white" />
-        </button>
+          <button className="nav-heart" onClick={handleFavorites}>
+            <Heart size={20} color="white" fill="white" />
+          </button>
 
-        {/* Enchères */}
-        <Link
-          to="/catalogue?type=auction"
-          style={{
-            flex: 1,
-            textAlign: 'center',
-            textDecoration: 'none',
-            padding: '8px 12px',
-            borderRadius: '40px',
-            background: isAuctions ? 'rgba(201, 169, 110, 0.9)' : 'transparent',
-            transition: 'all 0.2s ease',
-          }}
-        >
-          <span style={{
-            fontFamily: 'Helvetica Neue, Arial, sans-serif',
-            fontSize: '0.7rem',
-            fontWeight: 600,
-            letterSpacing: '0.12em',
-            color: isAuctions ? 'white' : '#1a1a1a',
-          }}>
+          <Link
+            to="/catalogue?type=auction"
+            className={`nav-pill ${isAuctions ? 'active' : 'inactive'}`}
+          >
             ENCHÈRES
-          </span>
-        </Link>
+          </Link>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

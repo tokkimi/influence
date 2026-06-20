@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart } from 'lucide-react';
-import { useStore, useT } from '../lib/store';
+import { Heart, Clock } from 'lucide-react';
+import { useStore } from '../lib/store';
 import { api, imgUrl } from '../lib/api';
 
 interface Item {
   id: string;
   title: string;
   brand: string;
+  category_name_fr?: string;
   photos: string[];
   fixed_price?: number;
   auction_enabled: number;
@@ -40,13 +41,13 @@ function useCountdown(endTime?: string) {
 }
 
 export default function ItemCard({ item }: { item: Item }) {
-  const t = useT();
   const { user } = useStore();
-  const countdown = useCountdown(item.auction_end_time);
+  const countdown = useCountdown(item.auction_enabled ? item.auction_end_time : undefined);
   const [faved, setFaved] = useState(false);
 
   const toggleFav = async (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     if (!user) return;
     try {
       const data = await api.post(`/favorites/${item.id}`);
@@ -58,69 +59,147 @@ export default function ItemCard({ item }: { item: Item }) {
     ? (item.current_bid || item.auction_start_price || 0)
     : (item.fixed_price || 0);
 
-  const conditionLabel: Record<string, string> = {
-    excellent: 'Excellent',
-    very_good: 'Très bon',
-    good: 'Bon',
-    fair: 'Correct',
-  };
+  const isAuction = item.auction_enabled === 1;
+  const isEnding = countdown && countdown !== 'Terminée' && !countdown.includes('j');
 
   return (
-    <Link to={`/article/${item.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }} className="card-hover">
-      <div style={{ position: 'relative', overflow: 'hidden', backgroundColor: '#f8f4ef', aspectRatio: '3/4' }}>
-        <img src={imgUrl(item.photos?.[0])} alt={item.title}
-          style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }}
-          onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')}
-          onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')} />
+    <Link to={`/article/${item.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+      <div style={{
+        borderRadius: '12px',
+        overflow: 'hidden',
+        backgroundColor: '#fff',
+        boxShadow: '0 2px 12px rgba(0,0,0,0.07)',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+      }}
+        onMouseEnter={e => {
+          (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-3px)';
+          (e.currentTarget as HTMLDivElement).style.boxShadow = '0 6px 20px rgba(0,0,0,0.12)';
+        }}
+        onMouseLeave={e => {
+          (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
+          (e.currentTarget as HTMLDivElement).style.boxShadow = '0 2px 12px rgba(0,0,0,0.07)';
+        }}
+      >
+        {/* Image */}
+        <div style={{ position: 'relative', aspectRatio: '3/4', overflow: 'hidden', backgroundColor: '#f8f4ef' }}>
+          <img
+            src={imgUrl(item.photos?.[0])}
+            alt={item.title}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
+            onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.04)')}
+            onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+          />
 
-        {item.featured ? (
-          <div style={{ position: 'absolute', top: '10px', left: '10px', backgroundColor: '#c9a96e', color: 'white', padding: '3px 10px', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.6rem', letterSpacing: '0.15em' }}>
-            SÉLECTION
-          </div>
-        ) : null}
+          {/* Badge enchère */}
+          {isAuction && (
+            <div style={{
+              position: 'absolute', top: '8px', left: '8px',
+              background: '#1a1a1a', color: '#c9a96e',
+              padding: '3px 8px', borderRadius: '4px',
+              fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.55rem', letterSpacing: '0.1em',
+            }}>
+              ENCHÈRE
+            </div>
+          )}
 
-        {item.auction_enabled ? (
-          <div style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: '#1a1a1a', color: '#c9a96e', padding: '3px 10px', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.6rem', letterSpacing: '0.1em' }}>
-            ENCHÈRE
-          </div>
-        ) : null}
-
-        {user && (
-          <button onClick={toggleFav} style={{ position: 'absolute', bottom: '10px', right: '10px', background: 'white', border: 'none', cursor: 'pointer', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Heart size={16} fill={faved ? '#c9a96e' : 'none'} color={faved ? '#c9a96e' : '#1a1a1a'} />
+          {/* Cœur favoris */}
+          <button
+            onClick={toggleFav}
+            style={{
+              position: 'absolute', bottom: '8px', right: '8px',
+              width: '30px', height: '30px', borderRadius: '50%',
+              background: 'rgba(255,255,255,0.85)',
+              backdropFilter: 'blur(6px)',
+              border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+            }}
+          >
+            <Heart
+              size={14}
+              fill={faved ? '#c9a96e' : 'none'}
+              color={faved ? '#c9a96e' : '#555'}
+              strokeWidth={2}
+            />
           </button>
-        )}
-      </div>
+        </div>
 
-      <div style={{ padding: '1rem 0.5rem' }}>
-        <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#c9a96e', marginBottom: '4px' }}>
-          {item.brand?.toUpperCase()}
-        </p>
-        <p style={{ fontFamily: 'Georgia, serif', fontSize: '0.9rem', color: '#1a1a1a', marginBottom: '6px', lineHeight: '1.3' }}>
-          {item.title}
-        </p>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div>
-            {item.auction_enabled && (
-              <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', color: '#9e8e7e', marginBottom: '2px' }}>
-                {item.current_bid ? t('currentBid') : t('startingBid')}
+        {/* Infos */}
+        <div style={{ padding: '10px 10px 12px' }}>
+          {/* Marque + catégorie */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px' }}>
+            <p style={{
+              fontFamily: 'Helvetica Neue, Arial, sans-serif',
+              fontSize: '0.6rem', letterSpacing: '0.14em',
+              color: '#c9a96e', fontWeight: 600,
+            }}>
+              {item.brand?.toUpperCase()}
+            </p>
+            {item.category_name_fr && (
+              <p style={{
+                fontFamily: 'Helvetica Neue, Arial, sans-serif',
+                fontSize: '0.55rem', color: '#bbb', letterSpacing: '0.05em',
+              }}>
+                {item.category_name_fr}
               </p>
             )}
-            <p style={{ fontFamily: 'Georgia, serif', fontSize: '1rem', color: '#1a1a1a', fontWeight: 400 }}>
-              {price.toLocaleString('fr-FR')} €
-            </p>
           </div>
-          {item.auction_enabled && countdown && (
-            <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', color: countdown === 'Terminée' ? '#cc0000' : '#c9a96e' }} className={countdown !== 'Terminée' ? 'pulse' : ''}>
-              {countdown}
-            </p>
-          )}
-        </div>
-        {item.size && (
-          <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.7rem', color: '#9e8e7e', marginTop: '4px' }}>
-            {conditionLabel[item.condition]} · {item.size}
+
+          {/* Titre */}
+          <p style={{
+            fontFamily: 'Georgia, serif', fontSize: '0.82rem',
+            color: '#1a1a1a', lineHeight: '1.3', marginBottom: '8px',
+            display: '-webkit-box', WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical', overflow: 'hidden',
+          }}>
+            {item.title}
           </p>
-        )}
+
+          {/* Prix */}
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+            <div>
+              {isAuction && (
+                <p style={{
+                  fontFamily: 'Helvetica Neue, Arial, sans-serif',
+                  fontSize: '0.55rem', color: '#9e8e7e', marginBottom: '1px',
+                }}>
+                  {item.current_bid ? 'OFFRE ACTUELLE' : 'MISE DE DÉPART'}
+                </p>
+              )}
+              <p style={{
+                fontFamily: 'Georgia, serif', fontSize: '0.95rem',
+                color: '#1a1a1a', fontWeight: 400,
+              }}>
+                {price.toLocaleString('fr-FR')} €
+              </p>
+            </div>
+
+            {/* Countdown enchère */}
+            {isAuction && countdown && countdown !== 'Terminée' && (
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: '3px',
+                background: isEnding ? 'rgba(204,0,0,0.08)' : 'rgba(201,169,110,0.1)',
+                borderRadius: '6px', padding: '3px 7px',
+              }}>
+                <Clock size={10} color={isEnding ? '#cc0000' : '#c9a96e'} />
+                <span style={{
+                  fontFamily: 'Helvetica Neue, Arial, sans-serif',
+                  fontSize: '0.6rem',
+                  color: isEnding ? '#cc0000' : '#c9a96e',
+                  fontWeight: 600,
+                }}>
+                  {countdown}
+                </span>
+              </div>
+            )}
+            {isAuction && countdown === 'Terminée' && (
+              <span style={{
+                fontFamily: 'Helvetica Neue, Arial, sans-serif',
+                fontSize: '0.6rem', color: '#bbb',
+              }}>Terminée</span>
+            )}
+          </div>
+        </div>
       </div>
     </Link>
   );
