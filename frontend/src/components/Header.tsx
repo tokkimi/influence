@@ -171,7 +171,18 @@ export default function Header() {
                   )}
                 </div>
               </>
-            ) : null}
+            ) : (
+              <div className="hidden md:flex items-center gap-3">
+                <button onClick={openLogin}
+                  style={{ background: 'none', border: '1px solid #e8d5b7', padding: '7px 16px', cursor: 'pointer', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.72rem', letterSpacing: '0.1em', color: '#1a1a1a' }}>
+                  {t('login').toUpperCase()}
+                </button>
+                <button onClick={openRegister} className="btn-gold"
+                  style={{ padding: '7px 16px', fontSize: '0.72rem' }}>
+                  {t('register').toUpperCase()}
+                </button>
+              </div>
+            )}
 
             <button className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
