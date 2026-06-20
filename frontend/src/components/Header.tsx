@@ -172,7 +172,8 @@ export default function Header() {
                 </div>
               </>
             ) : (
-              <div className="flex items-center gap-3">
+              /* Desktop only — hidden on mobile (shown in burger menu instead) */
+              <div className="hidden md:flex items-center gap-3">
                 <button onClick={openLogin} className="btn-outline" style={{ padding: '6px 16px' }}>{t('login')}</button>
                 <button onClick={openRegister} className="btn-gold" style={{ padding: '6px 16px' }}>{t('register')}</button>
               </div>
@@ -199,6 +200,13 @@ export default function Header() {
                 {t(item.key as any).toUpperCase()}
               </Link>
             ))}
+            {/* Auth buttons in mobile menu */}
+            {!user && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '1rem' }}>
+                <button onClick={() => { openLogin(); setMobileOpen(false); }} className="btn-outline" style={{ width: '100%', padding: '10px' }}>{t('login')}</button>
+                <button onClick={() => { openRegister(); setMobileOpen(false); }} className="btn-gold" style={{ width: '100%', padding: '10px' }}>{t('register')}</button>
+              </div>
+            )}
           </div>
         )}
       </header>

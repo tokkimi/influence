@@ -79,5 +79,6 @@ app.use('/api/admin', adminRoutes);
 app.use('/shops', shopRoutes);
 app.use('/api/shops', shopRoutes);
 app.use('/', miscRoutes);
+app.use('/api', miscRoutes);
 
 export default app;

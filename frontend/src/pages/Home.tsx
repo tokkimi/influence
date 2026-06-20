@@ -4,6 +4,7 @@ import { ChevronRight, ShoppingBag, Gavel, Shield, Truck } from 'lucide-react';
 import { api } from '../lib/api';
 import { useT } from '../lib/store';
 import ItemCard from '../components/ItemCard';
+import { filterStaticItems } from '../lib/staticItems';
 
 function SkeletonCard() {
   return (
@@ -75,21 +76,27 @@ export default function Home() {
 
   useEffect(() => {
     Promise.allSettled([
-      api.get('/items?type=auction&limit=8&status=active'),
-      api.get('/items?category=women&limit=8&status=active'),
-      api.get('/items?category=men&limit=8&status=active'),
-      api.get('/items?category=bags&limit=8&status=active'),
+      api.get('/items?type=auction&limit=8'),
+      api.get('/items?category=women&limit=8'),
+      api.get('/items?category=men&limit=8'),
+      api.get('/items?category=bags&limit=8'),
     ]).then(([a, w, m, b]) => {
-      if (a.status === 'fulfilled') setAuctions(a.value.items || []);
-      if (w.status === 'fulfilled') setWomen(w.value.items || []);
-      if (m.status === 'fulfilled') setMen(m.value.items || []);
-      if (b.status === 'fulfilled') setBags(b.value.items || []);
+      const aItems = a.status === 'fulfilled' ? (a.value.items || []) : [];
+      const wItems = w.status === 'fulfilled' ? (w.value.items || []) : [];
+      const mItems = m.status === 'fulfilled' ? (m.value.items || []) : [];
+      const bItems = b.status === 'fulfilled' ? (b.value.items || []) : [];
+
+      // Use static fallback if API returns nothing
+      setAuctions(aItems.length > 0 ? aItems : filterStaticItems({ type: 'auction', limit: 8 }).items);
+      setWomen(wItems.length > 0 ? wItems : filterStaticItems({ category: 'women', limit: 8 }).items);
+      setMen(mItems.length > 0 ? mItems : filterStaticItems({ category: 'men', limit: 8 }).items);
+      setBags(bItems.length > 0 ? bItems : filterStaticItems({ category: 'bags', limit: 8 }).items);
       setLoading(false);
     });
   }, []);
 
   return (
-    <div style={{ paddingBottom: '100px', backgroundColor: '#faf7f4' }}>
+    <div style={{ backgroundColor: '#faf7f4' }}>
       <style>{`@keyframes shimmer{0%{background-position:400% 0}100%{background-position:-400% 0}}`}</style>
 
       {/* Hero */}
@@ -177,7 +184,7 @@ export default function Home() {
       </div>
 
       {/* Trust */}
-      <div style={{ padding: '1.5rem 1rem 2rem', backgroundColor: '#1a1a1a' }}>
+      <div style={{ padding: '1.5rem 1rem 7rem', backgroundColor: '#1a1a1a' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           {[
             { icon: Shield, t1: 'Vendeurs vérifiés', t2: 'SIRET contrôlé' },

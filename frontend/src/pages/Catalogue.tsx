@@ -4,6 +4,7 @@ import { Filter, ChevronDown, X } from 'lucide-react';
 import { api } from '../lib/api';
 import { useT } from '../lib/store';
 import ItemCard from '../components/ItemCard';
+import { filterStaticItems } from '../lib/staticItems';
 
 const BRANDS = ['Hermès', 'Chanel', 'Dior', 'Louis Vuitton', 'Gucci', 'Prada', 'Cartier', 'Balenciaga', 'Saint Laurent', 'Valentino', 'Celine', 'Givenchy', 'Bottega Veneta', 'Loewe', 'Fendi', 'Burberry', 'Versace', 'Max Mara', 'Armani'];
 
@@ -35,7 +36,24 @@ export default function Catalogue() {
     if (category) q.set('category', category);
     if (brand) q.set('brand', brand);
     if (search) q.set('search', search);
-    api.get(`/items?${q}`).then(d => { setItems(d.items || []); setTotal(d.total || 0); }).catch(() => {}).finally(() => setLoading(false));
+    api.get(`/items?${q}`)
+      .then(d => {
+        const apiItems = d.items || [];
+        if (apiItems.length > 0) {
+          setItems(apiItems);
+          setTotal(d.total || 0);
+        } else {
+          const fallback = filterStaticItems({ type, category, brand, search, limit, offset: (page - 1) * limit, sort });
+          setItems(fallback.items);
+          setTotal(fallback.total);
+        }
+      })
+      .catch(() => {
+        const fallback = filterStaticItems({ type, category, brand, search, limit, offset: (page - 1) * limit, sort });
+        setItems(fallback.items);
+        setTotal(fallback.total);
+      })
+      .finally(() => setLoading(false));
   }, [type, category, brand, search, sort, page]);
 
   const setParam = (k: string, v: string) => {
