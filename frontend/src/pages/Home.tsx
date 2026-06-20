@@ -99,14 +99,15 @@ export default function Home() {
     <div style={{ backgroundColor: '#faf7f4' }}>
       <style>{`
         @keyframes shimmer{0%{background-position:400% 0}100%{background-position:-400% 0}}
-        .hero-img { object-fit: cover; object-position: center center; }
+        .hero-img { object-fit: cover; object-position: center 25%; }
         @media (min-width: 768px) {
+          .hero-img { object-position: center 15%; }
           .hero-text { padding: 3rem 4rem !important; }
-          .comment-acheter-inner { max-width: 1000px; margin: 0 auto; }
+          .comment-acheter-inner { max-width: 1100px; margin: 0 auto; }
           .comment-acheter-links { flex-direction: row !important; gap: 0 !important; }
           .comment-acheter-links a { flex: 1; border-right: 1px solid #e8e0d8; padding: 1.5rem 2rem !important; border-bottom: none !important; }
           .comment-acheter-links a:last-child { border-right: none; }
-          .trust-inner { max-width: 1000px; margin: 0 auto; }
+          .trust-inner { max-width: 1100px; margin: 0 auto; grid-template-columns: repeat(4, 1fr) !important; }
         }
       `}</style>
 
