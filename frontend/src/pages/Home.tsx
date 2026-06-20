@@ -1,126 +1,207 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ChevronRight, ShoppingBag, Gavel, Shield, Truck } from 'lucide-react';
 import { api } from '../lib/api';
 import { useT } from '../lib/store';
 import ItemCard from '../components/ItemCard';
 
 function SkeletonCard() {
   return (
-    <div style={{ borderRadius: '12px', overflow: 'hidden', backgroundColor: '#f8f4ef' }}>
-      <div style={{ aspectRatio: '3/4', background: 'linear-gradient(90deg, #f0ece6 25%, #f8f4ef 50%, #f0ece6 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.4s infinite' }} />
-      <div style={{ padding: '10px' }}>
-        <div style={{ height: '8px', backgroundColor: '#e8d5b7', borderRadius: '4px', width: '50%', marginBottom: '8px' }} />
-        <div style={{ height: '10px', backgroundColor: '#ede8e2', borderRadius: '4px', width: '80%', marginBottom: '6px' }} />
-        <div style={{ height: '10px', backgroundColor: '#ede8e2', borderRadius: '4px', width: '40%' }} />
+    <div style={{ borderRadius: '12px', overflow: 'hidden', backgroundColor: '#f0ece6', flexShrink: 0, width: '160px' }}>
+      <div style={{ width: '160px', height: '213px', background: 'linear-gradient(90deg, #ece8e2 25%, #f5f1ec 50%, #ece8e2 75%)', backgroundSize: '400% 100%', animation: 'shimmer 1.4s infinite' }} />
+      <div style={{ padding: '8px' }}>
+        <div style={{ height: '7px', backgroundColor: '#e0d8cc', borderRadius: '4px', width: '50%', marginBottom: '6px' }} />
+        <div style={{ height: '9px', backgroundColor: '#e8e0d8', borderRadius: '4px', width: '85%', marginBottom: '5px' }} />
+        <div style={{ height: '9px', backgroundColor: '#e8e0d8', borderRadius: '4px', width: '40%' }} />
       </div>
     </div>
   );
 }
 
-const gridStyle: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(2, 1fr)',
-  gap: '10px',
-  maxWidth: '1200px',
-  margin: '0 auto',
-};
+function HScrollSection({ title, label, link, items, loading }: {
+  title: string; label: string; link: string;
+  items: any[]; loading: boolean;
+}) {
+  const navigate = useNavigate();
+  return (
+    <div style={{ marginBottom: '0' }}>
+      {/* Header */}
+      <div style={{ padding: '1.5rem 1rem 0.75rem', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+        <div>
+          <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.55rem', letterSpacing: '0.3em', color: '#c9a96e', marginBottom: '2px' }}>{label}</p>
+          <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.15rem', fontWeight: 400, color: '#1a1a1a' }}>{title}</h2>
+        </div>
+        <Link to={link} style={{ display: 'flex', alignItems: 'center', gap: '3px', textDecoration: 'none', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', color: '#9e8e7e' }}>
+          Tout voir <ChevronRight size={12} />
+        </Link>
+      </div>
+
+      {/* Horizontal scroll */}
+      <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none', padding: '0 1rem 1rem' }}>
+        <style>{`.hscroll::-webkit-scrollbar{display:none}`}</style>
+        <div className="hscroll" style={{ display: 'flex', gap: '10px', width: 'max-content' }}>
+          {loading
+            ? [1,2,3,4].map(i => <SkeletonCard key={i} />)
+            : items.map(item => (
+                <div key={item.id} style={{ flexShrink: 0, width: '160px' }}>
+                  <ItemCard item={item} />
+                </div>
+              ))
+          }
+          {/* "Voir plus" tile */}
+          {!loading && items.length > 0 && (
+            <div
+              onClick={() => navigate(link)}
+              style={{ flexShrink: 0, width: '140px', borderRadius: '12px', border: '1.5px solid #e8d5b7', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer', backgroundColor: '#faf7f4' }}
+            >
+              <ChevronRight size={24} color="#c9a96e" />
+              <span style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', color: '#9e8e7e', letterSpacing: '0.1em' }}>VOIR PLUS</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Shop now button */}
+      <div style={{ padding: '0 1rem 1.5rem' }}>
+        <Link to={link} style={{ display: 'block', textAlign: 'center', border: '1px solid #1a1a1a', padding: '12px', textDecoration: 'none', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.7rem', letterSpacing: '0.15em', color: '#1a1a1a', borderRadius: '4px' }}>
+          DÉCOUVRIR
+        </Link>
+      </div>
+
+      <div style={{ height: '1px', backgroundColor: '#e8d5b7', margin: '0 1rem' }} />
+    </div>
+  );
+}
 
 export default function Home() {
   const t = useT();
   const [auctions, setAuctions] = useState<any[]>([]);
-  const [sales, setSales] = useState<any[]>([]);
+  const [women, setWomen] = useState<any[]>([]);
+  const [men, setMen] = useState<any[]>([]);
+  const [bags, setBags] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      api.get('/items?type=auction&limit=6&status=active').catch(() => ({ items: [] })),
-      api.get('/items?type=fixed&limit=6&status=active').catch(() => ({ items: [] })),
-    ]).then(([a, s]) => {
-      setAuctions(a.items || []);
-      setSales(s.items || []);
+    Promise.allSettled([
+      api.get('/items?type=auction&limit=8&status=active'),
+      api.get('/items?category=women&limit=8&status=active'),
+      api.get('/items?category=men&limit=8&status=active'),
+      api.get('/items?category=bags&limit=8&status=active'),
+    ]).then(([a, w, m, b]) => {
+      if (a.status === 'fulfilled') setAuctions(a.value.items || []);
+      if (w.status === 'fulfilled') setWomen(w.value.items || []);
+      if (m.status === 'fulfilled') setMen(m.value.items || []);
+      if (b.status === 'fulfilled') setBags(b.value.items || []);
       setLoading(false);
     });
   }, []);
 
   return (
     <div style={{ paddingBottom: '100px', backgroundColor: '#faf7f4' }}>
-      <style>{`
-        @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-        @media(min-width:640px){ .home-grid{ grid-template-columns: repeat(3,1fr) !important; } }
-        @media(min-width:1024px){ .home-grid{ grid-template-columns: repeat(4,1fr) !important; } }
-      `}</style>
+      <style>{`@keyframes shimmer{0%{background-position:400% 0}100%{background-position:-400% 0}}`}</style>
 
       {/* Hero */}
-      <div style={{ position: 'relative', backgroundColor: '#1a1a1a', minHeight: '55vh', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+      <div style={{ position: 'relative', backgroundColor: '#1a1a1a', minHeight: '52vh', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(135deg, #1a1a1a 0%, #2d2520 60%, #1a1a1a 100%)' }} />
         <div style={{ position: 'absolute', top: '10%', right: '5%', width: '45%', height: '80%', opacity: 0.08, backgroundImage: 'repeating-linear-gradient(45deg, #c9a96e 0, #c9a96e 1px, transparent 0, transparent 50%)', backgroundSize: '20px 20px' }} />
         <div style={{ position: 'relative', zIndex: 1, padding: '2.5rem 1.5rem', maxWidth: '560px' }}>
-          <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.6rem', letterSpacing: '0.4em', color: '#c9a96e', marginBottom: '0.75rem' }}>
+          <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.58rem', letterSpacing: '0.4em', color: '#c9a96e', marginBottom: '0.75rem' }}>
             MAGALI BERDAH · MODE DE LUXE
           </p>
-          <h1 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.7rem, 5vw, 3rem)', color: 'white', fontWeight: 400, lineHeight: '1.2', marginBottom: '1rem' }}>
+          <h1 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.7rem, 5vw, 3rem)', color: 'white', fontWeight: 400, lineHeight: '1.2', marginBottom: '1.25rem' }}>
             Des pièces d'exception,{' '}
             <span style={{ color: '#c9a96e' }}>vendues ou aux enchères.</span>
           </h1>
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <Link to="/catalogue?type=fixed" className="btn-gold" style={{ fontSize: '0.7rem', padding: '10px 18px' }}>VENTE DIRECTE</Link>
-            <Link to="/catalogue?type=auction" className="btn-outline" style={{ borderColor: '#c9a96e', color: '#c9a96e', fontSize: '0.7rem', padding: '10px 18px' }}>ENCHÈRES EN COURS</Link>
+            <Link to="/catalogue?type=fixed" className="btn-gold" style={{ fontSize: '0.68rem', padding: '10px 18px' }}>VENTE DIRECTE</Link>
+            <Link to="/catalogue?type=auction" style={{ border: '1px solid #c9a96e', color: '#c9a96e', padding: '10px 18px', textDecoration: 'none', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.68rem', letterSpacing: '0.1em', borderRadius: '2px' }}>
+              ENCHÈRES EN COURS
+            </Link>
           </div>
         </div>
       </div>
 
       {/* Enchères */}
-      <div style={{ padding: '2rem 1rem 1.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', maxWidth: '1200px', margin: '0 auto 1rem' }}>
-          <div>
-            <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.55rem', letterSpacing: '0.35em', color: '#c9a96e', marginBottom: '2px' }}>EN COURS</p>
-            <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.2rem', fontWeight: 400, color: '#1a1a1a' }}>{t('featuredAuctions')}</h2>
-          </div>
-          <Link to="/catalogue?type=auction" style={{ display: 'flex', alignItems: 'center', gap: '3px', textDecoration: 'none', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', color: '#9e8e7e' }}>
-            Tout voir <ChevronRight size={12} />
-          </Link>
-        </div>
-        <div style={gridStyle} className="home-grid">
-          {loading
-            ? [1,2,3,4].map(i => <SkeletonCard key={i} />)
-            : auctions.map(item => <ItemCard key={item.id} item={item} />)
-          }
+      <HScrollSection
+        label="EN COURS"
+        title={t('featuredAuctions')}
+        link="/catalogue?type=auction"
+        items={auctions}
+        loading={loading}
+      />
+
+      {/* Sélection Femme */}
+      <HScrollSection
+        label="SÉLECTION"
+        title="Femme"
+        link="/catalogue?category=women"
+        items={women}
+        loading={loading}
+      />
+
+      {/* Sélection Homme */}
+      <HScrollSection
+        label="SÉLECTION"
+        title="Homme"
+        link="/catalogue?category=men"
+        items={men}
+        loading={loading}
+      />
+
+      {/* Sacs */}
+      <HScrollSection
+        label="TENDANCE"
+        title="Sacs de luxe"
+        link="/catalogue?category=bags"
+        items={bags}
+        loading={loading}
+      />
+
+      {/* Comment acheter */}
+      <div style={{ padding: '2rem 1rem 1.5rem', backgroundColor: '#fff' }}>
+        <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', fontWeight: 400, color: '#1a1a1a', marginBottom: '1rem' }}>Comment acheter ?</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+          {[
+            { icon: ShoppingBag, title: 'ACHETER MAINTENANT', desc: "Votre guide d'achat et commandes" },
+            { icon: Gavel, title: 'FAQ', desc: 'Vos questions, nos réponses' },
+            { icon: Shield, title: 'AUTHENTICITÉ', desc: 'Vendeurs vérifiés, pièces garanties' },
+          ].map(({ icon: Icon, title, desc }, i) => (
+            <Link
+              key={title}
+              to={i === 0 ? '/comment-acheter' : i === 1 ? '/faq' : '/pro'}
+              style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 0', textDecoration: 'none', borderBottom: i < 2 ? '1px solid #f0ece6' : 'none' }}
+            >
+              <div style={{ width: '40px', height: '40px', backgroundColor: '#f8f4ef', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Icon size={18} color="#c9a96e" />
+              </div>
+              <div>
+                <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', color: '#1a1a1a', marginBottom: '2px' }}>{title}</p>
+                <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.7rem', color: '#9e8e7e' }}>{desc}</p>
+              </div>
+              <ChevronRight size={16} color="#c9a96e" style={{ marginLeft: 'auto' }} />
+            </Link>
+          ))}
         </div>
       </div>
 
-      {/* Séparateur */}
-      <div style={{ padding: '0 1rem' }}>
-        <div style={{ maxWidth: '1200px', margin: '0.5rem auto', borderTop: '1px solid #e8d5b7' }} />
-      </div>
-
-      {/* Vente directe */}
-      <div style={{ padding: '1.5rem 1rem 2rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', maxWidth: '1200px', margin: '0 auto 1rem' }}>
-          <div>
-            <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.55rem', letterSpacing: '0.35em', color: '#c9a96e', marginBottom: '2px' }}>DISPONIBLES</p>
-            <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.2rem', fontWeight: 400, color: '#1a1a1a' }}>Vente directe</h2>
-          </div>
-          <Link to="/catalogue?type=fixed" style={{ display: 'flex', alignItems: 'center', gap: '3px', textDecoration: 'none', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', color: '#9e8e7e' }}>
-            Tout voir <ChevronRight size={12} />
-          </Link>
+      {/* Trust */}
+      <div style={{ padding: '1.5rem 1rem 2rem', backgroundColor: '#1a1a1a' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          {[
+            { icon: Shield, t1: 'Vendeurs vérifiés', t2: 'SIRET contrôlé' },
+            { icon: Truck, t1: 'Livraison incluse', t2: 'Suivi en temps réel' },
+            { icon: Gavel, t1: 'Enchères sécurisées', t2: 'Paiement protégé' },
+            { icon: ShoppingBag, t1: 'Retour 14 jours', t2: 'Droit EU garanti' },
+          ].map(({ icon: Icon, t1, t2 }) => (
+            <div key={t1} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Icon size={18} color="#c9a96e" style={{ flexShrink: 0 }} />
+              <div>
+                <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', color: 'white', fontWeight: 600 }}>{t1}</p>
+                <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.6rem', color: '#9e8e7e' }}>{t2}</p>
+              </div>
+            </div>
+          ))}
         </div>
-        <div style={gridStyle} className="home-grid">
-          {loading
-            ? [1,2,3,4].map(i => <SkeletonCard key={i} />)
-            : sales.map(item => <ItemCard key={item.id} item={item} />)
-          }
-        </div>
-      </div>
-
-      {/* Pro CTA */}
-      <div style={{ backgroundColor: '#1a1a1a', padding: '3rem 1.5rem', textAlign: 'center', margin: '0 0' }}>
-        <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.6rem', letterSpacing: '0.4em', color: '#c9a96e', marginBottom: '0.75rem' }}>VOUS ÊTES UN PROFESSIONNEL ?</p>
-        <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.4rem', fontWeight: 400, color: 'white', marginBottom: '0.75rem' }}>Ouvrez votre boutique</h2>
-        <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.8rem', color: '#9e8e7e', marginBottom: '1.5rem', maxWidth: '380px', margin: '0 auto 1.5rem' }}>
-          Vendez vos pièces de luxe. 10 articles gratuits, Premium 129€/mois.
-        </p>
-        <Link to="/pro" className="btn-gold">CRÉER MA BOUTIQUE</Link>
       </div>
     </div>
   );

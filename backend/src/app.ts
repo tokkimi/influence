@@ -15,7 +15,10 @@ import miscRoutes from './routes/misc';
 
 const app = express();
 
-app.use(cors({ origin: '*' }));
+app.use(cors({
+  origin: (origin, cb) => cb(null, true),
+  credentials: true,
+}));
 app.use(express.json({ limit: '10mb' }));
 
 // File uploads — write to /tmp on Vercel, ./uploads locally
