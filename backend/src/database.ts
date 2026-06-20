@@ -266,29 +266,31 @@ if (userCount.c === 0) {
     1, new Date().toISOString(), new Date(Date.now() + 30 * 86400000).toISOString(), 5
   );
 
-  // Sample items
-  const itemId1 = uuidv4();
-  const itemId2 = uuidv4();
-  const itemId3 = uuidv4();
-  const itemId4 = uuidv4();
+  // Sample items — 5 enchères + 5 ventes
   const now = new Date();
-  const in3days = new Date(now.getTime() + 3 * 86400000).toISOString();
+  const in2days = new Date(now.getTime() + 2 * 86400000).toISOString();
+  const in4days = new Date(now.getTime() + 4 * 86400000).toISOString();
+  const in5days = new Date(now.getTime() + 5 * 86400000).toISOString();
   const in7days = new Date(now.getTime() + 7 * 86400000).toISOString();
+  const in10days = new Date(now.getTime() + 10 * 86400000).toISOString();
+  const p = (w: number, h: number) => JSON.stringify([`/api/placeholder/${w}/${h}`]);
 
-  const samplePhotos = JSON.stringify(['/api/placeholder/600/800']);
+  const insertAuction = db.prepare('INSERT INTO items (id, shop_id, title, description, brand, category_id, condition, size, color, photos, fixed_price, auction_enabled, auction_start_price, auction_min_price, auction_end_time, status, featured) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+  const insertFixed  = db.prepare('INSERT INTO items (id, shop_id, title, description, brand, category_id, condition, size, color, photos, fixed_price, auction_enabled, status, featured) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 
-  db.prepare('INSERT INTO items (id, shop_id, title, description, brand, category_id, condition, size, color, photos, fixed_price, auction_enabled, auction_start_price, auction_min_price, auction_end_time, status, featured) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(
-    itemId1, shopId, 'Sac Birkin 30 Hermès Fauve', 'Magnifique Birkin 30 en cuir Togo fauve, état exceptionnel, livré avec boîte et dustbag.', 'Hermès', 'bags-handbags', 'excellent', 'Taille unique', 'Fauve', samplePhotos, null, 1, 8500, 7000, in3days, 'active', 1
-  );
-  db.prepare('INSERT INTO items (id, shop_id, title, description, brand, category_id, condition, size, color, photos, fixed_price, auction_enabled, status, featured) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(
-    itemId2, shopId, 'Robe Chanel Tweed Rose', 'Robe en tweed rose poudré Chanel, collection printemps-été, en parfait état.', 'Chanel', 'women-dresses', 'excellent', '38', 'Rose', samplePhotos, 3200, 0, 'active', 1
-  );
-  db.prepare('INSERT INTO items (id, shop_id, title, description, brand, category_id, condition, size, color, photos, fixed_price, auction_enabled, auction_start_price, auction_min_price, auction_end_time, status, featured) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(
-    itemId3, shopId, 'Montre Cartier Tank Must', 'Cartier Tank Must acier, bracelet cuir bordeaux, état excellent avec boîte.', 'Cartier', 'acc-watches', 'very_good', 'Taille unique', 'Argent', samplePhotos, null, 1, 1800, 1500, in7days, 'active', 0
-  );
-  db.prepare('INSERT INTO items (id, shop_id, title, description, brand, category_id, condition, size, color, photos, fixed_price, auction_enabled, status, featured) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(
-    itemId4, shopId, 'Manteau Max Mara Camel', 'Iconique manteau Max Mara en camel, coupe impeccable, très bon état.', 'Max Mara', 'women-coats', 'very_good', '40', 'Camel', samplePhotos, 850, 0, 'active', 1
-  );
+  // 5 enchères
+  insertAuction.run(uuidv4(), shopId, 'Sac Birkin 30 Hermès Fauve', 'Birkin 30 cuir Togo fauve, état exceptionnel, boîte et dustbag inclus.', 'Hermès', 'bags-handbags', 'excellent', 'Taille unique', 'Fauve', p(600,800), null, 1, 8500, 7000, in2days, 'active', 1);
+  insertAuction.run(uuidv4(), shopId, 'Montre Cartier Tank Must', 'Tank Must acier, bracelet cuir bordeaux, avec boîte et papiers.', 'Cartier', 'acc-watches', 'excellent', 'Taille unique', 'Argent', p(600,800), null, 1, 1800, 1500, in4days, 'active', 1);
+  insertAuction.run(uuidv4(), shopId, 'Veste Gucci Brodée Fleurs', 'Veste Gucci en laine brodée fleurs, collection Alessandro Michele, état neuf.', 'Gucci', 'women-coats', 'excellent', '40', 'Noir', p(600,800), null, 1, 2200, 1800, in5days, 'active', 1);
+  insertAuction.run(uuidv4(), shopId, 'Sac Kelly 28 Hermès Noir', 'Kelly 28 box calf noir, palladium, intérieur impeccable, avec accessoires.', 'Hermès', 'bags-handbags', 'very_good', 'Taille unique', 'Noir', p(600,800), null, 1, 11000, 9500, in7days, 'active', 1);
+  insertAuction.run(uuidv4(), shopId, 'Collier Perles Chanel Vintage', 'Collier de perles Chanel vintage double rang avec fermoir CC doré, très bon état.', 'Chanel', 'acc-jewelry', 'very_good', 'Taille unique', 'Blanc', p(600,800), null, 1, 950, 750, in10days, 'active', 0);
+
+  // 5 ventes directes
+  insertFixed.run(uuidv4(), shopId, 'Robe Chanel Tweed Rose', 'Robe tweed rose poudré Chanel, collection printemps-été, parfait état.', 'Chanel', 'women-dresses', 'excellent', '38', 'Rose', p(600,800), 3200, 0, 'active', 1);
+  insertFixed.run(uuidv4(), shopId, 'Manteau Max Mara Camel', 'Iconique manteau Max Mara en camel, coupe structurée, très bon état.', 'Max Mara', 'women-coats', 'very_good', '40', 'Camel', p(600,800), 850, 0, 'active', 1);
+  insertFixed.run(uuidv4(), shopId, 'Costume Berluti Gris Anthracite', 'Costume deux pièces Berluti, laine gris anthracite, coupe slim, taille 50.', 'Berluti', 'men-suits', 'excellent', '50', 'Gris', p(600,800), 1600, 0, 'active', 0);
+  insertFixed.run(uuidv4(), shopId, 'Sac Pochette Dior Saddle', 'Mini Saddle bag Dior en cuir noir, bandoulière, état excellent avec pochon.', 'Dior', 'bags-clutch', 'excellent', 'Taille unique', 'Noir', p(600,800), 1250, 0, 'active', 1);
+  insertFixed.run(uuidv4(), shopId, 'Écharpe Hermès Cashmere Gris', 'Écharpe Hermès 100% cashmere, imprimé chevaux, coloris gris/or, état neuf.', 'Hermès', 'acc-scarves', 'excellent', 'Taille unique', 'Gris', p(600,800), 480, 0, 'active', 0);
 }
 
 // SEO default

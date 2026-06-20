@@ -4,6 +4,7 @@ import { useStore } from './lib/store';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
+import BottomNav from './components/BottomNav';
 import CookieBanner from './components/CookieBanner';
 import Chatbot from './components/Chatbot';
 
@@ -46,6 +47,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       <Header />
       <main style={{ flex: 1 }}>{children}</main>
       <Footer />
+      <BottomNav />
       <CookieBanner />
       <Chatbot />
     </div>
