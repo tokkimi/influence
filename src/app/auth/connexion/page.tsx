@@ -27,7 +27,7 @@ export default function ConnexionPage() {
       const sessionRes = await fetch('/api/auth/session')
       const session = await sessionRes.json()
       const role = session?.user?.role
-      if (role === 'ADMIN') router.push('/admin/tableau-de-bord')
+      if (role === 'ADMIN') router.push('/admin')
       else if (role === 'BRAND') router.push('/marque/tableau-de-bord')
       else if (role === 'INFLUENCER') router.push('/influenceur/tableau-de-bord')
       else router.push('/')
