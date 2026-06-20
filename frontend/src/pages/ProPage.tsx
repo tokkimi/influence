@@ -46,12 +46,15 @@ export default function ProPage() {
       </div>
 
       {/* Pricing */}
-      <div id="abonnement" style={{ backgroundColor: '#f8f4ef', padding: '5rem 2rem' }}>
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+      <div id="abonnement" style={{ backgroundColor: '#f8f4ef', padding: '4rem 1.25rem' }}>
+        <style>{`
+          @media (min-width: 640px) { .pricing-grid { grid-template-columns: 1fr 1fr !important; } }
+        `}</style>
+        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <p style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.65rem', letterSpacing: '0.4em', color: '#c9a96e', marginBottom: '0.75rem' }}>NOS OFFRES</p>
-          <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '2rem', fontWeight: 400, color: '#1a1a1a' }}>Choisissez votre plan</h2>
+          <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.8rem', fontWeight: 400, color: '#1a1a1a' }}>Choisissez votre plan</h2>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+        <div className="pricing-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem', maxWidth: '800px', margin: '0 auto' }}>
           {[
             {
               name: 'GRATUIT', price: '0 €', period: '', color: '#1a1a1a',
@@ -64,7 +67,7 @@ export default function ProPage() {
               cta: 'Démarrer Premium', ctaLink: '/boutique/abonnement', primary: true
             },
           ].map(plan => (
-            <div key={plan.name} style={{ backgroundColor: 'white', border: `2px solid ${plan.primary ? '#c9a96e' : '#e8d5b7'}`, padding: '2.5rem', position: 'relative' }}>
+            <div key={plan.name} style={{ backgroundColor: 'white', border: `2px solid ${plan.primary ? '#c9a96e' : '#e8d5b7'}`, padding: '2rem 1.5rem', position: 'relative' }}>
               {plan.primary && (
                 <div style={{ position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)', backgroundColor: '#c9a96e', color: 'white', padding: '4px 20px', fontFamily: 'Helvetica Neue, Arial, sans-serif', fontSize: '0.6rem', letterSpacing: '0.2em' }}>RECOMMANDÉ</div>
               )}
