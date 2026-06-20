@@ -27,6 +27,7 @@ const uploadDir = process.env.VERCEL
   : path.join(__dirname, '../../uploads');
 fs.mkdirSync(uploadDir, { recursive: true });
 app.use('/uploads', express.static(uploadDir));
+app.use('/api/uploads', express.static(uploadDir));
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, uploadDir),
@@ -34,19 +35,27 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } });
 
-// Routes without /api prefix — Vercel routePrefix strips /api before forwarding
-app.post('/upload', upload.single('file'), (req: any, res: any) => {
+const singleUpload = upload.single('file');
+const multiUpload = upload.array('files', 10);
+
+app.post('/upload', singleUpload, (req: any, res: any) => {
   if (!req.file) return res.status(400).json({ error: 'Aucun fichier' });
   res.json({ url: `/api/uploads/${req.file.filename}` });
 });
-
-app.post('/upload/multiple', upload.array('files', 10), (req: any, res: any) => {
+app.post('/api/upload', singleUpload, (req: any, res: any) => {
+  if (!req.file) return res.status(400).json({ error: 'Aucun fichier' });
+  res.json({ url: `/api/uploads/${req.file.filename}` });
+});
+app.post('/upload/multiple', multiUpload, (req: any, res: any) => {
   if (!req.files || !(req.files as any[]).length) return res.status(400).json({ error: 'Aucun fichier' });
-  const urls = (req.files as any[]).map(f => `/api/uploads/${f.filename}`);
-  res.json({ urls });
+  res.json({ urls: (req.files as any[]).map((f: any) => `/api/uploads/${f.filename}`) });
+});
+app.post('/api/upload/multiple', multiUpload, (req: any, res: any) => {
+  if (!req.files || !(req.files as any[]).length) return res.status(400).json({ error: 'Aucun fichier' });
+  res.json({ urls: (req.files as any[]).map((f: any) => `/api/uploads/${f.filename}`) });
 });
 
-app.get('/placeholder/:w/:h', (req: any, res: any) => {
+const servePlaceholder = (req: any, res: any) => {
   const { w, h } = req.params;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
     <rect width="100%" height="100%" fill="#f5f0eb"/>
@@ -54,13 +63,21 @@ app.get('/placeholder/:w/:h', (req: any, res: any) => {
   </svg>`;
   res.set('Content-Type', 'image/svg+xml');
   res.send(svg);
-});
+};
+app.get('/placeholder/:w/:h', servePlaceholder);
+app.get('/api/placeholder/:w/:h', servePlaceholder);
 
+// Mount at both /path and /api/path — handles Vercel routePrefix with or without stripping
 app.use('/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/items', itemRoutes);
+app.use('/api/items', itemRoutes);
 app.use('/orders', orderRoutes);
+app.use('/api/orders', orderRoutes);
 app.use('/admin', adminRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/shops', shopRoutes);
+app.use('/api/shops', shopRoutes);
 app.use('/', miscRoutes);
 
 export default app;
