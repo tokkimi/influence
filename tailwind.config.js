@@ -11,18 +11,25 @@ module.exports = {
         sans: ['var(--font-inter)', 'sans-serif'],
         display: ['var(--font-playfair)', 'serif'],
       },
+      colors: {
+        ink: '#0f0f0f',
+        muted: '#6b6b6b',
+        faint: '#aaaaaa',
+        sand: '#fafaf8',
+        accent: '#1a1a2e',
+        gold: '#c9993a',
+      },
       backgroundImage: {
-        'hero-gradient': 'linear-gradient(160deg, #080c1a 0%, #0d1a2e 50%, #080c1a 100%)',
-        'mesh': 'radial-gradient(ellipse at 20% 50%, #0a2a5a 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, #0a3a4a 0%, transparent 60%), radial-gradient(ellipse at 50% 80%, #1a0a3a 0%, transparent 60%)',
+        'hero-gradient': 'linear-gradient(160deg, #fafaf8 0%, #f0ede8 100%)',
       },
       animation: {
-        'float': 'float 6s ease-in-out infinite',
-        'float-delay': 'float 6s ease-in-out 3s infinite',
+        'float': 'float 7s ease-in-out infinite',
+        'float2': 'float 7s ease-in-out 3.5s infinite',
       },
       keyframes: {
         float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
+          '0%,100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-8px)' },
         }
       }
     },
