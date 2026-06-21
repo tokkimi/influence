@@ -161,7 +161,7 @@ export default function ProfilInfluenceur() {
           </div>
         </div>
 
-        <button type="submit" className="flex items-center gap-2 bg-orange-500 text-white px-6 py-3 rounded-full font-medium hover:bg-orange-500 transition">
+        <button type="submit" className="flex items-center gap-2 text-white px-6 py-3 rounded-full font-medium  transition">
           <Save className="w-4 h-4" />
           {saved ? '✅ Sauvegardé !' : 'Sauvegarder les modifications'}
         </button>

@@ -58,7 +58,7 @@ export default function PortefeuilleInfluenceur() {
               <label className="block text-sm font-medium text-white/80 mb-1">IBAN</label>
               <input value={iban} onChange={e => setIban(e.target.value)} placeholder="FR76 3000 6000 0112 3456 7890 189" className="w-full px-4 py-3 rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm font-mono" />
             </div>
-            <button onClick={() => { setBankSaved(true); setShowBankForm(false) }} className="bg-yellow-500 text-white px-6 py-2.5 rounded-full font-medium hover:bg-yellow-600 transition text-sm">
+            <button onClick={() => { setBankSaved(true); setShowBankForm(false) }} className="bg-[#F37021] text-white px-6 py-2.5 rounded-full font-medium hover:opacity-90 transition text-sm">
               Sauvegarder l&apos;IBAN
             </button>
           </div>

@@ -86,7 +86,7 @@ export default function MissionsPage() {
                 <button
                   onClick={() => submitPost(m.id)}
                   disabled={!postUrls[m.id]}
-                  className="bg-orange-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-orange-500 transition disabled:opacity-40"
+                  className="text-white px-5 py-2.5 rounded-xl text-sm font-medium  transition disabled:opacity-40"
                 >
                   Valider
                 </button>
