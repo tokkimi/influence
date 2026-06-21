@@ -106,7 +106,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   )
 
   return (
-    <div className="min-h-screen flex" style={{background:'#0c0c0c'}}>
+    <div className="min-h-screen flex overflow-x-hidden" style={{background:'#0c0c0c'}}>
 
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -144,7 +144,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </button>
         </header>
 
-        <main className="flex-1 p-5 md:p-8 overflow-hidden">
+        <main className="flex-1 p-5 md:p-8 overflow-x-hidden">
           {children}
         </main>
       </div>
