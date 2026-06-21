@@ -62,7 +62,7 @@ export default function AdminSeoPage() {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '1rem', alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', alignItems: 'start' }}>
         <GlassCard>
           <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'rgba(255,255,255,0.4)', marginBottom: '0.75rem' }}>Pages</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>

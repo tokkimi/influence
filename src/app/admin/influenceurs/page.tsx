@@ -105,65 +105,66 @@ export default function AdminInfluenceurs() {
           </div>
         </div>
 
-        {/* Table */}
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', background: 'transparent' }}>
-            <thead>
-              <tr style={{ background: 'rgba(255,255,255,0.03)' }}>
-                {['Influenceur', 'Catégorie', 'Abonnés', 'Engagement', 'Plan', 'Statut', 'Actions'].map(h => (
-                  <th key={h} style={{ padding: '0.6rem 1rem', textAlign: 'left', fontSize: '0.65rem', fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap', background: 'transparent' }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map(inf => (
-                <tr
-                  key={inf.id}
-                  onClick={() => { setPanel(inf); setEditing(false) }}
-                  style={{ borderTop: '1px solid rgba(255,255,255,0.05)', cursor: 'pointer', background: 'transparent', transition: 'background 0.15s' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.03)')}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                >
-                  <td style={{ padding: '0.75rem 1rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <img src={inf.photo} alt={inf.name} style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-                      <div>
-                        <div style={{ fontSize: '0.8rem', fontWeight: 600 }}>{inf.name}</div>
-                        <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.35)' }}>{inf.country}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td style={{ padding: '0.75rem 1rem' }}><CategoryBadge cat={inf.category} /></td>
-                  <td style={{ padding: '0.75rem 1rem', fontSize: '0.8rem' }}>{formatNumber(inf.followers)}</td>
-                  <td style={{ padding: '0.75rem 1rem', fontSize: '0.8rem', color: '#30d158', fontWeight: 600 }}>{inf.engagementRate}%</td>
-                  <td style={{ padding: '0.75rem 1rem', fontSize: '0.75rem', fontWeight: 600, color: inf.subscription === 'PRO' ? OR : 'rgba(255,255,255,0.3)' }}>
+        {/* Card list */}
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {filtered.map(inf => (
+            <div key={inf.id} onClick={() => { setPanel(inf); setEditing(false) }}
+              style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '0.875rem 1rem', cursor: 'pointer', transition: 'background 0.15s' }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.03)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+
+              {/* Row 1: avatar + name + badges */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '0.6rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+                  <img src={inf.photo} alt={inf.name} style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: '0.825rem', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{inf.name}</div>
+                    <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.35)' }}>{inf.country}</div>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '0.4rem', flexShrink: 0, alignItems: 'center' }}>
+                  <CategoryBadge cat={inf.category} />
+                  <StatusBadge verified={inf.isVerified} excluded={inf.isExcluded} />
+                </div>
+              </div>
+
+              {/* Row 2: stats + plan */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', marginBottom: '0.65rem' }}>
+                <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 8, padding: '0.4rem 0.6rem' }}>
+                  <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)' }}>Abonnés</div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700 }}>{formatNumber(inf.followers)}</div>
+                </div>
+                <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 8, padding: '0.4rem 0.6rem' }}>
+                  <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)' }}>Engage.</div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#30d158' }}>{inf.engagementRate}%</div>
+                </div>
+                <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 8, padding: '0.4rem 0.6rem' }}>
+                  <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)' }}>Plan</div>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: inf.subscription === 'PRO' ? OR : 'rgba(255,255,255,0.3)' }}>
                     {inf.subscription === 'PRO' ? 'Pro 29€/m' : 'Gratuit'}
-                  </td>
-                  <td style={{ padding: '0.75rem 1rem' }}>
-                    <StatusBadge verified={inf.isVerified} excluded={inf.isExcluded} />
-                  </td>
-                  <td style={{ padding: '0.75rem 1rem' }} onClick={e => e.stopPropagation()}>
-                    <div style={{ display: 'flex', gap: 4 }}>
-                      <button title="Voir" onClick={() => { setPanel(inf); setEditing(false) }} style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: 6, cursor: 'pointer', color: 'rgba(255,255,255,0.5)', display: 'flex' }}>
-                        <Eye size={13} />
-                      </button>
-                      {!inf.isVerified && !inf.isExcluded && (
-                        <button title="Certifier" onClick={() => certify(inf.id)} style={{ background: 'rgba(48,209,88,0.1)', border: '1px solid rgba(48,209,88,0.2)', borderRadius: 8, padding: 6, cursor: 'pointer', color: '#30d158', display: 'flex' }}>
-                          <CheckCircle size={13} />
-                        </button>
-                      )}
-                      <button title={inf.isExcluded ? 'Réactiver' : 'Exclure'} onClick={() => toggleExclude(inf.id)} style={{ background: inf.isExcluded ? 'rgba(48,209,88,0.1)' : 'rgba(255,149,0,0.1)', border: `1px solid ${inf.isExcluded ? 'rgba(48,209,88,0.2)' : 'rgba(255,149,0,0.2)'}`, borderRadius: 8, padding: 6, cursor: 'pointer', color: inf.isExcluded ? '#30d158' : '#ff9500', display: 'flex' }}>
-                        <Ban size={13} />
-                      </button>
-                      <button title="Supprimer" onClick={() => setConfirmDel(inf.id)} style={{ background: 'rgba(255,69,58,0.1)', border: '1px solid rgba(255,69,58,0.2)', borderRadius: 8, padding: 6, cursor: 'pointer', color: '#ff453a', display: 'flex' }}>
-                        <Trash2 size={13} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                </div>
+              </div>
+
+              {/* Row 3: actions */}
+              <div style={{ display: 'flex', gap: 6 }} onClick={e => e.stopPropagation()}>
+                <button title="Voir" onClick={() => { setPanel(inf); setEditing(false) }} style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, padding: '0.35rem 0.65rem', cursor: 'pointer', color: 'rgba(255,255,255,0.6)', fontSize: '0.72rem' }}>
+                  <Eye size={12} /> Voir
+                </button>
+                {!inf.isVerified && !inf.isExcluded && (
+                  <button title="Certifier" onClick={() => certify(inf.id)} style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(48,209,88,0.1)', border: '1px solid rgba(48,209,88,0.2)', borderRadius: 8, padding: '0.35rem 0.65rem', cursor: 'pointer', color: '#30d158', fontSize: '0.72rem' }}>
+                    <CheckCircle size={12} /> Certifier
+                  </button>
+                )}
+                <button title={inf.isExcluded ? 'Réactiver' : 'Exclure'} onClick={() => toggleExclude(inf.id)} style={{ display: 'flex', alignItems: 'center', gap: 4, background: inf.isExcluded ? 'rgba(48,209,88,0.1)' : 'rgba(255,149,0,0.1)', border: `1px solid ${inf.isExcluded ? 'rgba(48,209,88,0.2)' : 'rgba(255,149,0,0.2)'}`, borderRadius: 8, padding: '0.35rem 0.65rem', cursor: 'pointer', color: inf.isExcluded ? '#30d158' : '#ff9500', fontSize: '0.72rem' }}>
+                  <Ban size={12} /> {inf.isExcluded ? 'Réactiver' : 'Exclure'}
+                </button>
+                <button title="Supprimer" onClick={() => setConfirmDel(inf.id)} style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,69,58,0.1)', border: '1px solid rgba(255,69,58,0.2)', borderRadius: 8, padding: '0.35rem 0.65rem', cursor: 'pointer', color: '#ff453a', fontSize: '0.72rem' }}>
+                  <Trash2 size={12} />
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -171,7 +172,7 @@ export default function AdminInfluenceurs() {
       {panel && (
         <>
           <div style={{ position: 'fixed', inset: 0, zIndex: 40, background: 'rgba(0,0,0,0.4)' }} onClick={() => setPanel(null)} />
-          <div style={{ position: 'fixed', top: 0, right: 0, width: 400, height: '100vh', background: '#111', borderLeft: '1px solid rgba(255,255,255,0.08)', zIndex: 50, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ position: 'fixed', top: 0, right: 0, width: 'min(400px,100vw)', height: '100vh', background: '#111', borderLeft: '1px solid rgba(255,255,255,0.08)', zIndex: 50, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
             <div style={{ padding: '1.25rem', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
               <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'white' }}>{editing ? 'Modifier' : 'Fiche influenceur'}</span>
               <button onClick={() => setPanel(null)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}><X size={18} /></button>
