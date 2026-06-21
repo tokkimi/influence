@@ -52,7 +52,7 @@ export default function AdminMarques() {
   }
 
   return (
-    <div style={{ color: 'white' }}>
+    <div style={{ color: 'white', maxWidth: '100%', overflowX: 'hidden' }}>
       <div style={{ marginBottom: '1.25rem' }}>
         <h1 style={{ fontSize: '1.125rem', fontWeight: 700 }}>Marques</h1>
         <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.8rem', marginTop: 2 }}>{brands.length} marques enregistrées</p>

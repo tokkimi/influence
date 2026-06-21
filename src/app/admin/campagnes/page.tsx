@@ -39,7 +39,7 @@ export default function AdminCampagnesPage() {
   }
 
   return (
-    <div style={{ color: 'white', padding: '1.5rem' }}>
+    <div style={{ color: 'white', padding: '1.5rem', maxWidth: '100%', overflowX: 'hidden' }}>
       <div style={{ marginBottom: '1.5rem' }}>
         <h1 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.25rem' }}>Gestion des campagnes</h1>
         <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>{campaigns.length} campagnes enregistrées</p>
@@ -63,15 +63,15 @@ export default function AdminCampagnesPage() {
       {/* Card list */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
         {filtered.map(c => (
-          <div key={c.id} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: '0.875rem 1rem', cursor: 'pointer' }}
+          <div key={c.id} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: '0.875rem 1rem', cursor: 'pointer', overflow: 'hidden' }}
             onClick={() => setSelected(c)}
             onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.07)')}
             onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.04)')}>
 
             {/* Row 1: title + status */}
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '0.5rem' }}>
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontWeight: 700, fontSize: '0.875rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.title}</div>
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <div style={{ fontWeight: 700, fontSize: '0.875rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.title}</div>
                 <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginTop: '0.15rem' }}>{c.brandName}</div>
               </div>
               <StatusBadge status={c.status} />

@@ -44,7 +44,7 @@ export default function AdminTransactionsPage() {
   const totalCommissions = allTx.filter(t => t.type === 'COMMISSION').reduce((s, t) => s + t.amount, 0)
 
   return (
-    <div style={{ color: 'white', padding: '1.5rem' }}>
+    <div style={{ color: 'white', padding: '1.5rem', maxWidth: '100%', overflowX: 'hidden' }}>
       <div style={{ marginBottom: '1.5rem' }}>
         <h1 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.25rem' }}>Transactions</h1>
         <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>{allTx.length} transactions enregistrées</p>

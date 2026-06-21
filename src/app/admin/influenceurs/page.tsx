@@ -74,7 +74,7 @@ export default function AdminInfluenceurs() {
   ]
 
   return (
-    <div style={{ color: 'white', minHeight: '100vh' }}>
+    <div style={{ color: 'white', minHeight: '100vh', maxWidth: '100%', overflowX: 'hidden' }}>
       <div style={{ marginBottom: '1.5rem' }}>
         <h1 style={{ fontSize: '1.125rem', fontWeight: 700 }}>Influenceurs</h1>
         <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.8rem', marginTop: 2 }}>{list.length} profils enregistrés</p>
