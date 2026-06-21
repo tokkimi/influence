@@ -64,7 +64,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <X className="w-4 h-4" />
           </button>
         </div>
-        <div className="mt-3 text-[10px] font-medium px-2 py-0.5 rounded-full inline-block" style={{background:'rgba(201,153,58,0.15)', color:'#c9993a'}}>
+        <div className="mt-3 text-[10px] font-medium px-2 py-0.5 rounded-full inline-block" style={{background:'rgba(243,112,33,0.15)', color:'#F37021'}}>
           {roleLabel}
         </div>
       </div>
@@ -79,7 +79,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   'flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all',
                   active ? 'text-white' : 'text-white/40 hover:text-white/70'
                 )} style={active ? {background:'rgba(255,255,255,0.08)'} : {}}>
-                  <item.icon className={cn('w-4 h-4 flex-shrink-0', active ? 'text-[#c9993a]' : 'text-white/30')} />
+                  <item.icon className={cn('w-4 h-4 flex-shrink-0', active ? 'text-[#F37021]' : 'text-white/30')} />
                   {item.label}
                 </Link>
               </li>
@@ -90,7 +90,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       <div className="p-4 border-t" style={{borderColor:'rgba(255,255,255,0.07)'}}>
         <div className="flex items-center gap-2.5 mb-3">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0" style={{background:'rgba(201,153,58,0.2)'}}>
+          <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0" style={{background:'rgba(243,112,33,0.2)'}}>
             {session?.user?.name?.[0] || '?'}
           </div>
           <div className="flex-1 min-w-0">
@@ -110,7 +110,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-20" style={{background:'radial-gradient(circle, #c9993a 0%, transparent 65%)', filter:'blur(80px)'}} />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-20" style={{background:'radial-gradient(circle, #F37021 0%, transparent 65%)', filter:'blur(80px)'}} />
         <div className="absolute bottom-0 left-64 w-[400px] h-[400px] rounded-full opacity-10" style={{background:'radial-gradient(circle, #0a84ff 0%, transparent 65%)', filter:'blur(80px)'}} />
       </div>
 
@@ -144,7 +144,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </button>
         </header>
 
-        <main className="flex-1 p-5 md:p-8">
+        <main className="flex-1 p-5 md:p-8 overflow-hidden">
           {children}
         </main>
       </div>
